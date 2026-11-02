@@ -17,7 +17,7 @@ def create_demo(path: Path):
 
         # 1. 기본 DB 테이블 생성
         db.executescript(
-            (ROOT / "db" / "schema.sql").read_text(encoding="utf-8")
+            (ROOT / "db" / "schema_sqlite_sim.sql").read_text(encoding="utf-8")
         )
 
         # 2. 기존 DB와의 호환성: 정책 유효기간 컬럼 추가
