@@ -431,10 +431,10 @@ CREATE TABLE IF NOT EXISTS ledger (
     CONSTRAINT fk_ledger_merchant_id FOREIGN KEY (merchant_id) REFERENCES merchant(merchant_id),
     CONSTRAINT fk_ledger_rule_id FOREIGN KEY (rule_id) REFERENCES benefit_rule(rule_id),
     CONSTRAINT fk_ledger_policy_id FOREIGN KEY (policy_id) REFERENCES db_policy(policy_id),
-    CONSTRAINT ck_ledger_event_type CHECK (event_type IN ('PURCHASE', 'BALANCE_DELTA', 'BENEFIT_EARN', 'CREDIT_USAGE', 'CREDIT_REPAY', 'REFUND_REVERSAL', 'TOPUP', 'DEPOSIT')),
+    CONSTRAINT ck_ledger_event_type CHECK (event_type IN ('PURCHASE', 'BALANCE_DELTA', 'BENEFIT_EARN', 'CREDIT_USAGE', 'CREDIT_REPAY', 'REFUND_REVERSAL', 'TOPUP', 'DEPOSIT', 'PAYMENT')),
     CONSTRAINT ck_ledger_bucket_type CHECK (bucket_type IN ('DB_CHARGE', 'DB_CASHBACK', 'DB_GRANT', 'BANK_ACCOUNT', 'CREDIT_USED', 'BENEFIT_MONTH_USED', 'NONE')),
     CONSTRAINT ck_ledger_approval_status CHECK (approval_status IN ('APPROVED', 'DECLINED', 'PENDING')),
-    CONSTRAINT ck_ledger_source_mode CHECK (source_mode IN ('INITIAL', 'SIM_ENGINE', 'SYNTHETIC'))
+    CONSTRAINT ck_ledger_source_mode CHECK (source_mode IN ('INITIAL', 'SIM_ENGINE', 'SYNTHETIC', 'MOCK'))
 );
 
 -- Logical-only mappings (no FK): merchant.industry_code -> benefit_category_map;
