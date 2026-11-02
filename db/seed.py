@@ -88,7 +88,9 @@ def create_demo(path: Path):
 
         # 8. 카드 혜택 규칙
         db.executemany(
-            "INSERT OR REPLACE INTO benefit_rule VALUES (?,?,?,?,?,?,?,?)",
+            "INSERT OR REPLACE INTO benefit_rule "
+            "(rule_id, product_id, rate, prev_month_min, min_payment, per_tx_cap, monthly_cap, source_status) "
+            "VALUES (?,?,?,?,?,?,?,?)",
             [
                 ("CAFE5", "P_CHECK", "0.05", 300000, 1000, 2000, 10000, "SIMULATED"),
                 ("FOOD3", "P_CREDIT", "0.03", 300000, 0, 3000, 10000, "SIMULATED"),
