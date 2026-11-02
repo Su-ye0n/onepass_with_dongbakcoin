@@ -90,8 +90,10 @@ def create_test_client(service=None, mock_service=None):
 # 1. 정상 추천 요청
 # ========================================
 
-def test_recommend_payment_success():
-    with create_test_client(FakePaymentService()) as client:
+def test_recommend_payment_engine_unavailable():
+    with create_test_client(
+        service=PaymentService(engine=None)
+    ) as client:
         response = client.post(
             "/api/v1/payments/recommend",
             json={
@@ -100,8 +102,10 @@ def test_recommend_payment_success():
                 "amount_won": 30000,
             },
         )
+    assert response.status_code == 503
+    assert response.json()["detail"] == ()
 
-    assert response.status_code == 200
+
 
     data = response.json()
 
@@ -118,7 +122,41 @@ def test_recommend_payment_success():
 # 2. 추천 엔진 미연결
 # ========================================
 
-def test_recommend_payment_engine_unavailable():
+def test_recommend_payment_uses_rule_engine(monkeypatch):
+    from app.adapters.rule_engine_adapter import RuleEngineAdapter
+
+    called = {}
+
+    def fake_recommend(self, user_id, merchant_id, amount_won):
+        called["user_id"] = user_id
+        called["merchant_id"] = merchant_id
+        called["amount_won"] = amount_won
+
+        return {
+            "user_id": user_id,
+            "merchant_id": merchant_id,
+            "amount_won": amount_won,
+            "recommended_user_card_id": "USER_CARD_001",
+            "expected_benefit_won": 1500,
+            "candidates": [
+                {
+                    "user_card_id": "USER_CARD_001",
+                    "product_id": "CARD_001",
+                    "product_name": "테스트 카드",
+                    "expected_benefit_won": 1500,
+                    "eligible": True,
+                    "reason": "TEST",
+                }
+            ],
+        }
+
+    monkeypatch.setattr(
+        RuleEngineAdapter,
+        "recommend",
+        fake_recommend,
+    )
+
+    # 의존성 재정의 없이 실제 API 라우터 호출
     with create_test_client() as client:
         response = client.post(
             "/api/v1/payments/recommend",
@@ -129,10 +167,16 @@ def test_recommend_payment_engine_unavailable():
             },
         )
 
-    assert response.status_code == 503
-    assert response.json()["detail"] == (
-        "추천 엔진이 아직 연결되지 않았습니다."
-    )
+    assert response.status_code == 200
+    assert called == {
+        "user_id": "USER_001",
+        "merchant_id": "MERCHANT_001",
+        "amount_won": 30000,
+    }
+
+    data = response.json()
+    assert data["recommended_user_card_id"] == "USER_CARD_001"
+    assert data["expected_benefit_won"] == 1500
 
 
 # ========================================

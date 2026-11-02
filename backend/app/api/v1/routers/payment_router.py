@@ -27,7 +27,7 @@ from app.services.payment_service import (
 )
 from app.schemas.payment_schema import PaymentDetailResponse
 from app.schemas.payment_schema import PaymentHistoryResponse
-
+from app.adapters.rule_engine_adapter import RuleEngineAdapter
 
 
 
@@ -44,6 +44,9 @@ router = APIRouter(
 # ---------- 최적 결제수단 추천 서비스 생성함수 --------
 def get_payment_service() -> PaymentService:
     """추천 Service 의존성 주입"""
+    return PaymentService(
+        engine=RuleEngineAdapter(),
+    )
 
     # 팀원 추천 엔진 연결 전에는 None 사용
     return PaymentService(engine=None)
