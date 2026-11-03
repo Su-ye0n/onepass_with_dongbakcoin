@@ -1,0 +1,107 @@
+
+{
+  "merchants": [
+    {
+      "id": "M1",
+      "category": "FOOD",
+      "db_registered": true,
+      "annual_sales_band": "LE_10B"
+    },
+    {
+      "id": "M2",
+      "category": "CAFE",
+      "db_registered": false,
+      "annual_sales_band": "GT_30B"
+    },
+    {
+      "id": "M3",
+      "category": "FOOD",
+      "db_registered": true,
+      "annual_sales_band": "LE_30B"
+    }
+  ],
+  "users": [
+    {
+      "user_id": "U001",
+      "cards": [
+        {
+          "id": "U1_DB",
+          "type": "DONGBAEK_CHECK",
+          "account_id": "U1_ACC"
+        },
+        {
+          "id": "U1_CK",
+          "type": "DEBIT",
+          "account_id": "U1_ACC",
+          "prev_month_perf": 400000,
+          "rules": [
+            {
+              "id": "U1_CAFE5",
+              "categories": ["CAFE"],
+              "rate": "0.05",
+              "prev_month_min": 300000,
+              "min_payment": 1000,
+              "per_tx_cap": 2000,
+              "monthly_cap": 10000
+            }
+          ]
+        },
+        {
+          "id": "U1_CR",
+          "type": "CREDIT",
+          "credit_limit": 1000000,
+          "prev_month_perf": 400000,
+          "rules": [
+            {
+              "id": "U1_FOOD3",
+              "categories": ["FOOD"],
+              "rate": "0.03",
+              "prev_month_min": 300000,
+              "per_tx_cap": 3000,
+              "monthly_cap": 10000
+            }
+          ]
+        }
+      ],
+      "initial_state": {
+        "accounts": {
+          "U1_ACC": 100000
+        },
+        "db_charge": 60000,
+        "db_cashback": 0,
+        "db_grant": 0
+      }
+    },
+    {
+      "user_id": "U002",
+      "cards": [
+        {
+          "id": "U2_DB",
+          "type": "DONGBAEK_CHECK",
+          "account_id": "U2_ACC"
+        },
+        {
+          "id": "U2_CR",
+          "type": "CREDIT",
+          "credit_limit": 100000,
+          "prev_month_perf": 350000,
+          "rules": [
+            {
+              "id": "U2_CAFE4",
+              "categories": ["CAFE"],
+              "rate": "0.04",
+              "prev_month_min": 300000,
+              "monthly_cap": 5000
+            }
+          ]
+        }
+      ],
+      "initial_state": {
+        "accounts": {
+          "U2_ACC": 20000
+        },
+        "db_charge": 25000
+      }
+    }
+  ]
+}
