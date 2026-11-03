@@ -533,7 +533,6 @@ export default function OnePassDashboard() {
 
       <footer className="app-footer">
         <span>부산광역시&nbsp; | &nbsp;BNK부산은행</span>
-        <span>체험 서비스 · 실제 결제 없음</span>
       </footer>
 
       {menuOpen && (
@@ -542,7 +541,7 @@ export default function OnePassDashboard() {
             <div className="sheet-head"><h2>전체 메뉴</h2><button onClick={() => setMenuOpen(false)} aria-label="닫기"><X /></button></div>
             <button onClick={() => { setScreen('manage'); setMenuOpen(false) }}><CreditCard size={19} /><span><b>내 원카드 관리</b><small>연결 카드와 혜택 확인</small></span><ChevronRight /></button>
             <button onClick={() => { setScreen('platform'); setMenuOpen(false) }}><Receipt size={19} /><span><b>내정보 관리</b><small>{profile?.display_name ?? '프로필 정보 미등록'}</small></span><ChevronRight /></button>
-            <button onClick={() => { setScreen('recharge'); setMenuOpen(false) }}><CreditCard size={19} /><span><b>충전 체험</b><small>실제 금액 변동 없이 이용</small></span><ChevronRight /></button>
+            <button onClick={() => { setScreen('recharge'); setMenuOpen(false) }}><CreditCard size={19} /><span><b>충전</b><small>동백전 잔액 충전</small></span><ChevronRight /></button>
             {process.env.NODE_ENV === 'development' && (
               <button onClick={() => { setScreen('api-tools'); setMenuOpen(false) }}><Settings2 size={19} /><span><b>개발 도구</b><small>연동 상태 및 상세 정보</small></span><ChevronRight /></button>
             )}
@@ -707,7 +706,7 @@ function HomeScreen({
         <span><b>QR 결제</b><small>카메라로 가맹점 QR을 스캔하세요</small></span>
         <ChevronRight size={22} />
       </button>
-      <button className="recharge-shortcut" onClick={onOpenRecharge}><span><CreditCard size={15} /> 충전 체험</span><b>{wallet ? '실제 결제 없이 이용' : walletError || '잔액 정보 확인 필요'}</b><ChevronRight size={16} /></button>
+      <button className="recharge-shortcut" onClick={onOpenRecharge}><span><CreditCard size={15} /> 충전</span><b>{wallet ? '동백전 잔액' : walletError || '잔액 정보 확인 필요'}</b><ChevronRight size={16} /></button>
       <button className="report-shortcut" onClick={onOpenReport}><span><BarChart3 size={16} /> 월별 사용 리포트</span><b>이용 내역 기준</b><ChevronRight size={16} /></button>
       <section className="walk-card"><div><b>조금 더 걸어볼까요?</b><br /><span>산책이라도 나설까요?</span><small>걷기사용 · 오늘의 걸음은 연결 후 표시됩니다</small></div><span className="walk-icon">◜◡◝</span></section>
       <div className="bento">
@@ -755,6 +754,7 @@ function CardDetail({
   const [loading, setLoading] = useState(false)
   const [paying, setPaying] = useState(false)
   const [success, setSuccess] = useState('')
+  const [showBenefitComparison, setShowBenefitComparison] = useState(false)
   const thisMonthBenefit = payments
     .filter((payment) => payment.event_at.slice(0, 7) === new Date().toISOString().slice(0, 7))
     .reduce((sum, payment) => sum + (payment.awarded_benefit_won ?? 0), 0)
@@ -822,7 +822,7 @@ function CardDetail({
       <div className="detail-head"><button onClick={onBack} aria-label="뒤로"><ArrowLeft size={19} /></button><strong>동백원카드</strong><button onClick={onBack} aria-label="내 카드 관리"><Settings2 size={18} /></button></div>
       <section className="benefit-card"><div><span>이번 달 승인 결제 혜택</span><strong>{formatWon(thisMonthBenefit)}</strong><b>결제 이용 내역 기준</b></div><div className="mascot">◔ᴥ◔</div></section>
       <section className="pay-section">
-        <div className="section-title"><h3>어디서 결제하세요?</h3><span>카드 추천 후 결제 체험</span></div>
+        <div className="section-title"><h3>카드 혜택 비교</h3><span>보유 카드 기준</span></div>
         <label className="form-field">가맹점
           <select value={merchantId} onChange={(event) => { setMerchantId(event.target.value); setSuccess('') }}>
             <option value="">가맹점을 선택해 주세요</option>
@@ -839,13 +839,45 @@ function CardDetail({
               <span>{merchants.find((merchant) => merchant.merchant_id === merchantId)?.merchant_name} · {formatWon(recommendation.amount_won)}</span>
               <strong>예상 혜택 {formatWon(recommendation.expected_benefit_won)}</strong>
               <p>{recommendation.candidates.find((candidate) => candidate.user_card_id === recommendation.recommended_user_card_id)?.product_name ?? '추천 카드 없음'}</p>
-              <small>{recommendation.candidates.length ? '보유 카드의 실제 추천 결과입니다.' : '이 사용자에게 연결된 카드가 없어 추천 결과가 없습니다.'}</small>
+              <small>{recommendation.candidates.length ? '예상 혜택이 가장 높은 카드입니다.' : '등록된 보유 카드가 없어 비교할 수 없습니다.'}</small>
             </>
           ) : (
             <small>{recommendationError || (userCards.length ? '가맹점과 금액을 입력하면 보유 카드의 혜택을 조회합니다.' : '내 카드 관리에서 카드를 연결하면 결제 추천을 사용할 수 있습니다.')}</small>
           )}
-          <button disabled={paying || !recommendation?.recommended_user_card_id} onClick={() => void pay()}>
-            {paying ? '처리 중…' : '이 카드로 결제 체험하기'}
+          <button
+            type="button"
+            disabled={!recommendation?.candidates.length}
+            aria-expanded={showBenefitComparison}
+            onClick={() => setShowBenefitComparison((visible) => !visible)}
+          >
+            {showBenefitComparison ? '혜택 비교 닫기' : '혜택 비교하기'}
+          </button>
+          {showBenefitComparison && recommendation && (
+            <ol className="benefit-comparison-list">
+              {recommendation.candidates
+                .slice()
+                .sort((left, right) => right.expected_benefit_won - left.expected_benefit_won)
+                .map((candidate) => (
+                  <li
+                    className={candidate.user_card_id === recommendation.recommended_user_card_id ? 'recommended' : ''}
+                    key={candidate.user_card_id}
+                  >
+                    <span>
+                      <b>{candidate.product_name ?? '카드 상품'}</b>
+                      <small>{candidate.reason ?? (candidate.eligible ? '혜택 적용 가능' : '혜택 적용 대상 아님')}</small>
+                    </span>
+                    <strong>{formatWon(candidate.expected_benefit_won)}</strong>
+                  </li>
+                ))}
+            </ol>
+          )}
+          <button
+            type="button"
+            className="secondary-action"
+            disabled={paying || !recommendation?.recommended_user_card_id}
+            onClick={() => void pay()}
+          >
+            {paying ? '처리 중…' : '결제 시뮬레이션'}
           </button>
           {success && <small className="success-message" role="status">{success}</small>}
         </div>
@@ -1077,10 +1109,10 @@ function RechargeScreen({
       })
       requestRef.current = null
       setSuccess(
-        `${formatWon(topUp.amount_won)} 충전 체험 완료 · 표시 잔액 ${formatWon(topUp.balance_won)}`,
+        `${formatWon(topUp.amount_won)} 충전 완료 · 잔액 ${formatWon(topUp.balance_won)}`,
       )
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : '충전 체험을 완료하지 못했습니다.')
+      setError(cause instanceof Error ? cause.message : '충전을 완료하지 못했습니다.')
     } finally {
       setPending(false)
     }
@@ -1101,10 +1133,10 @@ function RechargeScreen({
             </select>
           </label>
         )}
-        <button className="primary-action" disabled={pending || !wallet || walletFallback} onClick={() => void submitTopUp()}>{pending ? '처리 중…' : walletFallback ? '현재 이용할 수 없습니다' : `${Number(amount || 0).toLocaleString('ko-KR')}원 충전 체험`}</button>
+        <button className="primary-action" disabled={pending || !wallet || walletFallback} onClick={() => void submitTopUp()}>{pending ? '처리 중…' : walletFallback ? '현재 이용할 수 없습니다' : `${Number(amount || 0).toLocaleString('ko-KR')}원 충전`}</button>
         {error && <p className="topup-error" role="alert">{error}</p>}
         {success && <p className="topup-success" role="status">{success}</p>}
-        <p className="recharge-note">{walletFallback ? '현재 잔액 정보를 확인할 수 없어 충전 체험을 이용할 수 없습니다.' : '충전 체험 기능입니다. 실제 결제나 계좌 출금은 발생하지 않습니다.'}</p>
+        <p className="recharge-note">{walletFallback ? '현재 잔액 정보를 확인할 수 없어 충전할 수 없습니다.' : '충전 및 잔액은 서비스 시뮬레이션 기준으로 표시됩니다.'}</p>
       </section>
       <section className="auto-charge"><div><b>잔액 부족 시 자동충전</b><small>자동충전은 지원하지 않습니다.</small></div><Toggle on={false} disabled label="자동충전 미지원" onChange={() => {}} /></section>
     </div>
@@ -1219,6 +1251,8 @@ function MyPlatform({
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
   const [editingProfile, setEditingProfile] = useState(false)
+  const studentIdentityCard = identityCards.find((card) => card.card_type === 'STUDENT')
+  const civicIdentityCard = identityCards.find((card) => card.card_type !== 'STUDENT')
 
   useEffect(() => {
     setDisplayName(profile?.display_name ?? '')
@@ -1267,42 +1301,32 @@ function MyPlatform({
         {editingProfile && <button className="profile-cancel" onClick={() => setEditingProfile(false)}>취소</button>}
       </div>
       <section className="identity-sections">
-        <section className="identity-display" aria-labelledby="citizen-identity-title">
-          <h2 id="citizen-identity-title">부산광역시 시민 인증</h2>
-          <div className="identity-artwork">
-            <DongiImage variant="big" alt="동이 캐릭터가 그려진 시민 인증 카드" className="identity-artwork-image" />
-            {identityCards.filter((card) => card.card_type !== 'STUDENT').map((card) => (
-              <div className="identity-artwork-copy" key={card.identity_card_id}>
-                <strong>{card.holder_name}</strong>
-              </div>
-            ))}
-          </div>
-          {identityCardError && <p className="identity-card-error" role="status">{identityCardError}</p>}
-          {!identityCardError && !identityCards.some((card) => card.card_type !== 'STUDENT') && (
-            <p className="identity-card-note">시민 인증 정보를 확인할 수 없습니다.</p>
-          )}
-        </section>
+        <div className="citizen-auth-heading">
+          <h2>부산시민 인증</h2>
+          <span>{civicIdentityCard ? '시민 정보 등록' : '정보 없음'}</span>
+        </div>
         <section className="identity-display" aria-labelledby="student-identity-title">
-          <h2 id="student-identity-title">갈매기대학교 학생증</h2>
-          <div className="identity-artwork">
+          <h2 id="student-identity-title" className="sr-only">갈매기대학교 학생증</h2>
+          {identityCardError && <p className="identity-card-error" role="status">{identityCardError}</p>}
+          <div className="identity-artwork student-id-artwork">
             <DongiImage variant="big" alt="동이 캐릭터가 그려진 갈매기대학교 학생증" className="identity-artwork-image" />
-            {identityCards.filter((card) => card.card_type === 'STUDENT').map((card) => (
-              <div className="identity-artwork-copy" key={card.identity_card_id}>
-                <strong>{card.holder_name}</strong>
-                <span>{card.subtitle.replace(/\s*\(데모\)\s*/gi, ' ').trim()}</span>
-              </div>
-            ))}
-            {!identityCards.some((card) => card.card_type === 'STUDENT') && (
+            {studentIdentityCard ? (
               <div className="identity-artwork-copy">
-                <strong>{profile?.display_name ?? '학생증 정보 없음'}</strong>
-                <span>{[profile?.university, profile?.department].filter(Boolean).join(' · ') || '학생 정보를 확인할 수 없습니다.'}</span>
+                <span className="student-id-university">{studentIdentityCard.issuer_name}</span>
+                <strong className="student-id-holder">{studentIdentityCard.holder_name}</strong>
+                <span className="student-id-details">{studentIdentityCard.subtitle.replace(/\s*\(데모\)\s*/gi, ' ').trim()}</span>
+              </div>
+            ) : (
+              <div className="identity-artwork-copy">
+                <span className="student-id-university">{profile?.university ?? '갈매기대학교'}</span>
+                <strong className="student-id-holder">{profile?.display_name ?? '학생증 정보 없음'}</strong>
+                <span className="student-id-details">{[profile?.department, profile?.student_card_id].filter(Boolean).join(' · ') || '학생 정보를 확인할 수 없습니다.'}</span>
               </div>
             )}
           </div>
+          <h3 className="student-id-caption">갈매기 대학교 학생증</h3>
         </section>
       </section>
-      <p className="identity-legal-note">이 화면은 서비스 이용 안내용이며, 실제 신분증이나 재학 증빙으로 사용할 수 없습니다.</p>
-      <section className="identity-card"><span className="blue-label">내 계정</span><h2>{profile?.display_name ?? '프로필 정보 미등록'}</h2><p>{profile ? '내 프로필 정보' : profileError || '사용자 프로필을 확인해 주세요.'}</p><QrCode size={40} /></section>
       {!editingProfile ? (
         <section className="profile-edit-entry">
           <div>
