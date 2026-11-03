@@ -1,11 +1,10 @@
-import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import './integration.css'
 
 export const metadata: Metadata = {
-  title: '동백원카드 | 부산시민플랫폼',
-  description: '동백전과 동백원카드를 한 곳에서 관리하는 모바일 위젯 앱',
+  title: '동백전 연계패스 | 부산시민플랫폼',
+  description: '동백전과 제휴 카드를 연결해 카드 혜택을 비교하는 서비스',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -43,7 +42,6 @@ export default function RootLayout({
     <html lang="ko">
       <body className="antialiased">
         {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )

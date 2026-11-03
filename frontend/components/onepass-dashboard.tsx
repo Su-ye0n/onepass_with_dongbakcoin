@@ -407,7 +407,7 @@ export default function OnePassDashboard() {
       <header className="app-header">
         <div className="brand">
           <div className="brand-mark"><DongbaekMark small /></div>
-          <div><b>동백전</b><span>부산시민플랫폼</span></div>
+          <div><b>동백전 연계패스</b><span>부산시민플랫폼</span></div>
         </div>
         <div className="header-actions">
           <button aria-label="알림"><Bell size={19} /></button>
@@ -419,7 +419,7 @@ export default function OnePassDashboard() {
       <nav className="tab-bar" aria-label="주요 메뉴">
         <button className={screen === 'home' ? 'active' : ''} onClick={() => setScreen('home')}><Home size={18} />홈</button>
         <button className={screen === 'platform' ? 'active' : ''} onClick={() => setScreen('platform')}><Grid2X2 size={18} />MY 플랫폼</button>
-        <button className={screen === 'manage' ? 'active' : ''} onClick={() => setScreen('manage')}><WalletCards size={18} />내 원카드</button>
+        <button className={screen === 'manage' ? 'active' : ''} onClick={() => setScreen('manage')}><WalletCards size={18} />내 카드</button>
         <button className={screen === 'report' ? 'active' : ''} onClick={() => setScreen('report')}><BarChart3 size={18} />리포트</button>
       </nav>
 
@@ -539,7 +539,7 @@ export default function OnePassDashboard() {
         <div className="menu-overlay" role="dialog" aria-modal="true" aria-label="전체 메뉴">
           <div className="menu-sheet">
             <div className="sheet-head"><h2>전체 메뉴</h2><button onClick={() => setMenuOpen(false)} aria-label="닫기"><X /></button></div>
-            <button onClick={() => { setScreen('manage'); setMenuOpen(false) }}><CreditCard size={19} /><span><b>내 원카드 관리</b><small>연결 카드와 혜택 확인</small></span><ChevronRight /></button>
+            <button onClick={() => { setScreen('manage'); setMenuOpen(false) }}><CreditCard size={19} /><span><b>내 카드 관리</b><small>연결 카드와 혜택 확인</small></span><ChevronRight /></button>
             <button onClick={() => { setScreen('platform'); setMenuOpen(false) }}><Receipt size={19} /><span><b>내정보 관리</b><small>{profile?.display_name ?? '프로필 정보 미등록'}</small></span><ChevronRight /></button>
             <button onClick={() => { setScreen('recharge'); setMenuOpen(false) }}><CreditCard size={19} /><span><b>충전</b><small>동백전 잔액 충전</small></span><ChevronRight /></button>
             {process.env.NODE_ENV === 'development' && (
@@ -591,9 +591,9 @@ function AuthScreen({
       <section className="auth-card">
         <div className="auth-brand">
           <div className="brand-mark"><DongbaekMark small /></div>
-          <div><b>동백전</b><span>부산시민플랫폼</span></div>
+          <div><b>동백전 연계패스</b><span>부산시민플랫폼</span></div>
         </div>
-        <p className="auth-eyebrow">동백원카드</p>
+        <p className="auth-eyebrow">동백전 연계패스</p>
         <h1>{registering ? '간편 회원가입' : '로그인'}</h1>
         <p className="auth-description">아이디와 비밀번호로 간편하게 시작하세요.</p>
         <div className="auth-tabs" role="tablist" aria-label="계정 메뉴">
@@ -711,7 +711,7 @@ function HomeScreen({
       <section className="walk-card"><div><b>조금 더 걸어볼까요?</b><br /><span>산책이라도 나설까요?</span><small>걷기사용 · 오늘의 걸음은 연결 후 표시됩니다</small></div><span className="walk-icon">◜◡◝</span></section>
       <div className="bento">
         <button onClick={onOpenMenu}><b>MY 플랫폼</b><span>내 정보를<br />한번에 확인하세요!</span><small>› 내정보 관리</small></button>
-        <button onClick={onOpenCard}><b>동백원카드</b><span>내 카드와 혜택을 확인해요</span></button>
+        <button onClick={onOpenCard}><b>동백전 연계패스</b><span>내 카드와 혜택을 확인해요</span></button>
         <button onClick={onOpenReport}><b>월별 사용 리포트</b><span>결제 이용 내역을 확인해요</span></button>
       </div>
       <div className="quick-grid">{quickLinks.map(({ label, icon: Icon, tone }) => <button key={label} type="button" disabled><span className={`quick-icon ${tone}`}><Icon size={17} /></span><b>{label}</b></button>)}</div>
@@ -819,7 +819,7 @@ function CardDetail({
 
   return (
     <div className="screen-content detail-screen">
-      <div className="detail-head"><button onClick={onBack} aria-label="뒤로"><ArrowLeft size={19} /></button><strong>동백원카드</strong><button onClick={onBack} aria-label="내 카드 관리"><Settings2 size={18} /></button></div>
+      <div className="detail-head"><button onClick={onBack} aria-label="뒤로"><ArrowLeft size={19} /></button><strong>동백전 연계패스</strong><button onClick={onBack} aria-label="내 카드 관리"><Settings2 size={18} /></button></div>
       <section className="benefit-card"><div><span>이번 달 승인 결제 혜택</span><strong>{formatWon(thisMonthBenefit)}</strong><b>결제 이용 내역 기준</b></div><div className="mascot">◔ᴥ◔</div></section>
       <section className="pay-section">
         <div className="section-title"><h3>카드 혜택 비교</h3><span>보유 카드 기준</span></div>
@@ -931,8 +931,8 @@ function CardManager({
 
   return (
     <div className="screen-content manager-screen">
-      <div className="detail-head"><button onClick={onBack} aria-label="뒤로"><ArrowLeft size={19} /></button><strong>내 원카드 관리</strong><button onClick={onBack} aria-label="메뉴"><Menu size={19} /></button></div>
-      <section className="primary-card"><div className="card-brand"><span className="mascot tiny">◔ᴥ◔</span><div><b>동백원카드</b><small>{displayName ?? '프로필 정보 미등록'} · 보유 카드 {userCards.length}장</small></div></div></section>
+      <div className="detail-head"><button onClick={onBack} aria-label="뒤로"><ArrowLeft size={19} /></button><strong>내 카드 관리</strong><button onClick={onBack} aria-label="메뉴"><Menu size={19} /></button></div>
+      <section className="primary-card"><div className="card-brand"><span className="mascot tiny">◔ᴥ◔</span><div><b>동백전 연계패스</b><small>{displayName ?? '프로필 정보 미등록'} · 보유 카드 {userCards.length}장</small></div></div></section>
       {pendingCard && <p className="card-action-status" role="status">카드 등록 상태를 변경하는 중입니다.</p>}
       {actionMessage && <p className="card-action-success" role="status">{actionMessage}</p>}
       <p className="list-label">내 보유 카드 {userCards.length}장</p>
@@ -1120,7 +1120,7 @@ function RechargeScreen({
 
   return (
     <div className="screen-content recharge-screen">
-      <div className="detail-head"><button onClick={onBack} aria-label="뒤로"><ArrowLeft size={19} /></button><strong>동백전 충전하기</strong><button aria-label="충전 안내">?</button></div>
+      <div className="detail-head"><button onClick={onBack} aria-label="뒤로"><ArrowLeft size={19} /></button><strong>충전</strong><button aria-label="충전 안내">?</button></div>
       <section className="recharge-balance"><span>{userName ?? '로그인 사용자'} · 현재 잔액</span><strong>{wallet ? formatWon(wallet.balance_won) : '잔액 조회 불가'}</strong><small>{walletFallback ? walletError : wallet ? '표시용 잔액 · 실제 금액 변동 없음' : walletError || '지갑 정보를 확인할 수 없습니다.'}</small></section>
       <section className="recharge-panel">
         <h3>충전 금액</h3>
@@ -1360,7 +1360,7 @@ function MyPlatform({
           {saved && <p className="topup-success" role="status">프로필 정보를 저장했습니다.</p>}
         </section>
       )}
-      <div className="settings-list"><div>동백원카드&nbsp; · &nbsp;시민 생활 서비스</div><div>마케팅 및 혜택 알림 설정 · 미연결</div></div>
+      <div className="settings-list"><div>동백전 연계패스&nbsp; · &nbsp;시민 생활 서비스</div><div>마케팅 및 혜택 알림 설정 · 미연결</div></div>
     </div>
   )
 }

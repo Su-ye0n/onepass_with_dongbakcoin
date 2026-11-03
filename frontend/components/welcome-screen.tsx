@@ -92,7 +92,7 @@ export default function WelcomeScreen({
       <header className="welcome-header">
         <div className="brand">
           <div className="brand-mark" aria-hidden="true"><span className="welcome-brand-mark">O</span></div>
-          <div><b>동백전</b><span>부산시민플랫폼</span></div>
+          <div><b>동백전 연계패스</b><span>부산시민플랫폼</span></div>
         </div>
         <button className="welcome-login-link" onClick={onLogin}>로그인</button>
       </header>
