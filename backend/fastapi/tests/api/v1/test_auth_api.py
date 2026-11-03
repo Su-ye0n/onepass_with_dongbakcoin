@@ -15,13 +15,18 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app.api.dependencies import get_db
-from app.api.v1.routers.auth_router import router as auth_router
-from app.api.v1.routers.identity_card_router import router as identity_card_router
-from app.api.v1.routers.user_router import router as user_router
+from app.api.v1.api_router import api_router
 from app.core.database import Base
 from app.db_entities.auth_entity import UserCredential, UserSession
 from app.db_entities.identity_card_entity import UserIdentityCard
+from app.db_entities.user_entity import User
 from app.services.auth_service import AuthService
+
+
+SEEDED_KB_BRIDGE_PASSWORD_HASH = (
+    "pbkdf2_sha256$310000$lbe3ACu_z8Uo90xO02YypQ=="
+    "$TiLE1SZstmunCoq0OY900o4Mdoz1wvnByc0zPYWb_MQ="
+)
 
 
 def create_client():
@@ -34,9 +39,7 @@ def create_client():
     session_factory = sessionmaker(bind=engine, autoflush=False)
     db = session_factory()
     app = FastAPI()
-    app.include_router(auth_router, prefix="/api/v1")
-    app.include_router(identity_card_router, prefix="/api/v1")
-    app.include_router(user_router, prefix="/api/v1")
+    app.include_router(api_router, prefix="/api/v1")
 
     def override_get_db():
         yield db
@@ -149,12 +152,43 @@ def test_register_rejects_short_password_and_invalid_username():
 
 
 def test_seeded_demo_password_hash_matches_authentication_format():
-    seeded_hash = (
-        "pbkdf2_sha256$310000$lbe3ACu_z8Uo90xO02YypQ=="
-        "$TiLE1SZstmunCoq0OY900o4Mdoz1wvnByc0zPYWb_MQ="
-    )
-    assert AuthService._verify_password("1234", seeded_hash)
-    assert not AuthService._verify_password("1235", seeded_hash)
+    assert AuthService._verify_password("1234", SEEDED_KB_BRIDGE_PASSWORD_HASH)
+    assert not AuthService._verify_password("1235", SEEDED_KB_BRIDGE_PASSWORD_HASH)
+
+
+def test_seeded_kb_bridge_credentials_can_log_in():
+    client, db, engine = create_client()
+    try:
+        db.add(
+            User(
+                user_id="USER_001",
+                user_status="ACTIVE",
+            )
+        )
+        db.add(
+            UserCredential(
+                username="kb_bridge",
+                user_id="USER_001",
+                password_hash=SEEDED_KB_BRIDGE_PASSWORD_HASH,
+                created_at=AuthService._now(),
+            )
+        )
+        db.commit()
+
+        response = client.post(
+            "/api/v1/auth/login",
+            json={"username": "kb_bridge", "password": "1234"},
+        )
+
+        assert response.status_code == 200
+        assert response.json()["user"] == {
+            "user_id": "USER_001",
+            "username": "kb_bridge",
+        }
+        assert response.json()["access_token"]
+    finally:
+        db.close()
+        engine.dispose()
 
 
 def test_identity_cards_are_returned_only_to_their_authenticated_owner():
