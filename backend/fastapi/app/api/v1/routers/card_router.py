@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.api.auth_dependencies import require_path_user
 from app.api.dependencies import get_db
 from app.repositories.card_repository import CardRepository
 from app.schemas.card_schema import CardProductResponse
@@ -81,6 +82,7 @@ def get_card_product(
 user_card_router = APIRouter(
     prefix="/users",
     tags=["User Cards"],
+    dependencies=[Depends(require_path_user)],
 )
 
 
@@ -239,7 +241,6 @@ def delete_user_card(
             status_code=404,
             detail="등록된 카드를 찾을 수 없거나 이미 해제된 카드입니다.",
         )
-
 
 
 

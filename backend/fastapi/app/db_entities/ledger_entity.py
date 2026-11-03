@@ -1,7 +1,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Identity, Integer, Text
+from sqlalchemy import DateTime, ForeignKey, Identity, Index, Integer, Text, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -11,6 +11,15 @@ class Ledger(Base):
     """결제, 충전, 캐시백 등 거래 원장 이벤트"""
 
     __tablename__ = "ledger"
+    __table_args__ = (
+        Index(
+            "uq_ledger_topup_request_id",
+            "request_id",
+            unique=True,
+            postgresql_where=text("event_type = 'TOPUP' AND request_id IS NOT NULL"),
+            sqlite_where=text("event_type = 'TOPUP' AND request_id IS NOT NULL"),
+        ),
+    )
 
     # 기본 키
     ledger_id: Mapped[int] = mapped_column(

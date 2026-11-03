@@ -39,6 +39,31 @@ class User(Base):
     )
 
 
+class UserProfile(Base):
+    """사용자 프로필과 데모용 시민 생활 정보"""
+
+    __tablename__ = "user_profile"
+
+    user_id: Mapped[str] = mapped_column(
+        Text,
+        ForeignKey("user.user_id"),
+        primary_key=True,
+    )
+    display_name: Mapped[str | None] = mapped_column(Text)
+    student_card_id: Mapped[str | None] = mapped_column(Text)
+    university: Mapped[str | None] = mapped_column(Text)
+    department: Mapped[str | None] = mapped_column(Text)
+    phone_number: Mapped[str | None] = mapped_column(Text)
+    address: Mapped[str | None] = mapped_column(Text)
+    source_mode: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=False)
+    )
+    updated_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=False)
+    )
+
+
 class Account(Base):
     """사용자 연결 계좌"""
 

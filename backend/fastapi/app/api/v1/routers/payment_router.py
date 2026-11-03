@@ -28,6 +28,8 @@ from app.services.payment_service import (
 from app.schemas.payment_schema import PaymentDetailResponse
 from app.schemas.payment_schema import PaymentHistoryResponse
 from app.adapters.rule_engine_adapter import RuleEngineAdapter
+from app.api.auth_dependencies import get_current_user, require_path_user
+from app.db_entities.user_entity import User
 
 
 
@@ -71,9 +73,12 @@ def get_mock_payment_service(
 def recommend_payment(
     request: PaymentRecommendRequest,
     service: PaymentService = Depends(get_payment_service),
+    current_user: User = Depends(get_current_user),
 ):
     """최적 결제수단 추천 요청"""
 
+    if request.user_id != current_user.user_id:
+        raise HTTPException(status_code=403, detail="본인 계정만 사용할 수 있습니다.")
     try:
         return service.recommend(request)
 
@@ -94,9 +99,12 @@ def recommend_payment(
 def create_mock_payment(
     request: MockPaymentRequest,
     service: PaymentService = Depends(get_mock_payment_service),
+    current_user: User = Depends(get_current_user),
 ):
     """모의 결제 실행"""
 
+    if request.user_id != current_user.user_id:
+        raise HTTPException(status_code=403, detail="본인 계정만 사용할 수 있습니다.")
     try:
         return service.create_mock_payment(request)
 
@@ -129,11 +137,18 @@ def create_mock_payment(
 def get_payment_detail(
     tx_id: str,
     service: PaymentService = Depends(get_mock_payment_service),
+    current_user: User = Depends(get_current_user),
 ):
     """결제 상세 조회"""
 
     try:
-        return service.get_payment_detail(tx_id)
+        payment = service.get_payment_detail(tx_id)
+        payment_user_id = (
+            payment["user_id"] if isinstance(payment, dict) else payment.user_id
+        )
+        if payment_user_id != current_user.user_id:
+            raise HTTPException(status_code=404, detail="결제 내역을 찾을 수 없습니다.")
+        return payment
 
     except PaymentNotFoundError as exc:
         raise HTTPException(
@@ -148,6 +163,7 @@ def get_payment_detail(
 user_payment_router = APIRouter(
     prefix="/users",
     tags=["payments"],
+    dependencies=[Depends(require_path_user)],
 )
 
 

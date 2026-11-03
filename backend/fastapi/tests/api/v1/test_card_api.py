@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from types import SimpleNamespace
 
+from app.api.auth_dependencies import get_current_user
 from app.api.v1.routers.card_router import (
     router,
     user_card_router,
@@ -162,7 +164,7 @@ class FakeCardService:
 
 
 
-def create_test_client():
+def create_test_client(user_id="USER_001"):
     """테스트용 FastAPI 앱 생성"""
 
     app = FastAPI()
@@ -176,6 +178,9 @@ def create_test_client():
     # 실제 Service 대신 Fake Service 사용
     app.dependency_overrides[get_card_service] = (
         lambda: FakeCardService()
+    )
+    app.dependency_overrides[get_current_user] = (
+        lambda: SimpleNamespace(user_id=user_id)
     )
 
     return TestClient(app)
@@ -251,7 +256,7 @@ def test_get_user_card_not_found():
 
 
 def test_cannot_get_other_users_card():
-    with create_test_client() as client:
+    with create_test_client("USER_002") as client:
         response = client.get(
             "/api/v1/users/USER_002/cards/UC_001"
         )
@@ -283,7 +288,7 @@ def test_create_user_card_success():
 
 
 def test_create_user_card_user_not_found():
-    with create_test_client() as client:
+    with create_test_client("NOT_FOUND") as client:
         response = client.post(
             "/api/v1/users/NOT_FOUND/cards",
             json={"product_id": "CARD_001"},
@@ -348,7 +353,7 @@ def test_delete_user_card_not_found():
 
 
 def test_cannot_delete_other_users_card():
-    with create_test_client() as client:
+    with create_test_client("USER_002") as client:
         response = client.delete(
             "/api/v1/users/USER_002/cards/UC_001"
         )
@@ -366,6 +371,9 @@ def test_delete_user_card_twice():
     app = FastAPI()
     app.include_router(user_card_router, prefix="/api/v1")
     app.dependency_overrides[get_card_service] = lambda: fake_service
+    app.dependency_overrides[get_current_user] = (
+        lambda: SimpleNamespace(user_id="USER_001")
+    )
 
     with TestClient(app) as client:
         first = client.delete(

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.api.auth_dependencies import require_path_user
 from app.api.dependencies import get_db
 from app.repositories.card_repository import CardRepository
 from app.repositories.category_repository import CategoryRepository
@@ -14,6 +15,7 @@ from app.services.category_service import CategoryService
 router = APIRouter(
     prefix="/users/{user_id}/category-priorities",
     tags=["Category Priorities"],
+    dependencies=[Depends(require_path_user)],
 )
 
 

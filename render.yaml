@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: onepass-with-dongbakcoin
+    runtime: python
+    rootDir: .
+    buildCommand: pip install -r backend/fastapi/requirements.txt
+    startCommand: PYTHONPATH=backend/fastapi:backend/module uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false

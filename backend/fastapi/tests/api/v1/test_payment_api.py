@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from types import SimpleNamespace
 
+from app.api.auth_dependencies import get_current_user
 from app.api.v1.routers.payment_router import (
     router,
     get_payment_service,
@@ -66,7 +68,7 @@ class FakePaymentService:
         }
 
 
-def create_test_client(service=None, mock_service=None):
+def create_test_client(service=None, mock_service=None, user_id="USER_001"):
     """테스트용 FastAPI 앱 생성"""
 
     app = FastAPI()
@@ -82,6 +84,10 @@ def create_test_client(service=None, mock_service=None):
         app.dependency_overrides[get_mock_payment_service] = (
             lambda: mock_service
         )
+
+    app.dependency_overrides[get_current_user] = (
+        lambda: SimpleNamespace(user_id=user_id)
+    )
 
     return TestClient(app)
 
@@ -242,7 +248,8 @@ def test_create_mock_payment_success():
             }
 
     with create_test_client(
-        mock_service=FakeMockPaymentService()
+        mock_service=FakeMockPaymentService(),
+        user_id="user-001",
     ) as client:
         response = client.post(
             "/api/v1/payments",
@@ -283,7 +290,8 @@ def test_create_mock_payment_card_not_found():
             )
 
     with create_test_client(
-        mock_service=FakeMockPaymentService()
+        mock_service=FakeMockPaymentService(),
+        user_id="user-001",
     ) as client:
         response = client.post(
             "/api/v1/payments",
@@ -424,7 +432,8 @@ def test_get_payment_detail_not_found():
             )
 
     with create_test_client(
-        mock_service=FakeMockPaymentService()
+        mock_service=FakeMockPaymentService(),
+        user_id="USER_999",
     ) as client:
         response = client.get(
             "/api/v1/payments/nonexistent-tx"
@@ -492,7 +501,8 @@ def test_get_payment_history_empty():
             return {"payments": []}
 
     with create_test_client(
-        mock_service=FakeMockPaymentService()
+        mock_service=FakeMockPaymentService(),
+        user_id="USER_999",
     ) as client:
         response = client.get(
             "/api/v1/users/USER_999/payments"
