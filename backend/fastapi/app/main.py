@@ -11,6 +11,7 @@ cors_origins = [
     for origin in os.getenv(
         "BACKEND_CORS_ORIGINS",
         "http://localhost:3000,http://127.0.0.1:3000",
+        "https://onepass-with-dongbakcoin-beta.vercel.app",
     ).split(",")
     if origin.strip()
 ]
