@@ -136,6 +136,7 @@ ul.as li .tag{margin-top:2px}
 /* 읽는 법 박스 (F-SOI chart-help 형식) */
 .help-box{margin-top:10px;padding:10px 13px;background:#FBF6F8;border-left:3px solid var(--b5);border-radius:0 8px 8px 0;font-size:12.8px;line-height:1.6}
 .help-box b{color:var(--b7)}
+.help-box>b:first-child{display:block;font-size:12px;letter-spacing:.02em;margin-bottom:3px}
 /* ===== P0 지도 ===== */
 .hero{display:grid;grid-template-columns:440px minmax(0,1fr);gap:24px;align-items:center;padding:12px 22px}
 .hero h2{font-size:25px;font-weight:900;letter-spacing:-.6px;line-height:1.28}
@@ -202,9 +203,9 @@ ul.as li .tag{margin-top:2px}
 <div id="stage">
   <header class="top">
     <div class="brand">동백원패스<span>직원용 기회 분석</span></div>
-    <div class="meta"><b class="hl">합성 데이터</b><b>평가월 2026-06</b><b>데이터 v3.4</b><b>실시간 데이터 아님</b></div>
+    <div class="meta"><b class="hl">보정 데이터</b><b>평가월 2026-06</b><b>데이터 v3.4</b><b>실시간 데이터 아님</b></div>
     <nav class="tabs" id="tabs">
-      <button data-p="p0"><small>P0</small>고객 지도</button>
+      <button data-p="p0"><small>P0</small>구·군 현황</button>
       <button data-p="p1"><small>P1</small>문제 진단</button>
       <button data-p="p2"><small>P2</small>고객 탐색</button>
       <button data-p="p3"><small>P3</small>시나리오 비교</button>
@@ -212,7 +213,7 @@ ul.as li .tag{margin-top:2px}
     <button class="help" id="helpbtn">? 용어 설명</button>
   </header>
   <main>
-    <!-- ================= P0 고객 지도 ================= -->
+    <!-- ================= P0 구·군 현황 ================= -->
     <section class="page" id="p0" style="grid-template-rows:172px 1fr">
       <div class="card hero">
         <div>
@@ -233,7 +234,7 @@ ul.as li .tag{margin-top:2px}
                 <option value="tot">1인 월 혜택 증가 (원패스+충전)</option>
                 <option value="op">1인 월 혜택 증가 (원패스만)</option>
                 <option value="mem">동백전 보유율</option>
-                <option value="n">합성 고객 수</option>
+                <option value="n">보정 고객 수</option>
               </select>
               <div class="seg"><button id="bigonly">대표본만</button></div>
             </div>
@@ -266,7 +267,7 @@ ul.as li .tag{margin-top:2px}
         <div class="card" style="width:580px" id="alloc"></div>
         <div class="card" style="width:580px" id="p1policy"></div>
         <div class="card grow">
-          <div class="ct">가맹점 업종 · 동백전 가맹 상태 <span class="tag t-db">DB·합성</span></div>
+          <div class="ct">가맹점 업종 · 동백전 가맹 상태 <span class="tag t-db">DB·보정</span></div>
           <div class="cs">NeonDB 가맹점 1,677곳 · 업종별 가맹/비가맹/미상</div>
           <div id="indbars" class="scroll" style="margin-top:6px"></div>
         </div>
@@ -283,14 +284,14 @@ ul.as li .tag{margin-top:2px}
       <div class="row">
         <div style="width:1060px;display:flex;flex-direction:column;gap:16px;min-height:0">
           <div class="card" style="flex:1">
-            <div class="ct">고객군 비교 · 지갑 상태 × 실사용 수준 7개 그룹 <span class="tag t-db">DB·합성</span><span class="tag t-sim">개선액 SIM·검증</span></div>
+            <div class="ct">고객군 비교 · 지갑 상태 × 실사용 수준 7개 그룹 <span class="tag t-db">DB·보정</span><span class="tag t-sim">개선액 SIM·검증</span></div>
             <div class="cs">필터 적용 후 고유 고객 수 · 그룹은 서로 겹치지 않음 · 행을 누르면 오른쪽 고객이 그 그룹으로 바뀜</div>
             <div class="scroll" style="margin-top:8px"><table class="t" id="ctable"></table></div>
             <div class="help-box" style="margin-top:auto"><b>읽는 법</b> "원패스 효과"는 결제 카드를 자동으로 골라 줬을 때 늘어나는 1인 월 혜택, "충전 효과"는 그 위에 잔액 부족까지 없앴을 때 더 늘어나는 몫(상한)입니다. 막대가 긴 그룹이 권유 효과가 큰 그룹입니다.</div>
           </div>
           <div class="row" style="height:232px">
-            <div class="card grow"><div class="ct">연령 분포 · 선택 고객 vs 전체 <span class="tag t-db">DB·합성</span></div><div class="cs">연령은 보조 비교 축이며 대상 선정 기준이 아님</div><div id="agebars" style="margin-top:6px"></div></div>
-            <div class="card grow"><div class="ct">구·군 · 소비 수준 <span class="tag t-db">DB·합성</span></div><div class="cs">10명 미만 구간은 비율보다 인원으로 읽기</div><div id="gubars" style="margin-top:6px"></div></div>
+            <div class="card grow"><div class="ct">연령 분포 · 선택 고객 vs 전체 <span class="tag t-db">DB·보정</span></div><div class="cs">연령은 보조 비교 축이며 대상 선정 기준이 아님</div><div id="agebars" style="margin-top:6px"></div></div>
+            <div class="card grow"><div class="ct">구·군 · 소비 수준 <span class="tag t-db">DB·보정</span></div><div class="cs">10명 미만 구간은 비율보다 인원으로 읽기</div><div id="gubars" style="margin-top:6px"></div></div>
           </div>
         </div>
         <div class="card grow" id="ucard"></div>
@@ -302,7 +303,7 @@ ul.as li .tag{margin-top:2px}
       <div class="row">
         <div class="card" style="width:900px">
           <div class="ct">결제 방식 × 동백전 잔액 · 4개 기본 시나리오 <span class="tag t-sim">SIM·검증 4/4</span><span class="tag t-asm">아랫줄 가정·상한</span></div>
-          <div class="cs">같은 2026-06 합성 거래 7,540건을 조건만 바꿔 재생 · 240명 합계 혜택 (괄호는 1인 평균)</div>
+          <div class="cs">같은 2026-06 보정 거래 7,540건을 조건만 바꿔 재생 · 240명 합계 혜택 (괄호는 1인 평균)</div>
           <div class="mx" id="mx"></div>
         </div>
         <div class="card grow">
@@ -326,8 +327,8 @@ ul.as li .tag{margin-top:2px}
         <div class="card grow">
           <div class="ct">실험 전제 · 해석 경계</div>
           <ul class="as" style="margin-top:8px">
-            <li><span class="tag t-base">BASE·합성</span>거래: 2026-06 합성 7,540건 · 217,449,500원(v3.4). 실거래·DB 원장 아님</li>
-            <li><span class="tag t-db">DB·합성</span>정책·가맹점·카드 기본정보는 NeonDB 조회. 실행 전후 해시 일치(DB 변경 없음)</li>
+            <li><span class="tag t-base">BASE·보정</span>거래: 2026-06 보정 7,540건 · 217,449,500원(v3.4). 실거래·DB 원장 아님</li>
+            <li><span class="tag t-db">DB·보정</span>정책·가맹점·카드 기본정보는 NeonDB 조회. 실행 전후 해시 일치(DB 변경 없음)</li>
             <li><span class="tag t-asm">가정</span>38.4%는 다른 행동을 잰 설문값을 빌린 프록시이며 자동충전 동의율 실측이 아님. 25%·50%도 가정</li>
             <li><span class="tag t-asm">가정</span>1인 자금 10만/18만/30만 원은 실제 계좌 잔액이 아님 · 동의율 분모는 동백전 보유자 111명</li>
             <li><span class="tag t-asm">상한</span>충분한 잔액 칸은 잔액 제약을 없앤 이론값. 자동충전을 실제로 했다는 뜻이 아님</li>
@@ -352,7 +353,7 @@ ul.as li .tag{margin-top:2px}
         <div class="gi"><div class="gt">혜택(원)</div><div class="gd">동백전 캐시백과 BNK 카드의 현금성 할인을 더한 값입니다. <b>카드 포인트는 0원으로 계산</b>했습니다(현금처럼 쓸 수 있는지 확인 전).<br><i>예) 캐시백 3,000원 + 카드 할인 500원 + 포인트 200점 = 혜택 3,500원.</i></div></div>
         <div class="gi"><div class="gt">고객 그룹 G1 ~ G7</div><div class="gd">동백전 지갑이 있는지, 있다면 한 달에 얼마나 쓰는지로 나눈 7개 묶음입니다. 한 고객은 한 그룹에만 속합니다.<br><i>예) G1은 동백전을 만들었지만 이번 달 안 쓴 고객 → 잔액이 없어 혜택이 끊기니 자동충전 권유가 핵심입니다.</i></div></div>
         <div class="gi"><div class="gt">자동충전 민감도 (S02)</div><div class="gd">"자동충전에 동의하는 사람이 몇 %이고, 한 사람이 얼마까지 충전할 수 있으면" 혜택이 얼마나 느는지 9가지 경우로 계산했습니다.<br><i>예) 동의율 38.4% × 1인 18만 원 칸 = 원패스만 쓸 때보다 240명 합계 +440,902원. 동의율 값은 모두 가정입니다.</i></div></div>
-        <div class="gi"><div class="gt"><span class="tag t-db">DB·합성</span><span class="tag t-sim">SIM·검증</span><span class="tag t-asm">가정</span><span class="tag t-ml">ML 연결 예정</span></div><div class="gd"><b>DB·합성</b>은 DB에 저장된 값, <b>SIM·검증</b>은 엔진이 결제를 다시 계산한 값, <b>가정</b>은 상한이나 임의로 정한 값, <b>ML 연결 예정</b>은 모델이 들어올 빈자리입니다.<br><i>예) 가정 배지가 붙은 숫자는 발표에서 "~라면" 형태로 말해야 합니다.</i></div></div>
+        <div class="gi"><div class="gt"><span class="tag t-db">DB·보정</span><span class="tag t-sim">SIM·검증</span><span class="tag t-asm">가정</span><span class="tag t-ml">ML 연결 예정</span></div><div class="gd"><b>DB·보정</b>은 DB에 저장된 값, <b>SIM·검증</b>은 엔진이 결제를 다시 계산한 값, <b>가정</b>은 상한이나 임의로 정한 값, <b>ML 연결 예정</b>은 모델이 들어올 빈자리입니다.<br><i>예) 가정 배지가 붙은 숫자는 발표에서 "~라면" 형태로 말해야 합니다.</i></div></div>
       </div>
     </div>
   </div>
@@ -400,7 +401,7 @@ const EX = [
    warn:'자동충전 회복 기회로 합산하면 안 됩니다.', go:null},
   {k:'MONTHLY_CAP_EXHAUSTED',name:'월 한도 소진',n:1,c:'var(--sand)',fix:'p-hold',fixT:'샘플 관측값',
    mean:'이번 달 캐시백 적용 한도를 이미 다 쓴 뒤의 거래입니다.',
-   act:'이 합성 조건에서 1건만 관측됐습니다. 일반적인 빈도로 해석하지 않습니다.',
+   act:'이 보정 조건에서 1건만 관측됐습니다. 일반적인 빈도로 해석하지 않습니다.',
    warn:'낮은 값은 샘플 조건에서 관측된 것일 뿐입니다.', go:null},
 ];
 EX.forEach(e=>{const f=((OV.exclusion_reasons||{}).items||[]).find(x=>x.key===e.k);if(f)e.n=f.count;});
@@ -436,9 +437,9 @@ $('glclose').onclick=()=>$('gl').classList.remove('show');
 $('gl').onclick=e=>{if(e.target.id==='gl')$('gl').classList.remove('show');};
 addEventListener('keydown',e=>{if(e.key==='Escape')$('gl').classList.remove('show');});
 
-$('foot').innerHTML=`<span>평가 사용자<b>240명</b></span><span>합성 거래<b>7,540건</b></span><span>합성 거래액<b>2억 1,745만 원</b></span>
+$('foot').innerHTML=`<span>평가 사용자<b>240명</b></span><span>보정 거래<b>7,540건</b></span><span>보정 거래액<b>2억 1,745만 원</b></span>
   <span>동백전 보유<b>${V.member}명</b></span><span>활성 지갑<b>${V.active}명</b></span><span>지금 혜택 합계<b>${won(V.sc.S00.tot)}</b></span><span>원패스 사용 시<b>${won(V.sc.S01.tot)}</b></span>
-  <span class="warn">합성 사용자는 부산 구·군 인구 분포를 반영한 가상 고객입니다 · 실제 고객·실거래 아님</span>`;
+  <span class="warn">보정 데이터는 부산 구·군 인구 분포를 반영한 가상 고객 240명입니다 · 실제 고객·실거래 아님</span>`;
 
 // ================= P0 지도 =================
 const sbOf=n=>n>=20?['sb-big','대표본']:n>=10?['sb-mid','중간']:['sb-small','소표본'];
@@ -460,7 +461,7 @@ const METRIC={pp:{k:'혜택률 개선폭',t:'혜택률 개선폭 (원패스+충�
   tot:{k:'1인 월 혜택 증가',t:'1인 월 혜택 증가 (원패스 + 충전, 상한)',f:s=>s.tot,fmt:v=>'+'+won(v)},
   op:{k:'1인 월 혜택 증가(원패스만)',t:'1인 월 혜택 증가 (원패스만, 현재 잔액)',f:s=>s.op,fmt:v=>'+'+won(v)},
   mem:{k:'동백전 보유율',t:'동백전 보유율',f:s=>s.mem,fmt:v=>Math.round(v*100)+'%'},
-  n:{k:'합성 고객 수',t:'합성 고객 수',f:s=>s.n,fmt:v=>fmt(v)+'명'}};
+  n:{k:'보정 고객 수',t:'보정 고객 수',f:s=>s.n,fmt:v=>fmt(v)+'명'}};
 function lerp(t){const st=[[247,235,239],[176,78,107],[63,11,30]];const k=t<.5?0:1,u=t<.5?t*2:(t-.5)*2;
   return 'rgb('+st[k].map((x,i)=>Math.round(x+(st[k+1][i]-x)*u)).join(',')+')';}
 function centroid(d){const p=[...d.matchAll(/([\d.]+),([\d.]+)/g)].map(m=>[+m[1],+m[2]]);
@@ -565,12 +566,13 @@ function scatter(){
     <text x="${L+8}" y="${H-B-8}" font-size="12" font-weight="700" fill="#8C8186">지금도 낮고 개선도 작음 · 원인 확인</text><text x="${W-Rr-8}" y="${H-B-8}" font-size="12" font-weight="700" fill="#8C8186" text-anchor="end">이미 잘 받는 중</text>`;
   h+=`<text x="${(L+W-Rr)/2}" y="${H-4}" font-size="11.5" fill="#5F6470" text-anchor="middle">지금 혜택률 (기존 습관 · 받은 혜택 ÷ 결제액) →</text>`;
   const lr=v=>5+Math.sqrt(v/smax)*21;
-  const SIDE={'남구':'left','부산진구':'below','해운대구':'right','강서구':'below','동래구':'above','중구':'left'};
-  Object.values(GUSTAT).sort((a,b)=>b.sumTot-a.sumTot).forEach(s=>{const q=quad(s),r=lr(s.sumTot);
-    h+=`<g data-g="${s.g}" style="cursor:pointer"><circle cx="${X(s.rA)}" cy="${Y(s.pp)}" r="${r}" fill="${q[2]}" fill-opacity="${s.n<10?.28:.72}" stroke="#fff" stroke-width="1.5"><title>${s.g} · ${s.n}명 · 월 +${won(s.sumTot)}</title></circle>
-      ${(()=>{const cx=X(s.rA),cy=Y(s.pp),side=SIDE[s.g]||(r>=15?'in':'right');
-        const [tx,ty,an]=side==='in'?[cx,cy+4,'middle']:side==='left'?[cx-r-4,cy+4,'end']:side==='below'?[cx,cy+r+13,'middle']:side==='above'?[cx,cy-r-5,'middle']:[cx+r+4,cy+4,'start'];
-        return `<text x="${tx}" y="${ty}" font-size="11.5" font-weight="800" fill="${side==='in'&&s.n>=10?'#fff':'#241A1E'}" text-anchor="${an}" style="pointer-events:none">${s.g}</text>`;})()}</g>`;});
+  const SIDE={'남구':'left','부산진구':'below','해운대구':'right','강서구':'below','동래구':'above','중구':'left','기장군':'left','금정구':'above'};
+  const ORD=Object.values(GUSTAT).sort((a,b)=>b.sumTot-a.sumTot);
+  ORD.forEach(s=>{const q=quad(s),r=lr(s.sumTot);
+    h+=`<circle data-g="${s.g}" style="cursor:pointer" cx="${X(s.rA)}" cy="${Y(s.pp)}" r="${r}" fill="${q[2]}" fill-opacity="${s.n<10?.28:.72}" stroke="#fff" stroke-width="1.5"><title>${s.g} · ${s.n}명 · 월 +${won(s.sumTot)}</title></circle>`;});
+  ORD.forEach(s=>{const r=lr(s.sumTot),cx=X(s.rA),cy=Y(s.pp),side=SIDE[s.g]||'right';
+    const [tx,ty,an]=side==='left'?[cx-r-4,cy+4,'end']:side==='below'?[cx,cy+r+13,'middle']:side==='above'?[cx,cy-r-5,'middle']:[cx+r+4,cy+4,'start'];
+    h+=`<text data-g="${s.g}" x="${tx}" y="${ty}" font-size="11.5" font-weight="800" fill="#241A1E" stroke="#fff" stroke-width="3" paint-order="stroke" stroke-linejoin="round" text-anchor="${an}" style="cursor:pointer">${s.g}</text>`;});
   return h+'</svg>';
 }
 function selectGu(g){gusel=gusel===g?null:g;renderMap();renderTop5();renderInfo();}
@@ -593,7 +595,7 @@ function renderInfo(){
     $('info').innerHTML=`<div class="info-empty"><b>부산 전체 ${U.length}명</b>을 보고 있습니다. 왼쪽 지도에서 <b>구·군을 누르면</b> 그 지역 고객 구성, 권할 조치, 혜택이 많이 느는 고객이 이 자리에 나옵니다.</div>
      <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-top:14px">
       <div class="pn"><h4>지금 혜택률 대비 개선폭 · 어느 구에서 원패스 효과가 큰가 ${tag('t-sim','SIM·검증')}</h4>${scatter()}
-        <div class="leg" style="margin-top:4px;align-items:center"><span style="display:inline-flex;align-items:center;gap:6px"><svg width="52" height="28"><circle cx="10" cy="18" r="6" fill="none" stroke="#8C8186"/><circle cx="36" cy="14" r="13" fill="none" stroke="#8C8186"/></svg>원 크기 = 구 전체 월 혜택 증가</span><span><i style="background:var(--b7)"></i>우선 권유</span><span><i style="background:var(--b5)"></i>원패스 설명</span><span><i style="background:var(--sand)"></i>원인 확인</span><span><i style="background:var(--slate)"></i>유지</span></div>
+        <div class="leg" style="margin-top:4px;align-items:center"><span style="display:inline-flex;align-items:center;gap:6px"><svg width="48" height="30" viewBox="0 0 48 30"><circle cx="9" cy="20" r="6" fill="none" stroke="#8C8186"/><circle cx="32" cy="15" r="13" fill="none" stroke="#8C8186"/></svg>원 크기 = 구 전체 월 혜택 증가</span><span><i style="background:var(--b7)"></i>우선 권유</span><span><i style="background:var(--b5)"></i>원패스 설명</span><span><i style="background:var(--sand)"></i>원인 확인</span><span><i style="background:var(--slate)"></i>유지</span></div>
         <div class="help-box"><b>읽는 법</b> 가로는 지금 받는 혜택률(혜택 ÷ 결제액), 세로는 원패스+충전 시 그 비율이 몇 %p 오르는지입니다. 점선은 부산 평균(지금 ${pct(BUS.rA)}, 개선 +${(BUS.pp*100).toFixed(2)}%p)입니다. <b>원이 클수록 그 구에서 늘어나는 혜택 합계가 큽니다.</b> 왼쪽 위의 큰 원이 먼저 챙길 구이고, 흐린 원은 고객 10명 미만입니다.</div></div>
       <div class="pn" id="rankpn"></div>
      </div>
@@ -617,7 +619,7 @@ function renderInfo(){
      <button class="btn ghost" style="margin-left:auto" id="backall">← 부산 전체</button><button class="btn" id="goP2gu">이 구 고객 P2에서 보기 →</button></div>
     ${s.n<10?`<div class="help-box" style="border-color:var(--warn);background:#FBF1EA"><b style="color:var(--warn)">소표본 주의</b> 고객이 ${s.n}명뿐이라 한두 명 때문에 평균이 크게 흔들립니다. 순위나 비교보다 고객 한 명씩 보는 용도로 쓰세요.</div>`:''}
     <div class="k4">
-      <div><div class="l">합성 고객</div><div class="v">${s.n}<small style="font-size:14px">명</small></div><div class="s">부산 전체 240명 중 ${(s.n/240*100).toFixed(1)}%</div></div>
+      <div><div class="l">보정 고객</div><div class="v">${s.n}<small style="font-size:14px">명</small></div><div class="s">부산 전체 240명 중 ${(s.n/240*100).toFixed(1)}%</div></div>
       <div><div class="l">동백전 보유율</div><div class="v">${Math.round(s.mem*100)}%</div><div class="s">부산 평균 ${Math.round(allMem*100)}%</div></div>
       <div><div class="l">지금 혜택률 (혜택 ÷ 결제액)</div><div class="v">${pct(s.rA)}</div><div class="s">결제 1만 원당 ${fmt(s.rA*1e4)}원 · 부산 ${pct(BUS.rA)} · 1인 ${won(s.a)}/월</div></div>
       <div class="hi"><div class="l">원패스+충전 시 혜택률</div><div class="v">${pct(s.rD)} <small style="font-size:15px">+${(s.pp*100).toFixed(2)}%p</small></div><div class="s">개선폭 16개 구·군 중 ${Object.values(GUSTAT).sort((x,y)=>y.pp-x.pp).findIndex(x=>x.g===s.g)+1}위 · 부산 +${(BUS.pp*100).toFixed(2)}%p · 1인 +${won(s.tot)}/월</div></div>
@@ -645,11 +647,11 @@ $('bigonly').onclick=()=>{bigOnly=!bigOnly;$('bigonly').classList.toggle('on',bi
 // ================= P1 =================
 let p1sc='S01';
 function p1kpi(){
-  const k=[['평가 사용자',fmt(V.users),'명','고유 user_id · 실은행 고객 아님',tag('t-db','DB·합성')],
-    ['합성 거래',fmt(V.tx),'건','2026-06 · 거래 ID 기준',tag('t-base','BASE·합성')],
-    ['합성 거래액','2억 1,745','만 원','217,449,500원 · v3.4',tag('t-base','BASE·합성')],
-    ['동백전 보유',fmt(V.member),'명',`${(V.member/V.users*100).toFixed(1)}% (${V.member}/${V.users}) · 활성 지갑 ${V.active}명과 구분`,tag('t-db','DB·합성')],
-    ['카드 슬롯',fmt(DB.slots),'개','보조 지표 · 상품 종류 수 아님',tag('t-db','DB·합성')]];
+  const k=[['평가 사용자',fmt(V.users),'명','고유 user_id · 실은행 고객 아님',tag('t-db','DB·보정')],
+    ['보정 거래',fmt(V.tx),'건','2026-06 · 거래 ID 기준',tag('t-base','BASE·보정')],
+    ['보정 거래액','2억 1,745','만 원','217,449,500원 · v3.4',tag('t-base','BASE·보정')],
+    ['동백전 보유',fmt(V.member),'명',`${(V.member/V.users*100).toFixed(1)}% (${V.member}/${V.users}) · 활성 지갑 ${V.active}명과 구분`,tag('t-db','DB·보정')],
+    ['카드 슬롯',fmt(DB.slots),'개','보조 지표 · 상품 종류 수 아님',tag('t-db','DB·보정')]];
   let h=k.map(([l,v,u,s,t])=>`<div class="card kpi grow"><div class="l">${l} ${t}</div><div class="big">${v}<small>${u}</small></div><div class="s">${s}</div></div>`).join('');
   const sc=V.sc[p1sc];
   h+=`<div class="card kpi" style="width:400px"><div class="l">고객 혜택 합계 ${tag('t-sim','SIM·검증')}
@@ -678,7 +680,7 @@ function p1x(){
     <div class="blk"><h5>읽을 때 주의</h5><p style="color:var(--warn)">${e.warn}</p></div>
     <div style="margin-top:auto;display:flex;gap:8px">${e.go?`<button class="btn" id="goP2">P2에서 관련 고객군 보기 →</button>`:''}
       ${e.k==='INSUFFICIENT_BALANCE'?`<button class="btn ghost" id="goP3">P3 자동충전 비교</button>`:''}
-      ${e.k==='NOT_OWNED'||e.k==='INSUFFICIENT_BALANCE'?`<button class="btn ghost" id="goP0">P0 지도에서 보기</button>`:''}</div>`;
+      ${e.k==='NOT_OWNED'||e.k==='INSUFFICIENT_BALANCE'?`<button class="btn ghost" id="goP0">P0 구·군 현황에서 보기</button>`:''}</div>`;
   if(e.go) $('goP2').onclick=()=>{resetF();F.ws=new Set(e.go.ws);gsel=null;usel=null;p2();show('p2');};
   if($('goP3')) $('goP3').onclick=()=>show('p3');
   if($('goP0')) $('goP0').onclick=()=>{metric=e.k==='NOT_OWNED'?'mem':'tot';$('metric').value=metric;renderMap();show('p0');};
@@ -717,7 +719,7 @@ function alloc(){
 function p1policy(){
   const r=DB.policies.map(p=>`<tr><td><b>${p.id}</b> ${tag('t-asm',p.src==='SIMULATED'?'가상':(p.src||'출처 미상'))}</td><td>${p.start} ~ ${p.end}</td><td class="r">${fmt(p.cap/1e4)}만 원</td>
      <td>${p.rates.map(x=>Math.round(x*100)+'%').join(' / ')}</td></tr>`).join('');
-  $('p1policy').innerHTML=`<div class="ct">동백전 정책 정보 ${tag('t-db','DB·합성')}<span class="mute" style="font-weight:500">· 조회 전용</span></div>
+  $('p1policy').innerHTML=`<div class="ct">동백전 정책 정보 ${tag('t-db','DB·보정')}<span class="mute" style="font-weight:500">· 조회 전용</span></div>
    <div class="cs">요율은 가맹점 매출 10억 이하 / 10~30억 / 30억 초과 순</div>
    <table class="t" style="margin-top:8px"><tr><th>정책</th><th>적용 기간</th><th class="r">월 적용 한도</th><th>캐시백 요율</th></tr>${r}</table>
    <div class="help-box"><b>읽는 법</b> 같은 1만 원 결제도 작은 가게(매출 10억 이하)면 캐시백 1,000원, 큰 가게(30억 초과)면 0원입니다. 정책 출처가 공식 확인(VERIFIED)이 아니면 <b>가상·확인 대기</b> 값입니다.</div>`;
@@ -751,7 +753,7 @@ function p2(){
   $('fgu').onchange=e=>{F.gu=e.target.value?new Set([e.target.value]):new Set();gsel=null;usel=null;p2();};
   $('freset').onclick=()=>{resetF();gsel=null;usel=null;p2();};
   const L=U.filter(pass), n=L.length;
-  $('fsum').innerHTML=`<div><div class="mute">고유 고객 ${tag('t-db','DB·합성')}</div><div class="big">${n}<small>/ 240명</small></div><div class="mute">${n<30?'⚠ 30명 미만 · 소표본':'필터 적용 결과'}</div></div>
+  $('fsum').innerHTML=`<div><div class="mute">고유 고객 ${tag('t-db','DB·보정')}</div><div class="big">${n}<small>/ 240명</small></div><div class="mute">${n<30?'⚠ 30명 미만 · 소표본':'필터 적용 결과'}</div></div>
     <div><div class="mute">동백전 보유 · 활성</div><div class="big" style="font-size:28px">${L.filter(u=>u.mem).length}<small>· ${L.filter(u=>u.ws==='활성').length}명</small></div><div class="mute">분모 111 · 97명</div></div>
     <div><div class="mute">원패스 개선액 (S01−S00) ${tag('t-sim','SIM')}</div><div class="big" style="font-size:28px;color:var(--b7)">+${fmt(sum(L,u=>u.c-u.a))}<small>원</small></div><div class="mute">1인 +${won(avg(L,u=>u.c-u.a))}/월</div></div>`;
   const gmx=Math.max(...COH.map(([g])=>{const x=L.filter(u=>u.g===g);return avg(x,u=>u.d-u.a);}),1);
@@ -790,7 +792,7 @@ function rec(u){
 }
 function ucard(L){
   const pool=gsel?L.filter(u=>u.g===gsel):L;
-  if(!pool.length){$('ucard').innerHTML='<div class="ct">대표 합성 고객 상세</div><div class="ph" style="flex:1"><b>조건에 맞는 고객이 없습니다</b>필터를 줄여 보세요.</div>';return;}
+  if(!pool.length){$('ucard').innerHTML='<div class="ct">대표 보정 고객 상세</div><div class="ph" style="flex:1"><b>조건에 맞는 고객이 없습니다</b>필터를 줄여 보세요.</div>';return;}
   const sorted=[...pool].sort((x,y)=>(y.d-y.a)-(x.d-x.a));
   if(!usel||!pool.find(u=>u.id===usel)) usel=sorted[0].id;
   const u=UBY[usel], [ra,rb]=rec(u);
@@ -798,7 +800,7 @@ function ucard(L){
   const tx=TXC[u.id]||[];
   const changed=tx.filter(r=>r.selected_card.S01!==r.selected_card.S00||r.selected_card.S11!==r.selected_card.S00);
   const rows=[...tx].sort((x,y)=>(y.benefit_won.S11-y.benefit_won.S00)-(x.benefit_won.S11-x.benefit_won.S00)).slice(0,40);
-  $('ucard').innerHTML=`<div class="ct">고객 상세 ${tag('t-db','DB·합성')}${tag('t-sim','SIM·검증')}<span class="mute" style="font-weight:500">· 실제 개인정보 없음</span></div>
+  $('ucard').innerHTML=`<div class="ct">고객 상세 ${tag('t-db','DB·보정')}${tag('t-sim','SIM·검증')}<span class="mute" style="font-weight:500">· 실제 개인정보 없음</span></div>
    <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
    <select class="s" id="usel" style="flex:1">${sorted.slice(0,240).map(x=>`<option value="${x.id}" ${x.id===usel?'selected':''}>${x.id} · ${x.g} · ${x.age} · ${x.gu} · 증가 ${sgn(x.d-x.a)}원</option>`).join('')}</select>
    <span class="mute">${gsel?gsel+' 그룹 ':''}${pool.length}명 · 증가액 순</span></div>
@@ -806,7 +808,7 @@ function ucard(L){
      <div style="flex:1"><div class="big" style="font-size:28px">${u.id}</div><div class="mute">${u.g} ${COH.find(c=>c[0]===u.g)[1]}</div>
        <div style="margin-top:6px"><span class="chip">${u.age}</span><span class="chip">${u.gu}</span><span class="chip">${u.sp}</span><span class="chip">${u.st}</span></div>
        <div class="blk" style="margin-top:8px"><h5>동백전</h5><p style="font-size:13.5px">${u.mem?'보유':'미보유'} · 지갑 ${u.ws} · 이용 수준 ${u.lv}</p></div>
-       <div class="blk" style="margin-top:8px"><h5>연결 카드 ${u.cc}장</h5>${u.cards.map(([n,p])=>`<span class="chip ${p?'b':''}">${n.replace('BNK ','')}${p?' · 주카드':''}</span>`).join('')}</div></div>
+       <div class="blk" style="margin-top:8px"><h5>연결 카드 ${u.cc}장</h5>${u.cards.map(([n,p])=>`<span class="chip ${p?'b':''}">${n.replace('BNK ','').replace('합성','보정')}${p?' · 주카드':''}</span>`).join('')}</div></div>
      <div style="flex:1.1"><h5 class="mute" style="font-weight:700;margin-bottom:4px">이 고객의 6월 혜택 · 4가지 조건</h5>${scenarioBars(u,'결제 '+tx.length+'건 · S10·S11은 잔액 가정 상한')}</div></div>
    <div style="display:flex;gap:12px;margin-top:10px">
      <div style="flex:1;background:var(--b1);border-radius:14px;padding:12px 14px">
