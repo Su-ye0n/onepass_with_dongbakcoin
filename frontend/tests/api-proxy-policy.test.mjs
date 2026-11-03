@@ -11,8 +11,12 @@ test('allows frontend user, wallet, card, benefit, merchant, and payment API ope
     [['v1', 'auth', 'register'], 'POST'],
     [['v1', 'auth', 'login'], 'POST'],
     [['v1', 'auth', 'logout'], 'POST'],
+    [['v1', 'cards', 'products', 'PRODUCT_001'], 'GET'],
     [['v1', 'cards', 'products'], 'GET'],
     [['v1', 'users', 'USER_001', 'cards'], 'GET'],
+    [['v1', 'users', 'USER_001', 'cards', 'priorities'], 'GET'],
+    [['v1', 'users', 'USER_001', 'cards', 'priorities'], 'PUT'],
+    [['v1', 'users', 'USER_001', 'cards', 'CARD_001'], 'GET'],
     [['v1', 'users', 'USER_001', 'identity-cards'], 'GET'],
     [['v1', 'users', 'USER_001', 'cards'], 'POST'],
     [['v1', 'users', 'USER_001', 'cards', 'CARD_001'], 'DELETE'],
@@ -20,10 +24,15 @@ test('allows frontend user, wallet, card, benefit, merchant, and payment API ope
     [['v1', 'users', 'USER_001', 'profile'], 'PUT'],
     [['v1', 'users', 'USER_001', 'wallet'], 'GET'],
     [['v1', 'users', 'USER_001', 'wallet', 'top-ups'], 'POST'],
+    [['v1', 'users', 'USER_001', 'category-priorities'], 'GET'],
+    [['v1', 'users', 'USER_001', 'category-priorities'], 'PUT'],
     [['v1', 'merchants'], 'GET'],
+    [['v1', 'merchants', 'MERCHANT_001'], 'GET'],
     [['v1', 'benefits', 'products', 'PRODUCT_001'], 'GET'],
+    [['v1', 'benefits', 'RULE_001'], 'GET'],
     [['v1', 'payments', 'recommend'], 'POST'],
     [['v1', 'payments'], 'POST'],
+    [['v1', 'payments', 'TX_001'], 'GET'],
     [['v1', 'users', 'USER_001', 'payments'], 'GET'],
   ]
 
@@ -384,7 +393,7 @@ test('reports backend network failures without treating them as success', async 
   })
 })
 
-test('browser API client uses same-origin uncached requests and reports failures', async (t) => {
+test('browser API client calls the deployed backend without caching and reports failures', async (t) => {
   let requestUrl
   let requestInit
   t.mock.method(globalThis, 'fetch', async (url, init) => {
@@ -394,7 +403,10 @@ test('browser API client uses same-origin uncached requests and reports failures
   })
 
   assert.deepEqual(await api.getProducts(), [{ product_id: 'P1' }])
-  assert.equal(requestUrl, '/api/v1/cards/products')
+  assert.equal(
+    requestUrl,
+    'https://onepass-with-dongbakcoin.onrender.com/api/v1/cards/products',
+  )
   assert.equal(requestInit.cache, 'no-store')
 
   t.mock.restoreAll()

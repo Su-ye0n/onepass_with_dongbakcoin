@@ -11,10 +11,19 @@ const routeRules: readonly RouteRule[] = [
   { methods: ['POST'], segments: ['v1', 'auth', 'register'] },
   { methods: ['POST'], segments: ['v1', 'auth', 'login'] },
   { methods: ['POST'], segments: ['v1', 'auth', 'logout'] },
+  { methods: ['GET'], segments: ['v1', 'cards', 'products', ':productId'] },
   { methods: ['GET'], segments: ['v1', 'cards', 'products'] },
   {
     methods: ['GET'],
     segments: ['v1', 'users', ':userId', 'cards'],
+  },
+  {
+    methods: ['GET', 'PUT'],
+    segments: ['v1', 'users', ':userId', 'cards', 'priorities'],
+  },
+  {
+    methods: ['GET'],
+    segments: ['v1', 'users', ':userId', 'cards', ':userCardId'],
   },
   {
     methods: ['GET'],
@@ -37,6 +46,10 @@ const routeRules: readonly RouteRule[] = [
     segments: ['v1', 'users', ':userId', 'cards'],
   },
   {
+    methods: ['GET', 'PUT'],
+    segments: ['v1', 'users', ':userId', 'category-priorities'],
+  },
+  {
     methods: ['DELETE'],
     segments: ['v1', 'users', ':userId', 'cards', ':userCardId'],
   },
@@ -48,10 +61,13 @@ const routeRules: readonly RouteRule[] = [
       offset: { min: 0, max: Number.MAX_SAFE_INTEGER },
     },
   },
+  { methods: ['GET'], segments: ['v1', 'merchants', ':merchantId'] },
+  { methods: ['GET'], segments: ['v1', 'benefits', ':ruleId'] },
   {
     methods: ['GET'],
     segments: ['v1', 'benefits', 'products', ':productId'],
   },
+  { methods: ['GET'], segments: ['v1', 'payments', ':transactionId'] },
   {
     methods: ['POST'],
     segments: ['v1', 'payments', 'recommend'],

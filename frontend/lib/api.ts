@@ -1,4 +1,4 @@
-const API_BASE_PATH = '/api/v1'
+const API_BASE_PATH = 'https://onepass-with-dongbakcoin.onrender.com/api/v1'
 const AUTH_SESSION_STORAGE_KEY = 'onepass-auth-session'
 
 export type AuthSession = {
@@ -16,21 +16,40 @@ export type CardProduct = {
   issuer: string | null
   card_type: string | null
   product_status: string | null
+  terms_version?: string | null
+  source_status?: string | null
+  source_ref?: string | null
 }
 
 export type UserCard = {
   user_card_id: string
   user_id: string
   product_id: string
+  db_wallet_id?: string | null
+  linked_account_id?: string | null
   card_status: string | null
   credit_limit_won: number | null
   default_preference_rank: number | null
+  expires_at?: string | null
+  registered_ref?: string | null
+  active_from?: string | null
+  active_to?: string | null
 }
 
 export type Merchant = {
   merchant_id: string
   merchant_name: string | null
   industry_code: string
+  source_merchant_id?: string | null
+  dongbaek_status?: string | null
+  sales_band?: string | null
+  sales_band_basis_at?: string | null
+  is_good_price_shop?: boolean | null
+  is_dbplus_shop?: boolean | null
+  is_qr_merchant?: boolean | null
+  dbplus_discount_rate?: number | string | null
+  region_code?: string | null
+  source_status?: string | null
 }
 
 export type BenefitRule = {
@@ -43,6 +62,26 @@ export type BenefitRule = {
   per_tx_cap_won: number | null
   monthly_cap_won: number | null
   monthly_count_cap: number | null
+  min_amount_won?: number | null
+  shared_cap_group?: string | null
+  day_condition?: string | null
+  perf_threshold_won?: number | null
+  perf_basis_code?: string | null
+  reward_unit?: string | null
+  stack_rule?: string | null
+  payment_channel_required?: string | null
+  rounding_mode?: string | null
+  valid_from?: string | null
+  valid_to?: string | null
+  source_status?: string | null
+}
+
+export type CategoryPriority = {
+  priority_id: string
+  user_id: string
+  user_category_code: string
+  user_card_id: string
+  priority_group: number | null
 }
 
 export type PaymentCandidate = {
@@ -291,6 +330,8 @@ async function request<T>(
 }
 
 export const api = {
+  checkDatabase: (options?: RequestOptions) =>
+    request<{ status: string; database: string }>('/health/db', undefined, options),
   register: (payload: { username: string; password: string }) =>
     request<AuthSession>('/auth/register', {
       method: 'POST',
@@ -352,23 +393,95 @@ export const api = {
     ),
   getProducts: (options?: RequestOptions) =>
     request<CardProduct[]>('/cards/products', undefined, options),
+  getProduct: (productId: string, options?: RequestOptions) =>
+    request<CardProduct>(
+      `/cards/products/${encodeURIComponent(productId)}`,
+      undefined,
+      options,
+    ),
   getUserCards: (userId: string, options?: RequestOptions) =>
     request<UserCard[]>(
       `/users/${encodeURIComponent(userId)}/cards`,
       undefined,
       options,
     ),
+  getUserCard: (
+    userId: string,
+    userCardId: string,
+    options?: RequestOptions,
+  ) =>
+    request<UserCard>(
+      `/users/${encodeURIComponent(userId)}/cards/${encodeURIComponent(userCardId)}`,
+      undefined,
+      options,
+    ),
+  getCardPriorities: (userId: string, options?: RequestOptions) =>
+    request<UserCard[]>(
+      `/users/${encodeURIComponent(userId)}/cards/priorities`,
+      undefined,
+      options,
+    ),
+  updateCardPriorities: (
+    userId: string,
+    cards: { user_card_id: string; priority: number }[],
+  ) =>
+    request<UserCard[]>(
+      `/users/${encodeURIComponent(userId)}/cards/priorities`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({ cards }),
+      },
+    ),
+  getCategoryPriorities: (userId: string, options?: RequestOptions) =>
+    request<CategoryPriority[]>(
+      `/users/${encodeURIComponent(userId)}/category-priorities`,
+      undefined,
+      options,
+    ),
+  updateCategoryPriorities: (
+    userId: string,
+    priorities: {
+      user_category_code: string
+      user_card_id: string
+      priority_group: number
+    }[],
+  ) =>
+    request<CategoryPriority[]>(
+      `/users/${encodeURIComponent(userId)}/category-priorities`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({ priorities }),
+      },
+    ),
   getMerchants: (options?: RequestOptions) =>
     request<Merchant[]>('/merchants?limit=100', undefined, options),
+  getMerchant: (merchantId: string, options?: RequestOptions) =>
+    request<Merchant>(
+      `/merchants/${encodeURIComponent(merchantId)}`,
+      undefined,
+      options,
+    ),
   getBenefits: (productId: string, options?: RequestOptions) =>
     request<BenefitRule[]>(
       `/benefits/products/${encodeURIComponent(productId)}`,
       undefined,
       options,
     ),
+  getBenefitRule: (ruleId: string, options?: RequestOptions) =>
+    request<BenefitRule>(
+      `/benefits/${encodeURIComponent(ruleId)}`,
+      undefined,
+      options,
+    ),
   getPaymentHistory: (userId: string, options?: RequestOptions) =>
     request<{ payments: PaymentRecord[] }>(
       `/users/${encodeURIComponent(userId)}/payments`,
+      undefined,
+      options,
+    ),
+  getPaymentDetail: (transactionId: string, options?: RequestOptions) =>
+    request<PaymentRecord>(
+      `/payments/${encodeURIComponent(transactionId)}`,
       undefined,
       options,
     ),
