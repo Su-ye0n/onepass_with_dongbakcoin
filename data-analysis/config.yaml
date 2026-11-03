@@ -1,0 +1,109 @@
+# data-analysis 공통 설정
+# 값(기간, 기준일, API 주소, 경로)은 여기서만 바꾼다. 코드는 그대로 둔다.
+# 경로는 모두 data-analysis/ 폴더 기준이다.
+
+reference_date: "2026-06-30"      # 정책·데이터 기준일 (이후 자료는 쓰지 않음)
+period:
+  start: "2023-01"                # 내려받기 시작 월 (YYYY-MM)
+  end: "2026-06"                  # 내려받기 끝 월 (YYYY-MM, 기준일 이후 금지)
+
+api:
+  env_file: ".env"                # 키 파일 (git 제외)
+  key_name: "DATA_GO_KR_KEY"
+  timeout_sec: 120                # D9 는 한 번 응답에 10~30초 걸림
+  max_retries: 3                  # 시간 초과·통신 실패 시 다시 시도할 횟수
+  retry_wait_sec: 10
+  pause_sec: 0.3                  # 요청 사이 쉬는 시간 (호출 한도 보호)
+  probe_rows: 5                   # 시험 호출 때 받을 행 수
+
+# 부산 구·군 코드 (법정동코드 앞 5자리, 출처: 행정안전부 법정동코드)
+busan_sigungu:
+  "26110": 중구
+  "26140": 서구
+  "26170": 동구
+  "26200": 영도구
+  "26230": 부산진구
+  "26260": 동래구
+  "26290": 남구
+  "26320": 북구
+  "26350": 해운대구
+  "26380": 사하구
+  "26410": 금정구
+  "26440": 강서구
+  "26470": 연제구
+  "26500": 수영구
+  "26530": 사상구
+  "26710": 기장군
+
+# 데이터셋별 API 설정
+# - params: 매번 같은 값으로 보내는 파라미터
+# - unit: month = 한 달씩 받음 / period = 기간 전체를 한 번에 받음 (응답이 느린 API 용)
+# - month_params: 기간 파라미터. month 단위면 {ym}, period 단위면 {start_ym}·{end_ym} 자리에 YYYYMM 이 들어감
+# - split_param / split_values: 한 번에 하나씩만 조회되는 값(예: 구·군)으로 나눠 받을 때
+# - page_param / size_param: 페이지 번호·페이지당 행 수 파라미터 이름
+# - items_path / total_path: 응답 JSON 안에서 행 목록·전체 건수가 있는 위치 (점으로 구분)
+# - result_code_path / ok_codes: 성공 여부를 알려 주는 값의 위치와 성공 코드 (없으면 생략)
+datasets:
+  d1:
+    title: "부산광역시_일별 행정동 소비매출 월별 일평균(업종)_카드데이터"
+    source: "공공데이터포털 15164434"
+    url: "https://apis.data.go.kr/6260000/DongSalesBizService/getDongSalesBiz"
+    raw_dir: "data/raw/d1"
+    unit: "month"
+    params:
+      resultType: "json"
+    month_params:
+      stdYm: "{ym}"
+    page_param: "pageNo"
+    size_param: "numOfRows"
+    page_size: 1000
+    items_path: "response.body.items.item"
+    total_path: "response.body.totalCount"
+    result_code_path: "response.header.resultCode"
+    ok_codes: ["00", "0", "0000"]
+    columns:                      # 점검·정제에 쓰는 컬럼 역할
+      month: "stdYm"
+      region_code: "hcode"
+      region_name: "hname"
+      category: "ryLNm"
+      amount: ["avgAmt"]
+      count: ["avgCnt"]
+      amount_is_daily_avg: true   # 월별 일평균 → 월 합계 = 값 × 그 달 일수
+    category_aliases:             # 원본 표기 오류 정리 (원본 → 바른 이름)
+      "음식료픔": "음식료품"        # 2026-01부터 원본 오타 (STEP 0 확인)
+    processed_path: "data/processed/d1_clean.parquet"
+
+  d9:
+    title: "한국조폐공사_지역사랑상품권_가맹점_업종별_결제정보"
+    source: "공공데이터포털 15149767"
+    url: "https://apis.data.go.kr/B190001/localGiftsKsciPaymentV1/paymentsV1"
+    raw_dir: "data/raw/d9"
+    unit: "period"                # 월별로 받으면 호출이 672회 × 20초라 기간 전체를 구·군별로 받음
+    params:
+      returnType: "JSON"
+    month_params:
+      "cond[crtr_ym::GTE]": "{start_ym}"
+      "cond[crtr_ym::LTE]": "{end_ym}"
+    split_param: "cond[usage_rgn_cd::EQ]"
+    split_values_from: "busan_sigungu"
+    page_param: "page"
+    size_param: "perPage"
+    page_size: 1000
+    items_path: "data"
+    total_path: "matchCount"
+    columns:
+      month: "crtr_ym"
+      region_code: "emd_cd"
+      region_name: "emd_nm"
+      category: "ksic_nm"
+      category_code: "ksic"
+      amount: ["stlm_amt", "card_use_amt", "mbl_use_amt"]
+      count: ["stlm_nocs", "mbl_user_cnt"]
+      amount_is_daily_avg: false  # 월간 결제금액 그대로
+
+# 참고 자료(수기 입력 표) 경로
+ref:
+  report_stats: "ref/dongbaek_stats_bdi2025.csv"     # D10 부산연구원 보고서 표
+  report_category_map: "ref/report_category_map.csv" # D10 업종 → D1 업종 연결 (사람 검토)
+  industry_map: "ref/industry_map.csv"               # D1 업종 ↔ 동백전 사용 가능 여부 (사람 검토)
+  policy: "ref/policy.csv"

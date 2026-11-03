@@ -1,0 +1,7 @@
+﻿column,dtype,missing_rate,n_unique,example
+stdYm,str,0.0,42,202301
+hcode,str,0.0,206,2635055300
+hname,str,0.002,205,해운대구 좌3동
+ryLNm,str,0.0,12,미용
+avgAmt,int64,0.0,94829,6587217
+avgCnt,int64,0.0,8878,131

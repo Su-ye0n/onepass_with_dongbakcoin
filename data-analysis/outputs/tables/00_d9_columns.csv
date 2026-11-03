@@ -1,0 +1,14 @@
+﻿column,dtype,missing_rate,n_unique,example
+card_use_amt,float64,0.0001,50059,17300.0
+crtr_ym,str,0.0,42,202606
+emd_cd,str,0.0,208,26110133
+emd_nm,str,0.0874,191,광복동1가
+ksic,str,0.0,66,475
+ksic_nm,str,0.0,66,기타 생활용품 소매업
+mbl_use_amt,int64,0.0,7431,0
+mbl_user_cnt,int64,0.0,219,0
+par_ag,str,0.0,6,04
+par_gend,str,0.0121,2,M
+stlm_amt,int64,0.0,50753,17300
+stlm_nocs,int64,0.0,2035,1
+usage_rgn_cd,str,0.0,16,26110
