@@ -1,0 +1,8 @@
+data-analysis/
+frontend/
+docs/
+backend/module/*.py
+backend/module/tests/
+backend/module/onepass/
+backend/module/db/
+backend/fastapi/tests/

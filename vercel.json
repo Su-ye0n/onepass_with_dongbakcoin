@@ -1,0 +1,17 @@
+{
+  "builds": [
+    {
+      "src": "backend/fastapi/api/index.py",
+      "use": "@vercel/python",
+      "config": {
+        "includeFiles": [
+          "backend/fastapi/app/**",
+          "backend/module/results/four_scenario_v34/**"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "backend/fastapi/api/index.py" }
+  ]
+}
