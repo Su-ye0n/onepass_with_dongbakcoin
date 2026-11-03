@@ -670,35 +670,16 @@ function p1x(){
   const N=V.tx, rest={i:-1,n:REST,c:'#D9D2D5',name:'동백전 적용·기타'};
   const groups=P1GROUP.map(([k,label,idx,col])=>({k,label,col,items:k==='rest'?[rest]:idx.map(i=>({i,n:EX[i].n,c:EX[i].c,name:EX[i].name}))}));
   groups.forEach(g=>g.n=g.items.reduce((a,b)=>a+b.n,0));
-  const W=700,H=440,nw=14,x0=64,x1=300,x2=470,gG=18,gR=8;
-  const nR=groups.reduce((a,g)=>a+g.items.length,0);
-  const k=(H-20-(groups.length-1)*gG-(nR-groups.length)*gR)/N, hmin=3;
-  const hh=n=>Math.max(n*k,hmin);
-  // 노드 위치
-  let y=10; const L0={y:10+((groups.length-1)*gG+(nR-groups.length)*gR)/2,h:N*k};
-  groups.forEach(g=>{g.y=y;g.h=g.items.reduce((a,it)=>a+hh(it.n),0)+(g.items.length-1)*gR;let yy=g.y;g.items.forEach(it=>{it.y=yy;it.h=hh(it.n);yy+=it.h+gR;});y+=g.h+gG;});
-  const band=(xa,ya0,ya1,xb,yb0,yb1)=>{const xm=(xa+xb)/2;return `M${xa},${ya0} C${xm},${ya0} ${xm},${yb0} ${xb},${yb0} L${xb},${yb1} C${xm},${yb1} ${xm},${ya1} ${xa},${ya1}Z`;};
-  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="결제가 이유별로 갈라지는 흐름">`;
-  // 결제 → 묶음
-  let ly=L0.y;
-  groups.forEach(g=>{const lh=g.n*k;let gy=g.y,gh=g.h;
-    s+=`<path d="${band(x0+nw,ly,ly+lh,x1,gy,gy+gh)}" fill="${g.col}" opacity=".18"/>`;ly+=lh;});
-  // 묶음 → 이유
-  groups.forEach(g=>{let sy=g.y;g.items.forEach(it=>{const on=it.i===xsel;
-    s+=`<path data-i="${it.i}" d="${band(x1+nw,sy,sy+it.h,x2,it.y,it.y+it.h)}" fill="${it.c}" opacity="${on?.75:.35}" style="cursor:${it.i>=0?'pointer':'default'}"><title>${it.name} ${fmt(it.n)}건</title></path>`;sy+=it.h+gR;});});
-  // 노드
-  s+=`<rect x="${x0}" y="${L0.y}" width="${nw}" height="${L0.h}" rx="3" fill="#241A1E"/>
-    <text x="${x0-8}" y="${L0.y+L0.h/2-6}" font-size="13" font-weight="900" fill="#241A1E" text-anchor="end">결제</text>
-    <text x="${x0-8}" y="${L0.y+L0.h/2+11}" font-size="12" fill="#5F6470" text-anchor="end">${fmt(N)}건</text>`;
-  groups.forEach(g=>{s+=`<rect x="${x1}" y="${g.y}" width="${nw}" height="${g.h}" rx="3" fill="${g.col}"/>
-    <text x="${x1-8}" y="${g.y+g.h/2-2}" font-size="12.5" font-weight="800" fill="${g.col==='#BDB4B8'?'#8C8186':g.col}" text-anchor="end" stroke="#fff" stroke-width="3" paint-order="stroke">${g.label}</text>
-    <text x="${x1-8}" y="${g.y+g.h/2+13}" font-size="11.5" fill="#5F6470" text-anchor="end" stroke="#fff" stroke-width="3" paint-order="stroke">${fmt(g.n)}건 · ${Math.round(g.n/N*100)}%</text>`;
-    g.items.forEach(it=>{const on=it.i===xsel;s+=`<rect data-i="${it.i}" x="${x2}" y="${it.y}" width="${nw}" height="${it.h}" rx="2" fill="${it.c}" style="cursor:${it.i>=0?'pointer':'default'}"/>
-      <text data-i="${it.i}" x="${x2+nw+8}" y="${it.y+it.h/2+4}" font-size="12.5" font-weight="${on?900:600}" fill="#241A1E" style="cursor:${it.i>=0?'pointer':'default'}">${it.name} <tspan fill="#8C8186" font-weight="600">${fmt(it.n)}</tspan></text>`;});});
-  s+='</svg>';
+  const mx=Math.max(...EX.map(e=>e.n),REST);
+  const body=groups.map(g=>`<div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;font-weight:800;color:${g.col==='#BDB4B8'?'#8C8186':g.col};border-bottom:2px solid ${g.col};padding:0 4px 4px;margin-bottom:6px"><span>${g.label}</span><span>${fmt(g.n)}건 · ${Math.round(g.n/N*100)}%</span></div>
+      ${g.items.map(it=>`<div class="xrow ${it.i===xsel?'on':''}" data-i="${it.i}" style="${it.i<0?'cursor:default':''}">
+        <div class="n">${it.name}</div>
+        <div class="track"><div class="fill" style="width:${Math.max(it.n/mx*100,.6)}%;background:${it.c}"></div></div>
+        <div class="v">${fmt(it.n)}건<small>${(it.n/N*100).toFixed(1)}%</small></div></div>`).join('')}</div>`).join('');
   const e=EX[xsel];
   $('waffle').innerHTML=`<div class="ct">결제 ${fmt(N)}건은 어디서 동백전 혜택을 놓치나 <span class="mute" style="font-weight:500">· 원패스 자동 선택 + 현재 잔액</span></div>
-    <div style="margin:auto 0">${s}</div>
+    <div style="margin:14px 0 auto">${body}</div>
     <div style="display:flex;align-items:center;gap:12px;background:#FAF5F7;border-radius:12px;padding:12px 14px">
       <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:15px">${e.name} <span class="pill ${e.fix}" style="margin-left:4px">${e.fixT}</span></div><div class="mute" style="margin-top:3px;font-size:13px">${e.mean}</div></div>
       ${e.go?`<button class="btn" id="goP2">관련 고객 보기 →</button>`:''}${e.k==='INSUFFICIENT_BALANCE'?`<button class="btn ghost" id="goP3">자동충전 비교</button>`:''}</div>`;
