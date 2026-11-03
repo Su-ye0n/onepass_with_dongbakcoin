@@ -302,8 +302,7 @@ ul.as li .tag{margin-top:2px}
         <div id="fsum" style="display:flex;gap:18px;align-items:center;flex-shrink:0"></div>
       </div>
       <div class="row">
-        <div class="card" style="width:340px;padding:16px 14px" id="clist"></div>
-        <div class="card" style="width:830px" id="ucard"></div>
+        <div class="card" style="width:1130px" id="ucard"></div>
         <div class="card grow" id="urec"></div>
       </div>
     </section>
@@ -781,9 +780,12 @@ function p2(){
   $('fgu').onchange=e=>{F.gu=e.target.value?new Set([e.target.value]):new Set();usel=null;p2();};
   $('freset').onclick=()=>{resetF();gsel=null;usel=null;p2();};
   const L=U.filter(pass).filter(inG), n=L.length;
-  $('fsum').innerHTML=`<div><div class="mute">선택한 고객</div><div class="big">${n}<small>/ 240명</small></div></div>
-    <div><div class="mute">원패스 개선액 합계</div><div class="big" style="color:var(--b7)">+${fmt(sum(L,u=>u.c-u.a))}<small>원</small></div></div>`;
-  clist(L);ucard(L);p2hero();
+  const sorted=[...L].sort((x,y)=>(y.d-y.a)-(x.d-x.a));
+  if(!sorted.find(u=>u.id===usel)) usel=sorted.length?sorted[0].id:null;
+  $('fsum').innerHTML=`<div class="fgrp" style="flex-direction:row;align-items:center;gap:8px"><h6 style="white-space:nowrap">고객 <b style="color:var(--b7)">${n}</b>명</h6>
+    <select class="s" id="usel" style="width:290px;font-weight:700">${sorted.map(x=>`<option value="${x.id}" ${x.id===usel?'selected':''}>${x.id} · ${x.g} · ${x.age} · ${x.gu} · +${fmt(x.d-x.a)}원</option>`).join('')||'<option>조건에 맞는 고객 없음</option>'}</select></div>`;
+  if($('usel')) $('usel').onchange=e=>{usel=e.target.value;ucard(L);};
+  ucard(L);p2hero();
 }
 function mode(a){const c={};a.forEach(x=>c[x]=(c[x]||0)+1);const k=Object.keys(c).sort((x,y)=>c[y]-c[x])[0];return k?`${k} ${c[k]}명`:null;}
 function rec(u){
@@ -792,24 +794,12 @@ function rec(u){
   if(u.d-u.c>u.c-u.a) return ['R2 조건부 자동충전 검토',`잔액이 모자라 동백전 혜택이 끊긴 결제가 있습니다. 충전까지 되면 월 +${won(u.d-u.c)} 더 받습니다(가정·상한).`];
   return ['원패스 선택 효과 설명',`결제 카드를 자동으로 골라 주면 월 +${won(u.c-u.a)} 늘어납니다.`];
 }
-function clist(L){
-  const sorted=[...L].sort((x,y)=>(y.d-y.a)-(x.d-x.a));
-  if(sorted.length&&(!usel||!sorted.find(u=>u.id===usel))) usel=sorted[0].id;
-  const mx=Math.max(1,...sorted.map(u=>u.d-u.a));
-  $('clist').innerHTML=`<div class="ct">고객 선택</div><div class="cs">${gsel?gsel.replace(',','·')+' 그룹 · ':''}${sorted.length}명 · 혜택이 많이 늘어나는 순</div>
-    <div class="scroll" style="flex:1;margin-top:8px">${sorted.map(u=>`<div data-u="${u.id}" class="crow ${u.id===usel?'on':''}">
-      <div style="display:flex;justify-content:space-between;align-items:baseline"><b>${u.id}</b><span class="mute">${u.age} · ${u.gu}</span></div>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:3px"><span class="gchip" style="background:${GCOL[u.g]};color:${['G4','G5','G7'].includes(u.g)?'var(--ink)':'#fff'}">${u.g}</span>
-        <div class="tr" style="flex:1;height:7px;background:#F4EEF0;border-radius:4px;overflow:hidden"><div style="height:100%;width:${(u.d-u.a)/mx*100}%;background:var(--b5)"></div></div>
-        <span style="font-size:12px;font-weight:700;color:var(--b7);min-width:62px;text-align:right">+${fmt(u.d-u.a)}</span></div></div>`).join('')||'<div class="mute" style="padding:20px">조건에 맞는 고객이 없습니다.</div>'}</div>`;
-  $('clist').querySelectorAll('[data-u]').forEach(r=>r.onclick=()=>{usel=r.dataset.u;clist(L);ucard(L);});
-}
 function ucard(L){
   if(!usel){$('ucard').innerHTML='<div class="ct">고객 상세</div><div class="ph" style="flex:1"><b>왼쪽에서 고객을 고르세요</b></div>';$('urec').innerHTML='';return;}
   const u=UBY[usel], [ra,rb]=rec(u), tx=txRows(u.id, ()=>{if(usel===u.id)ucard(L);});
   const rows=tx?[...tx].sort((x,y)=>(y.b3-y.b0)-(x.b3-x.b0)):[];
   const changed=rows.filter(r=>r.c1!==r.c0||r.c3!==r.c0).length;
-  $('ucard').innerHTML=`<div style="display:flex;align-items:baseline;gap:12px"><div class="big" style="font-size:30px">${u.id}</div><div class="mute">${u.g} ${COH.find(c=>c[0]===u.g)[1]} · 실제 개인정보 없음</div></div>
+  $('ucard').innerHTML=`<div style="display:flex;align-items:baseline;gap:12px"><div class="big" style="font-size:30px">${u.id}</div><div class="mute">${u.g} ${COH.find(c=>c[0]===u.g)[1]} · 실제 개인정보 없음</div><div class="mute" style="margin-left:auto">상단에서 고객을 바꿀 수 있습니다 · 혜택 증가 순</div></div>
    <div style="display:flex;gap:18px;margin-top:10px">
      <div style="flex:1;min-width:0">
        <div><span class="chip">${u.age}</span><span class="chip">${u.gu}</span><span class="chip">${u.sp}</span><span class="chip">${u.st}</span></div>
