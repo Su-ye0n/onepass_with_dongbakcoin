@@ -46,3 +46,23 @@ class Merchant(Base):
     # 지역 및 데이터 출처
     region_code: Mapped[str | None] = mapped_column(Text)
     source_status: Mapped[str | None] = mapped_column(Text)
+
+
+
+
+
+
+    # --------- 2026.10.28.13:09 권지은님 컬럼 7개 반영 -----------------
+    
+    # 가맹점 상세 위치 정보
+    address: Mapped[str | None] = mapped_column(Text)
+    lat: Mapped[Decimal | None] = mapped_column(Numeric(9, 6))
+    lon: Mapped[Decimal | None] = mapped_column(Numeric(9, 6))
+
+    # 브랜드 및 세부 업종
+    brand: Mapped[str | None] = mapped_column(Text)
+    sub_group: Mapped[str | None] = mapped_column(Text)
+
+    # 원본 데이터 출처 및 캐시백 정보 근거
+    data_source: Mapped[str | None] = mapped_column(Text)
+    cashback_basis: Mapped[str | None] = mapped_column(Text)
