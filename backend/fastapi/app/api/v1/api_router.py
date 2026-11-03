@@ -13,6 +13,7 @@ from app.api.v1.routers.payment_router import (
     user_payment_router,
 )
 
+from app.api.v1.routers.admin_router import router as admin_router
 from app.api.v1.routers.category_priority_router import (
     router as category_priority_router,
 )
@@ -38,3 +39,6 @@ api_router.include_router(user_router)
 
 # 업종별 카드 우선순위 API
 api_router.include_router(category_priority_router)
+
+# 직원 대시보드 API (읽기 전용)
+api_router.include_router(admin_router)

@@ -1,0 +1,84 @@
+{
+  "scenario_benefits_won": {
+    "S00": 1459931,
+    "S10": 2784649,
+    "S01": 2348201,
+    "S11": 4443873
+  },
+  "total_change_S11_minus_S00_won": 2983942,
+  "shapley_balance_effect_won": "1710195",
+  "shapley_behavior_effect_won": "1273747",
+  "interaction_effect_won": 770954,
+  "balance_effect_at_onepass_won": 2095672,
+  "onepass_effect_at_current_balance_won": 888270,
+  "summaries": {
+    "S00": {
+      "users": 240,
+      "transactions": 7540,
+      "transaction_amount_won": 217449500,
+      "estimated_benefit_won": 1459931,
+      "dongbaek_count": 430,
+      "bnk_count": 6934,
+      "unresolved_count": 176,
+      "dongbaek_cashback_won": 881402,
+      "bnk_cash_won": 578529,
+      "bnk_points": 109283
+    },
+    "S10": {
+      "users": 240,
+      "transactions": 7540,
+      "transaction_amount_won": 217449500,
+      "estimated_benefit_won": 2784649,
+      "dongbaek_count": 1078,
+      "bnk_count": 6340,
+      "unresolved_count": 122,
+      "dongbaek_cashback_won": 2214816,
+      "bnk_cash_won": 569833,
+      "bnk_points": 104399
+    },
+    "S01": {
+      "users": 240,
+      "transactions": 7540,
+      "transaction_amount_won": 217449500,
+      "estimated_benefit_won": 2348201,
+      "dongbaek_count": 648,
+      "bnk_count": 6710,
+      "unresolved_count": 182,
+      "dongbaek_cashback_won": 1325096,
+      "bnk_cash_won": 1023105,
+      "bnk_points": 100832
+    },
+    "S11": {
+      "users": 240,
+      "transactions": 7540,
+      "transaction_amount_won": 217449500,
+      "estimated_benefit_won": 4443873,
+      "dongbaek_count": 1606,
+      "bnk_count": 5812,
+      "unresolved_count": 122,
+      "dongbaek_cashback_won": 3444980,
+      "bnk_cash_won": 998893,
+      "bnk_points": 81741
+    }
+  },
+  "methodology": {
+    "data": "ORIGINAL_SYNTHETIC_V3_4_BASE",
+    "policy": "NEONDB_DB_POLICY",
+    "behavior": "V2_USAGE_STYLE_SYNTHETIC_ASSUMPTION",
+    "wallet_B": "SUFFICIENT_BALANCE_THEORETICAL",
+    "choice_engine": "SEQUENTIAL_GREEDY_NOT_GLOBAL_OPTIMUM",
+    "shapley": "AVERAGE_OF_TWO_INTERVENTION_ORDERS",
+    "point_rate": "NON_CASH_REWARD_VALUE_ZERO",
+    "real_authorization": false,
+    "auto_topup": false,
+    "data_version": "v3.4",
+    "source_metadata": {
+      "data_version": "v3.4",
+      "source_user_count": 240,
+      "source_transaction_count": 7540,
+      "source_transaction_amount_won": 217449500,
+      "source_id_uniqueness_checked": true,
+      "v34_amount_check_performed": true
+    }
+  }
+}
