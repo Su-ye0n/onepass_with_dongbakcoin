@@ -1,1 +1,8 @@
-ÿþ
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic-settings
+psycopg[binary]
+python-dotenv
+httpx
+pytest
