@@ -257,30 +257,26 @@ ul.as li .tag{margin-top:2px}
     </section>
 
     <!-- ================= P1 ================= -->
-    <section class="page" id="p1" style="grid-template-rows:128px 1fr 300px">
-      <div class="row" id="p1kpi"></div>
-      <div class="row">
-        <div class="card" style="width:760px">
-          <div class="ct">혜택이 어디서 끊기나 · 원패스 사용 시 동백전 배제 사유 </div>
-          <div class="cs">원패스 자동 선택 + 현재 잔액 조건의 7,540건 중 대표 배제 사유 판정 건수 · 사유를 누르면 오른쪽에 설명</div>
-          <div id="xbars" style="margin-top:10px;display:flex;flex-direction:column;gap:2px"></div>
-          <div class="help-box" style="margin-top:auto"><b>읽는 법</b> 막대 = 그 이유로 동백전 혜택이 안 붙은 결제 건수(금액·고객 수 아님). 위 두 줄만 직원 권유로 바꿀 수 있습니다.</div>
+    <section class="page" id="p1" style="grid-template-rows:172px 1fr">
+      <div class="card hero">
+        <div>
+          <h2>동백전 혜택은 <em>어디서 끊기고</em><br>누가 풀 수 있나요?</h2>
+          <div class="sub">원패스가 카드를 골라 줘도 동백전 혜택이 안 붙은 결제를 이유별로 나눴습니다. 직원 권유로 풀 수 있는 이유와 정책 영역을 구분해서 봅니다.</div>
         </div>
-        <div class="card" style="width:520px" id="xdetail"></div>
-        <div class="card grow" id="p1effect"></div>
+        <div class="top5" id="p1hero"></div>
       </div>
       <div class="row">
-        <div class="card" style="width:580px" id="alloc"></div>
-        <div class="card" style="width:580px" id="p1policy"></div>
-        <div class="card grow">
-          <div class="ct">가맹점 업종 · 동백전 가맹 상태 </div>
-          <div class="cs">NeonDB 가맹점 1,677곳 · 업종별 가맹/비가맹/미상</div>
-          <div id="indbars" class="scroll" style="margin-top:6px"></div>
+        <div class="card" style="width:760px" id="waffle"></div>
+        <div class="card" style="width:500px" id="alloc"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:16px;min-width:0">
+          <div class="card" id="p1policy" style="flex:0 0 auto"></div>
+          <div class="card grow" id="p1ind"></div>
         </div>
       </div>
     </section>
 
-    <!-- ================= P2 ================= -->
+    
+<!-- ================= P2 ================= -->
     <section class="page" id="p2" style="grid-template-rows:140px 1fr">
       <div class="card" style="flex-direction:row;gap:22px;align-items:stretch">
         <div id="filters" style="display:flex;gap:16px;flex:1;min-width:0;flex-wrap:wrap"></div>
@@ -651,92 +647,88 @@ $('metric').onchange=e=>{metric=e.target.value;renderMap();};
 $('bigonly').onclick=()=>{bigOnly=!bigOnly;$('bigonly').classList.toggle('on',bigOnly);renderMap();};
 
 // ================= P1 =================
-let p1sc='S01';
-function p1kpi(){
-  const k=[['평가 사용자',fmt(V.users),'명','고유 user_id · 실은행 고객 아님',''],
-    ['보정 거래',fmt(V.tx),'건','2026-06 · 거래 ID 기준',''],
-    ['보정 거래액','2억 1,745','만 원','217,449,500원 · v3.4',''],
-    ['동백전 보유',fmt(V.member),'명',`${(V.member/V.users*100).toFixed(1)}% (${V.member}/${V.users}) · 활성 지갑 ${V.active}명과 구분`,''],
-    ['카드 슬롯',fmt(DB.slots),'개','보조 지표 · 상품 종류 수 아님','']];
-  let h=k.map(([l,v,u,s,t])=>`<div class="card kpi grow"><div class="l">${l} ${t}</div><div class="big">${v}<small>${u}</small></div><div class="s">${s}</div></div>`).join('');
-  const sc=V.sc[p1sc];
-  h+=`<div class="card kpi" style="width:400px"><div class="l">고객 혜택 합계 
-      <span class="seg" style="margin-left:auto"><button data-s="S00" class="${p1sc==='S00'?'on':''}">기존 습관</button><button data-s="S01" class="${p1sc==='S01'?'on':''}">원패스</button></span></div>
-      <div class="big">${fmt(sc.tot)}<small>원</small></div><div class="s">${sc.pay} + ${sc.bal} · 240명 · 1인 ${won(sc.tot/240)}</div></div>`;
-  $('p1kpi').innerHTML=h;
-  $('p1kpi').querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{p1sc=b.dataset.s;p1kpi();});
-}
+function ALLOC(sc){const A=OV.allocation[sc],g={};Object.keys(A).forEach(k=>g[k]=[A[k].count,A[k].amount_won]);return g;}
+const P1GROUP=[['help','직원 권유로 풀 수 있음',[0,1],'var(--b7)'],['policy','정책·가맹점 영역',[2,3,4],'var(--slate)'],['rest','동백전 적용·기타',[],'#BDB4B8']];
 let xsel=1;
+function p1hero(){
+  const help=EX[0].n+EX[1].n, pol=EX[2].n+EX[3].n+EX[4].n, d=V.sc.S01.tot-V.sc.S00.tot;
+  const cards=[
+    [0,'동백전 미보유',EX[0].n,'가입 안내로 풀 수 있음','var(--b8)'],
+    [1,'잔액 부족',EX[1].n,'자동충전으로 풀 수 있음','var(--b6)'],
+    [2,'비가맹점 · 온라인',EX[2].n+EX[3].n,'정책 영역 · 직원 해결 불가','var(--slate)'],
+    [null,'카드 자동 선택 효과',null,`240명 합계 · 1인 +${won(d/240)}/월`,'var(--b7)']];
+  $('p1hero').innerHTML=cards.map(([i,n,c,sub,col])=>`<div class="t5 ${i===xsel?'on':''}" ${i!==null?`data-i="${i}"`:'data-go="p3"'} tabindex="0">
+     <div class="h"><span class="rk" style="background:${col}">${i===null?'원패스':i<2?'풀 수 있음':'정책 영역'}</span>
+     <div><div class="gv" style="color:${col}">${c===null?'+'+fmt(d/10000)+'만':fmt(c)}</div><div class="gl">${c===null?'원 · 월':'건 · '+(c/V.tx*100).toFixed(1)+'%'}</div></div></div>
+     <div class="nm">${n}</div><div class="ds">${sub}</div></div>`).join('')
+   +`<div class="t5" style="cursor:default;background:#FAF5F7"><div class="nm" style="margin-top:0">결제 ${fmt(V.tx)}건 중</div>
+     <div class="ds"><b style="color:var(--b7)">${fmt(help)}건(${Math.round(help/V.tx*100)}%)</b> 직원이 풀 수 있음</div><div class="ds"><b style="color:var(--slate)">${fmt(pol)}건(${Math.round(pol/V.tx*100)}%)</b> 정책 영역</div></div>`;
+  $('p1hero').querySelectorAll('[data-i]').forEach(c=>c.onclick=()=>{xsel=+c.dataset.i;p1hero();p1x();});
+  $('p1hero').querySelectorAll('[data-go]').forEach(c=>c.onclick=()=>show('p3'));
+}
 function p1x(){
-  const max=Math.max(...EX.map(e=>e.n));
-  $('xbars').innerHTML=EX.map((e,i)=>`<div class="xrow ${i===xsel?'on':''}" data-i="${i}">
-     <div class="n">${e.name}<small>${e.k}</small></div>
-     <div class="track"><div class="fill" style="width:${Math.max(e.n/max*100,.6)}%;background:${e.c}"></div></div>
-     <div class="v">${fmt(e.n)}건<small>${(e.n/V.tx*100).toFixed(1)}%</small></div></div>`).join('')+
-   `<div class="xrow" style="cursor:default"><div class="n" style="color:var(--mute)">나머지<small>적용 또는 기타·판정 유보</small></div>
-     <div class="track"><div class="fill" style="width:${REST/max*100}%;background:#D9D2D5"></div></div>
-     <div class="v" style="color:var(--mute)">${fmt(REST)}건<small>로그 미분리</small></div></div>`;
-  $('xbars').querySelectorAll('.xrow[data-i]').forEach(r=>r.onclick=()=>{xsel=+r.dataset.i;p1x();});
+  const items=[...EX.map((e,i)=>({i,n:e.n,c:e.c,name:e.name})),{i:-1,n:REST,c:'#D9D2D5',name:'동백전 적용·기타'}];
+  const order=[0,1,2,3,4,-1];
+  // 100칸 와플 (최대 나머지 방식)
+  const raw=items.map(x=>x.n/V.tx*100), base=raw.map(Math.floor); let left=100-base.reduce((a,b)=>a+b,0);
+  raw.map((v,k)=>[v-Math.floor(v),k]).sort((a,b)=>b[0]-a[0]).slice(0,left).forEach(([,k])=>base[k]++);
+  const cells=[];order.forEach(i=>{const k=items.findIndex(x=>x.i===i);for(let t=0;t<base[k];t++)cells.push(items[k]);});
+  const sz=30,gp=4;
+  let svg=`<svg viewBox="0 0 ${10*(sz+gp)} ${10*(sz+gp)}" style="width:370px;height:370px;flex-shrink:0" role="img" aria-label="결제 100칸으로 본 배제 사유">`;
+  cells.forEach((c,k)=>{const x=(k%10)*(sz+gp),y=Math.floor(k/10)*(sz+gp);
+    svg+=`<rect x="${x}" y="${y}" width="${sz}" height="${sz}" rx="5" fill="${c.c}" opacity="1" stroke="${c.i===xsel?'#241A1E':'none'}" stroke-width="${c.i===xsel?2.5:0}" data-i="${c.i}" style="cursor:${c.i>=0?'pointer':'default'}"><title>${c.name} ${fmt(c.n)}건</title></rect>`;});
+  svg+='</svg>';
+  const groups=P1GROUP.map(([k,label,idx,col])=>{const its=k==='rest'?[items[5]]:idx.map(i=>items[i]);const tot=its.reduce((a,b)=>a+b.n,0);
+    return `<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:${col};border-bottom:2px solid ${col};padding-bottom:3px;margin-bottom:5px"><span>${label}</span><span>${fmt(tot)}건 · ${Math.round(tot/V.tx*100)}%</span></div>
+      ${its.map(x=>`<div data-i="${x.i}" style="display:flex;align-items:center;gap:7px;font-size:13px;padding:3px 6px;border-radius:6px;cursor:${x.i>=0?'pointer':'default'};${x.i===xsel?'background:var(--b1)':''}"><i style="width:11px;height:11px;border-radius:3px;background:${x.c};flex-shrink:0"></i><span style="flex:1">${x.name}</span><b>${fmt(x.n)}</b></div>`).join('')}</div>`;}).join('');
   const e=EX[xsel];
-  $('xdetail').innerHTML=`<div class="ct">${e.name} <span class="pill ${e.fix}">${e.fixT}</span></div>
-    <div class="cs">${e.k} · 원패스 자동 선택 + 현재 잔액 조건</div>
-    <div class="big" style="margin-top:14px">${fmt(e.n)}<small>건 · 전체 거래의 ${(e.n/V.tx*100).toFixed(1)}%</small></div>
-    <div class="blk"><h5>무슨 뜻인가</h5><p>${e.mean}</p></div>
-    <div class="blk"><h5>직원이 검토할 대응</h5><p>${e.act}</p></div>
-    <div class="blk"><h5>읽을 때 주의</h5><p style="color:var(--warn)">${e.warn}</p></div>
-    <div style="margin-top:auto;display:flex;gap:8px">${e.go?`<button class="btn" id="goP2">P2에서 관련 고객군 보기 →</button>`:''}
-      ${e.k==='INSUFFICIENT_BALANCE'?`<button class="btn ghost" id="goP3">P3 자동충전 비교</button>`:''}
-      ${e.k==='NOT_OWNED'||e.k==='INSUFFICIENT_BALANCE'?`<button class="btn ghost" id="goP0">P0 구·군 현황에서 보기</button>`:''}</div>`;
+  $('waffle').innerHTML=`<div class="ct">결제 100건 중 동백전 혜택이 안 붙은 이유 <span class="mute" style="font-weight:500">· 원패스 자동 선택 + 현재 잔액</span></div>
+    <div style="display:flex;gap:28px;align-items:center;margin:auto 0">${svg}<div style="flex:1;min-width:0">${groups}</div></div>
+    <div style="display:flex;align-items:center;gap:12px;background:#FAF5F7;border-radius:12px;padding:12px 14px">
+      <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:15px">${e.name} <span class="pill ${e.fix}" style="margin-left:4px">${e.fixT}</span></div><div class="mute" style="margin-top:3px;font-size:13px">${e.mean}</div></div>
+      ${e.go?`<button class="btn" id="goP2">관련 고객 보기 →</button>`:''}${e.k==='INSUFFICIENT_BALANCE'?`<button class="btn ghost" id="goP3">자동충전 비교</button>`:''}</div>`;
+  $('waffle').querySelectorAll('[data-i]').forEach(r=>{const i=+r.dataset.i;if(i>=0)r.onclick=()=>{xsel=i;p1hero();p1x();};});
   if(e.go) $('goP2').onclick=()=>{resetF();F.ws=new Set(e.go.ws);gsel=null;usel=null;p2();show('p2');};
   if($('goP3')) $('goP3').onclick=()=>show('p3');
-  if($('goP0')) $('goP0').onclick=()=>{metric=e.k==='NOT_OWNED'?'mem':'tot';$('metric').value=metric;renderMap();show('p0');};
 }
-function p1effect(){
-  const a=V.sc.S00.tot,b=V.sc.S01.tot,d=b-a;
-  $('p1effect').innerHTML=`<div class="ct">카드 선택 효과 · 원패스가 결제 카드를 골라 주면 </div>
-   <div class="cs">기존 카드 습관 + 현재 잔액 → 원패스 자동 선택 + 현재 잔액 · 같은 7,540건 다시 계산</div>
-   <div style="display:flex;align-items:flex-end;gap:22px;margin-top:18px">
-     <div><div class="mute">기존 카드 습관</div><div class="big" style="font-size:30px">${fmt(a)}<small>원</small></div></div>
-     <div style="font-size:30px;color:var(--b3);padding-bottom:4px">→</div>
-     <div><div class="mute">원패스 자동 선택</div><div class="big" style="font-size:30px;color:var(--b7)">${fmt(b)}<small>원</small></div></div></div>
-   <div style="background:var(--b1);border-radius:14px;padding:14px 18px;margin-top:16px">
-     <div class="mute" style="color:var(--b6);font-weight:700">얻을 수 있는 이득</div>
-     <div class="big" style="color:var(--b7);font-size:40px">+${fmt(d)}<small>원 (+${(d/a*100).toFixed(1)}%)</small></div>
-     <div class="mute" style="margin-top:4px">240명 합계 · 1인 평균 +${fmt(d/240)}원/월</div></div>
-   <div class="help-box"><b>읽는 법</b>고객이 결제할 때마다 원패스가 혜택이 가장 큰 카드를 대신 골라 주면 늘어나는 혜택입니다. 잔액은 지금 그대로라 충전 효과는 들어 있지 않습니다. 실제 전환율이나 은행 수익이 아닙니다.</div>
-   <button class="btn ghost" style="margin-top:auto" onclick="show('p3')">P3 시나리오 비교 →</button>`;
-}
-let alsc='S01';
 function alloc(){
-  const idx={S00:5,S01:7,S11:9}[alsc];
-  const grp={db:[0,0],cr:[0,0],ck:[0,0],none:[0,0]};
-  const AL=OV.allocation[alsc];Object.keys(grp).forEach(k=>{grp[k]=[AL[k].count,AL[k].amount_won];});
-  const parts=[['db','동백전','var(--b8)'],['cr','BNK 신용','var(--b5)'],['ck','BNK 체크','var(--b3)'],['none','미배정','#D9D2D5']];
-  const T=V.amount;
-  $('alloc').innerHTML=`<div class="ct">결제수단 배정 · 어떤 카드로 결제됐나 
-     <span class="seg" style="margin-left:auto">${['S00','S01','S11'].map(s=>`<button data-s="${s}" class="${alsc===s?'on':''}">${s==='S00'?'기존 습관':s==='S01'?'원패스':'원패스+잔액'}</button>`).join('')}</span></div>
-   <div class="cs">v3.4 거래 7,540건 · 금액 기준 막대 · ${V.sc[alsc].pay} + ${V.sc[alsc].bal}</div>
-   <div class="sbar" style="height:44px;margin-top:12px">${parts.map(([k,n,c])=>`<div style="width:${grp[k][1]/T*100}%;background:${c};${k==='ck'||k==='none'?'color:var(--ink)':''}">${grp[k][1]/T>.07?n+' '+Math.round(grp[k][1]/T*100)+'%':''}</div>`).join('')}</div>
-   <table class="t" style="margin-top:2px"><tr><th>수단</th><th class="r">건수</th><th class="r">금액</th><th class="r">금액 비중</th></tr>
-   ${parts.map(([k,n,c])=>`<tr><td><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${c};margin-right:6px"></i>${n}</td><td class="r">${fmt(grp[k][0])}건</td><td class="r">${won(grp[k][1])}</td><td class="r">${(grp[k][1]/T*100).toFixed(1)}%</td></tr>`).join('')}</table>
-   <div class="help-box" style="margin-top:auto"><b>읽는 법</b> 버튼으로 같은 결제가 어느 수단으로 옮겨 가는지 비교합니다.</div>`;
-  $('alloc').querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{alsc=b.dataset.s;alloc();});
+  const parts=[['db','동백전','var(--b8)','#fff'],['cr','BNK 신용','var(--b5)','#fff'],['ck','BNK 체크','var(--b2)','var(--ink)'],['none','미배정','#D9D2D5','var(--ink)']];
+  const scs=[['S00','지금 습관'],['S01','원패스'],['S11','원패스+잔액']];
+  const W=440,H=330,T=10,B=44,bw=96,gap=(W-bw*3)/4,Y=v=>T+v*(H-T-B);
+  let svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="시나리오별 결제수단 배정">`;
+  const tot=V.amount;
+  scs.forEach(([sc,label],i)=>{const g=ALLOC(sc),x=gap+i*(bw+gap);let acc=0;
+    parts.forEach(([k,n,col,tc])=>{const v=g[k][1]/tot,y=Y(acc),h=v*(H-T-B);
+      svg+=`<rect x="${x}" y="${y}" width="${bw}" height="${Math.max(h,0)}" fill="${col}"><title>${n} ${fmt(g[k][0])}건 · ${won(g[k][1])}</title></rect>`;
+      if(h>18) svg+=`<text x="${x+bw/2}" y="${y+h/2+4}" font-size="12" font-weight="800" fill="${tc}" text-anchor="middle">${Math.round(v*100)}%</text>`;
+      acc+=v;});
+    svg+=`<text x="${x+bw/2}" y="${H-B+18}" font-size="12.5" font-weight="700" fill="#241A1E" text-anchor="middle">${label}</text>`;
+    if(sc==='S11') svg+=`<text x="${x+bw/2}" y="${H-B+34}" font-size="10.5" fill="#8A6326" text-anchor="middle">가정 · 잔액 넉넉</text>`;});
+  svg+='</svg>';
+  const db0=ALLOC('S00').db[1]/tot,db1=ALLOC('S01').db[1]/tot,db2=ALLOC('S11').db[1]/tot;
+  $('alloc').innerHTML=`<div class="ct">같은 결제가 어느 카드로 옮겨 가나</div><div class="cs">결제 금액 비중 · 보정 거래 ${fmt(V.tx)}건</div>
+    <div style="margin-top:10px">${svg}</div>
+    <div class="leg" style="justify-content:center">${parts.map(([k,n,col])=>`<span><i style="background:${col}"></i>${n}</span>`).join('')}</div>
+    <div class="help-box" style="margin-top:auto"><b>읽는 법</b>동백전 비중이 ${Math.round(db0*100)}% → ${Math.round(db1*100)}% → ${Math.round(db2*100)}%로 커지는 만큼이 원패스와 충전 효과입니다.</div>`;
 }
 function p1policy(){
-  const r=DB.policies.map(p=>`<tr><td><b>${p.id}</b> ${tag('t-asm',p.src==='SIMULATED'?'가상':(p.src||'출처 미상'))}</td><td>${p.start} ~ ${p.end}</td><td class="r">${fmt(p.cap/1e4)}만 원</td>
-     <td>${p.rates.map(x=>Math.round(x*100)+'%').join(' / ')}</td></tr>`).join('');
-  $('p1policy').innerHTML=`<div class="ct">동백전 정책 정보 <span class="mute" style="font-weight:500">· 조회 전용</span></div>
-   <div class="cs">요율은 가맹점 매출 10억 이하 / 10~30억 / 30억 초과 순</div>
-   <table class="t" style="margin-top:8px"><tr><th>정책</th><th>적용 기간</th><th class="r">월 적용 한도</th><th>캐시백 요율</th></tr>${r}</table>
-   <div class="help-box"><b>읽는 법</b>같은 1만 원 결제도 작은 가게(매출 10억 이하)면 캐시백 1,000원, 큰 가게(30억 초과)면 0원입니다. 정책 출처가 공식 확인(VERIFIED)이 아니면 <b>가상·확인 대기</b> 값입니다.</div>`;
+  const pol=DB.policies.find(p=>p.start<='2026-06-30'&&(!p.end||p.end>'2026-06-01'))||DB.policies[0];
+  const bandName={'LE_10B':'10억 이하','GT_10B_LE_30B':'10~30억','GT_30B':'30억 초과','UNKNOWN':'미상'};
+  const cnt=Object.fromEntries(DB.bands.map(([b,c])=>[bandName[b]||b,c]));
+  const rows=[['10억 이하',pol?pol.rates[0]:null],['10~30억',pol?pol.rates[1]:null],['30억 초과',pol?pol.rates[2]:null],['미상',null]];
+  const mxc=Math.max(...rows.map(r=>cnt[r[0]]||0));
+  $('p1policy').innerHTML=`<div class="ct">가맹점 매출 규모별 캐시백 ${pol&&pol.src!=='VERIFIED'?'<span class="tag t-asm">가정 · 정책 확인 대기</span>':''}</div>
+    <div class="cs">${pol?pol.id+' · 월 한도 '+fmt(pol.cap/1e4)+'만 원':''}</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px;align-items:end">
+    ${rows.map(([n,r])=>{const c=cnt[n]||0;return `<div style="text-align:center"><div style="font-size:24px;font-weight:900;color:${r?'var(--b7)':'var(--mute)'}">${r==null?'—':Math.round(r*100)+'%'}</div>
+      <div style="height:70px;display:flex;align-items:flex-end;justify-content:center;margin-top:4px"><div style="width:42px;height:${Math.max(c/mxc*70,3)}px;background:${r?'var(--b3)':'#D9D2D5'};border-radius:4px 4px 0 0"></div></div>
+      <div style="font-size:12.5px;font-weight:700;margin-top:4px">${n}</div><div class="mute">${fmt(c)}곳</div></div>`;}).join('')}</div>`;
 }
 function p1ind(){
-  const mx=Math.max(...DB.ind.map(r=>r[1]+r[2]+r[3]));
-  $('indbars').innerHTML=DB.ind.map(([n,a,b,c])=>`<div class="hbar"><span>${n}</span><div class="tr">
-     <div style="width:${a/mx*100}%;background:var(--b7)"></div><div style="width:${b/mx*100}%;background:var(--b2)"></div><div style="width:${c/mx*100}%;background:var(--sand)"></div></div>
-     <span class="mute">${fmt(a+b+c)}곳</span></div>`).join('')+
-   `<div class="leg" style="margin-top:6px"><span><i style="background:var(--b7)"></i>가맹</span><span><i style="background:var(--b2)"></i>비가맹</span><span><i style="background:var(--sand)"></i>미상(판정 유보)</span>
-    <span style="margin-left:auto">매출 구간 미상 ${DB.bands.find(b=>b[0]==='미상')[1]}곳</span></div>`;
+  const rows=DB.ind.filter(r=>r[1]+r[2]+r[3]>0).slice(0,12), mx=Math.max(...rows.map(r=>r[1]+r[2]+r[3]));
+  $('p1ind').innerHTML=`<div class="ct">업종별 동백전 가맹 비율</div><div class="cs">가맹점 ${fmt(DB.ind.reduce((a,r)=>a+r[1]+r[2]+r[3],0))}곳 · 막대 길이 = 가맹점 수</div>
+    <div style="margin-top:8px">${rows.map(([n,a,b,c])=>{const t=a+b+c;return `<div class="hbar" style="grid-template-columns:86px 1fr 52px"><span>${n}</span><div class="tr" style="width:${t/mx*100}%"><div style="width:${a/t*100}%;background:var(--b7)"></div><div style="width:${b/t*100}%;background:var(--b2)"></div><div style="width:${c/t*100}%;background:var(--sand)"></div></div><span style="text-align:right;font-weight:700;color:var(--b7)">${Math.round(a/t*100)}%</span></div>`;}).join('')}</div>
+    <div class="leg" style="margin-top:auto;padding-top:6px"><span><i style="background:var(--b7)"></i>가맹</span><span><i style="background:var(--b2)"></i>비가맹</span><span><i style="background:var(--sand)"></i>미상</span><span style="margin-left:auto">오른쪽 % = 가맹 비율</span></div>`;
 }
 
 // ================= P2 =================
@@ -865,7 +857,7 @@ function s02(){
 }
 
 renderTop5();renderMap();renderInfo();
-p1kpi();p1x();p1effect();alloc();p1policy();p1ind();p2();p3();s02();
+p1hero();p1x();alloc();p1policy();p1ind();p2();p3();s02();
 show((location.hash||'#p0').slice(1));
 }
 boot();
