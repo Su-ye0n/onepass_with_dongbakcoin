@@ -149,6 +149,7 @@ ul.as li .tag{margin-top:2px}
 /* 읽는 법 박스 (F-SOI chart-help 형식) */
 .help-box{margin-top:10px;padding:10px 13px;background:#FBF6F8;border-left:3px solid var(--b5);border-radius:0 8px 8px 0;font-size:12.8px;line-height:1.6}
 .help-box b{color:var(--b7)}
+.help-box{min-height:84px;box-sizing:border-box}
 .help-box>b:first-child{display:block;font-size:12px;letter-spacing:.02em;margin-bottom:3px}
 /* ===== P0 지도 ===== */
 .hero{height:172px;box-sizing:border-box;overflow:hidden;display:grid;grid-template-columns:440px minmax(0,1fr);gap:24px;align-items:center;padding:12px 22px}
@@ -166,7 +167,10 @@ ul.as li .tag{margin-top:2px}
 .t5 .gv{font-size:24px;font-weight:900;color:var(--b7);line-height:1;text-align:right}
 .t5 .gl{font-size:10.5px;color:var(--mute);text-align:right;margin-top:3px}
 .t5 .nm{font-size:18px;font-weight:900;margin-top:4px}
-.t5 .ds{font-size:12.5px;color:var(--mute)}
+.t5 .ds{font-size:12.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;height:19px;line-height:19px}
+.t5 .ds .tag,.t5 .ds .sb{padding:0 6px;line-height:16px;display:inline-block;vertical-align:1px}
+.hero .top5{height:100%;align-items:stretch}
+.hero .t5{height:145px;box-sizing:border-box;align-self:center}
 .mapwrap{display:grid;grid-template-columns:660px minmax(0,1fr);gap:16px;min-height:0}
 .mapbox{position:relative;flex:1;min-height:0;margin-top:10px;background:#FBF7F8;border-radius:12px;border:1px solid var(--line)}
 #mapsvg{position:absolute;inset:8px;width:calc(100% - 16px);height:calc(100% - 16px)}
@@ -514,7 +518,7 @@ function renderRank(){
   $('rankpn').innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px"><h4 style="margin:0">구·군 순위</h4>
     <span class="seg">${[['pp','혜택률 개선폭'],['tot','1인 증가'],['sum','구 합계']].map(([k,l])=>`<button data-m="${k}" class="${rankMode===k?'on':''}">${l}</button>`).join('')}</span></div>
     <div class="mute" style="margin-bottom:6px">${M[1]}</div>
-    ${all.map(s=>{const [c]=sbOf(s.n),q=quad(s);return `<div class="vb" style="grid-template-columns:64px 1fr 120px;cursor:pointer" data-g="${s.g}"><span>${s.g}</span><div class="tr"><div style="width:${M[2](s)/mx*100}%;background:${rankMode==='pp'?q[2]:'var(--b7)'};opacity:${s.n<10?.45:1}"></div></div><span class="v">${M[3](M[2](s))} <span class="sb ${c}">${s.n}</span></span></div>`;}).join('')}
+    ${all.map(s=>{const [c]=sbOf(s.n),q=quad(s);return `<div class="vb" style="grid-template-columns:64px 1fr 120px;cursor:pointer;margin:3px 0" data-g="${s.g}"><span>${s.g}</span><div class="tr"><div style="width:${M[2](s)/mx*100}%;background:${rankMode==='pp'?q[2]:'var(--b7)'};opacity:${s.n<10?.45:1}"></div></div><span class="v">${M[3](M[2](s))} <span class="sb ${c}">${s.n}</span></span></div>`;}).join('')}
     ${rankMode==='pp'?`<div class="leg" style="margin-top:6px"><span><i style="background:var(--b7)"></i>우선 권유</span><span><i style="background:var(--b5)"></i>원패스 설명</span><span><i style="background:var(--sand)"></i>원인 확인</span><span><i style="background:var(--slate)"></i>유지</span></div>`
       :`<div class="mute" style="margin-top:6px">옆 숫자는 고객 수 · 흐린 막대는 10명 미만</div>`}`;
   $('rankpn').insertAdjacentHTML('beforeend','<div class="help-box"><b>읽는 법</b>버튼으로 순위 기준을 바꿉니다. 혜택률 개선폭은 고객 수와 상관없는 효율, 구 합계는 기회의 크기입니다. 막대를 누르면 그 구 상세가 열립니다.</div>');
@@ -557,7 +561,7 @@ function waterfall(){
   return h+`<text x="0" y="11" font-size="10" fill="#8C8186">단위: 원 · ${n}명 평균</text></svg>`;
 }
 function scatter(){
-  const W=640,H=430,L=46,Rr=14,T=14,B=38,xm=0.013,ym=0.03;
+  const W=640,H=380,L=46,Rr=14,T=14,B=38,xm=0.013,ym=0.03;
   const X=v=>L+v/xm*(W-L-Rr),Y=v=>T+(1-v/ym)*(H-T-B);
   const smax=Math.max(...Object.values(GUSTAT).map(s=>s.sumTot));
   let h=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="구·군별 지금 혜택률과 개선폭">`;
@@ -655,16 +659,17 @@ let xsel=1;
 function p1hero(){
   const help=EX[0].n+EX[1].n, pol=EX[2].n+EX[3].n+EX[4].n, d=V.sc.S01.tot-V.sc.S00.tot;
   const cards=[
-    [0,'동백전 미보유',EX[0].n,'가입 안내로 풀 수 있음','var(--b8)'],
-    [1,'잔액 부족',EX[1].n,'자동충전으로 풀 수 있음','var(--b6)'],
-    [2,'비가맹점 · 온라인',EX[2].n+EX[3].n,'정책 영역 · 직원 해결 불가','var(--slate)'],
-    [null,'카드 자동 선택 효과',null,`240명 합계 · 1인 +${won(d/240)}/월`,'var(--b7)']];
-  $('p1hero').innerHTML=cards.map(([i,n,c,sub,col])=>`<div class="t5 ${i===xsel?'on':''}" ${i!==null?`data-i="${i}"`:'data-go="p3"'} tabindex="0">
+    [0,'동백전 미보유',EX[0].n,'가입 안내로 풀 수 있음','var(--b8)','고객이 동백전이 없어 후보에서 빠짐'],
+    [1,'잔액 부족',EX[1].n,'자동충전으로 풀 수 있음','var(--b6)','결제 순간 잔액이 모자람'],
+    [2,'비가맹점 · 온라인',EX[2].n+EX[3].n,'정책 영역 · 직원 해결 불가','var(--slate)','가맹점 확대는 부산시·운영사 몫'],
+    [null,'카드 자동 선택 효과',null,'240명 합계 · 현재 잔액 기준','var(--b7)',`1인 +${won(d/240)}/월`]];
+  $('p1hero').innerHTML=cards.map(([i,n,c,sub,col,sub2])=>`<div class="t5 ${i===xsel?'on':''}" ${i!==null?`data-i="${i}"`:'data-go="p3"'} tabindex="0">
      <div class="h"><span class="rk" style="background:${col}">${i===null?'원패스':i<2?'풀 수 있음':'정책 영역'}</span>
      <div><div class="gv" style="color:${col}">${c===null?'+'+fmt(d/10000)+'만':fmt(c)}</div><div class="gl">${c===null?'원 · 월':'건 · '+(c/V.tx*100).toFixed(1)+'%'}</div></div></div>
-     <div class="nm">${n}</div><div class="ds">${sub}</div></div>`).join('')
-   +`<div class="t5" style="cursor:default;background:#FAF5F7"><div class="nm" style="margin-top:0">결제 ${fmt(V.tx)}건 중</div>
-     <div class="ds"><b style="color:var(--b7)">${fmt(help)}건(${Math.round(help/V.tx*100)}%)</b> 직원이 풀 수 있음</div><div class="ds"><b style="color:var(--slate)">${fmt(pol)}건(${Math.round(pol/V.tx*100)}%)</b> 정책 영역</div></div>`;
+     <div class="nm">${n}</div><div class="ds">${sub}</div><div class="ds">${sub2}</div></div>`).join('')
+   +`<div class="t5" style="cursor:default;background:#FAF5F7"><div class="h"><span class="rk" style="background:var(--b7)">요약</span>
+     <div><div class="gv">${Math.round(help/V.tx*100)}%</div><div class="gl">직원이 풀 수 있음</div></div></div>
+     <div class="nm">결제 ${fmt(V.tx)}건 중</div><div class="ds"><b style="color:var(--b7)">${fmt(help)}건</b> 직원이 풀 수 있음</div><div class="ds"><b style="color:var(--slate)">${fmt(pol)}건(${Math.round(pol/V.tx*100)}%)</b> 정책 영역</div></div>`;
   $('p1hero').querySelectorAll('[data-i]').forEach(c=>c.onclick=()=>{xsel=+c.dataset.i;p1hero();p1x();});
   $('p1hero').querySelectorAll('[data-go]').forEach(c=>c.onclick=()=>show('p3'));
 }
@@ -682,7 +687,7 @@ function p1x(){
   const e=EX[xsel];
   $('waffle').innerHTML=`<div class="ct">결제 ${fmt(N)}건은 어디서 동백전 혜택을 놓치나 <span class="mute" style="font-weight:500">· 원패스 자동 선택 + 현재 잔액</span></div>
     <div style="margin:14px 0 auto">${body}</div>
-    <div style="display:flex;align-items:center;gap:12px;background:#FAF5F7;border-radius:12px;padding:12px 14px">
+    <div style="display:flex;align-items:center;gap:12px;background:#FAF5F7;border-radius:12px;padding:10px 14px;min-height:84px;box-sizing:border-box;border-left:3px solid var(--b5)">
       <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:15px">${e.name} <span class="pill ${e.fix}" style="margin-left:4px">${e.fixT}</span></div><div class="mute" style="margin-top:3px;font-size:13px">${e.mean}</div></div>
       ${e.go?`<button class="btn" id="goP2">관련 고객 보기 →</button>`:''}${e.k==='INSUFFICIENT_BALANCE'?`<button class="btn ghost" id="goP3">자동충전 비교</button>`:''}</div>`;
   $('waffle').querySelectorAll('[data-i]').forEach(r=>{const i=+r.dataset.i;if(i>=0)r.onclick=()=>{xsel=i;p1hero();p1x();};});
