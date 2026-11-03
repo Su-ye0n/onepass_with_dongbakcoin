@@ -56,7 +56,7 @@ UPDATE user_profile
 SET display_name = '김개미',
     student_card_id = 's_123',
     university = '갈매기 대학교',
-    department = '철학과',
+    department = '미술과',
     address = '부산광역시 영도구 (데모 주소)',
     updated_at = CURRENT_TIMESTAMP
 WHERE user_id = 'USER_001';
@@ -97,7 +97,7 @@ VALUES
         '갈매기 대학교',
         '갈매기 대학교 학생증',
         '김개미',
-        '철학과 · 2024학번 · 휴학 (데모)',
+        '미술과 · 24학번 · 휴학 (데모)',
         'ACTIVE',
         '도서관 출입 · 학식 할인 · 원카드 결제',
         '학생증 · 재학 인증',
