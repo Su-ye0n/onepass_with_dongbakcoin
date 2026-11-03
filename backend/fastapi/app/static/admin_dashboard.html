@@ -91,6 +91,11 @@ table.t tr.sel td{background:var(--b1)}
 table.t tr.ck{cursor:pointer}
 table.t tr.ck:hover td{background:#FBF6F8}
 .scroll{overflow:auto;min-height:0}
+.crow{padding:8px 10px;border-radius:10px;cursor:pointer;border:1.5px solid transparent;margin-bottom:2px}
+.crow:hover{background:#FBF6F8}
+.crow.on{background:var(--b1);border-color:var(--b3)}
+.gchip{font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:6px}
+
 #ctable td{padding:3px 8px}
 #ctable .chip{margin:1px 0}
 .chip{display:inline-block;font-size:12.5px;padding:4px 10px;border-radius:20px;background:#F4EEF0;color:var(--ink);margin:2px 4px 2px 0}
@@ -297,19 +302,9 @@ ul.as li .tag{margin-top:2px}
         <div id="fsum" style="display:flex;gap:18px;align-items:center;flex-shrink:0"></div>
       </div>
       <div class="row">
-        <div style="width:1060px;display:flex;flex-direction:column;gap:16px;min-height:0">
-          <div class="card" style="flex:1">
-            <div class="ct">고객군 비교 · 지갑 상태 × 실사용 수준 7개 그룹 <span class="tag t-asm">충전 효과는 가정</span></div>
-            <div class="cs">필터 적용 후 고유 고객 수 · 그룹은 서로 겹치지 않음 · 행을 누르면 오른쪽 고객이 그 그룹으로 바뀜</div>
-            <div class="scroll" style="margin-top:8px;flex:1;min-height:0"><table class="t" id="ctable"></table></div>
-            <div class="mute" style="margin-top:6px">원패스 효과 = 카드 자동 선택 시 1인 월 증가 · 충전 효과 = 잔액 부족까지 없앴을 때 더 늘어나는 몫(가정·상한)</div>
-          </div>
-          <div class="row" style="height:236px">
-            <div class="card grow"><div class="ct">연령 분포 · 선택 고객 vs 전체 </div><div class="cs">연령은 보조 비교 축이며 대상 선정 기준이 아님</div><div id="agebars" style="margin-top:6px"></div></div>
-            <div class="card grow"><div class="ct">구·군 · 소비 수준 </div><div class="cs">10명 미만 구간은 비율보다 인원으로 읽기</div><div id="gubars" style="margin-top:6px"></div></div>
-          </div>
-        </div>
-        <div class="card grow" id="ucard"></div>
+        <div class="card" style="width:340px;padding:16px 14px" id="clist"></div>
+        <div class="card" style="width:830px" id="ucard"></div>
+        <div class="card grow" id="urec"></div>
       </div>
     </section>
 
@@ -773,81 +768,93 @@ function resetF(){F={ws:new Set(),age:new Set(),sp:new Set(),cc:new Set(),gu:new
 resetF();
 const ccl=u=>u.cc>=5?'5장+':u.cc+'장';
 const pass=u=>(!F.ws.size||F.ws.has(u.ws))&&(!F.age.size||F.age.has(u.age))&&(!F.sp.size||F.sp.has(u.sp))&&(!F.cc.size||F.cc.has(ccl(u)))&&(!F.gu.size||F.gu.has(u.gu));
+function txRows(id,cb){
+  if(!(id in TXC)){TXC[id]=null;getJSON('/users/'+encodeURIComponent(id)+'/transactions').then(d=>{TXC[id]=d;cb&&cb();}).catch(()=>{TXC[id]=[];cb&&cb();});}
+  const d=TXC[id];if(d===null)return null;
+  return d.map(r=>({dt:r.requested_at.slice(5,16).replace('T',' ').replace('-','/'),m:r.merchant_name||r.merchant_id,ind:r.industry,amt:r.amount_won,
+    c0:r.card_name.S00,b0:r.benefit_won.S00,c1:r.card_name.S01,b1:r.benefit_won.S01,c3:r.card_name.S11,b3:r.benefit_won.S11}));}
 function p2(){
   $('filters').innerHTML=Object.keys(FD).map(k=>`<div class="fgrp"><h6>${FL[k]}</h6><div class="fbtns">${FD[k].map(v=>`<button data-k="${k}" data-v="${v}" class="${F[k].has(v)?'on':''}">${v}</button>`).join('')}</div></div>`).join('')
-    +`<div class="fgrp"><h6>구·군 (지도와 연결)</h6><select class="s" id="fgu"><option value="">부산 전체</option>${GUS.map(g=>`<option ${F.gu.has(g)?'selected':''}>${g}</option>`).join('')}</select></div>`
-    +`<div class="fgrp" style="justify-content:flex-end"><button class="btn ghost" id="freset">초기화</button></div>`;
-  $('filters').querySelectorAll('.fbtns button').forEach(b=>b.onclick=()=>{const s=F[b.dataset.k];s.has(b.dataset.v)?s.delete(b.dataset.v):s.add(b.dataset.v);gsel=null;usel=null;p2();});
-  $('fgu').onchange=e=>{F.gu=e.target.value?new Set([e.target.value]):new Set();gsel=null;usel=null;p2();};
+    +`<div class="fgrp"><h6>구·군</h6><select class="s" id="fgu"><option value="">부산 전체</option>${GUS.map(g=>`<option ${F.gu.has(g)?'selected':''}>${g}</option>`).join('')}</select></div>`
+    +`<div class="fgrp"><button class="btn ghost" id="freset" style="padding:7px 12px">초기화</button></div>`;
+  $('filters').querySelectorAll('.fbtns button').forEach(b=>b.onclick=()=>{const s=F[b.dataset.k];s.has(b.dataset.v)?s.delete(b.dataset.v):s.add(b.dataset.v);usel=null;p2();});
+  $('fgu').onchange=e=>{F.gu=e.target.value?new Set([e.target.value]):new Set();usel=null;p2();};
   $('freset').onclick=()=>{resetF();gsel=null;usel=null;p2();};
-  const L=U.filter(pass), n=L.length;
-  $('fsum').innerHTML=`<div><div class="mute">고유 고객 </div><div class="big">${n}<small>/ 240명</small></div><div class="mute">${n<30?'⚠ 30명 미만 · 소표본':'필터 적용 결과'}</div></div>
-    <div><div class="mute">동백전 보유 · 활성</div><div class="big" style="font-size:28px">${L.filter(u=>u.mem).length}<small>· ${L.filter(u=>u.ws==='활성').length}명</small></div><div class="mute">분모 111 · 97명</div></div>
-    <div><div class="mute">원패스 개선액 (S01−S00) </div><div class="big" style="font-size:28px;color:var(--b7)">+${fmt(sum(L,u=>u.c-u.a))}<small>원</small></div><div class="mute">1인 +${won(avg(L,u=>u.c-u.a))}/월</div></div>`;
-  const gmx=Math.max(...COH.map(([g])=>{const x=L.filter(u=>u.g===g);return avg(x,u=>u.d-u.a);}),1);
-  const rows=COH.map(([g,name,act,why])=>{const x=L.filter(u=>u.g===g),all=U.filter(u=>u.g===g).length;
-     const op=avg(x,u=>u.c-u.a),ch=avg(x,u=>u.d-u.c);
-     return `<tr data-g="${g}" class="ck ${gsel&&gsel.split(',').includes(g)?'sel':''}"><td><b style="color:var(--b7)">${g}</b></td><td>${name}</td>
-       <td class="r"><b>${x.length}</b>${x.length<10&&x.length?' <span class="tag t-asm">소표본</span>':''}</td><td class="r mute">${all}</td>
-       <td>${mode(x.map(u=>u.age))||'—'}</td><td><span class="chip b">${act}</span></td>
-       <td style="width:250px">${x.length?`<div class="hbar" style="grid-template-columns:1fr 120px;margin:0"><div class="tr"><div style="width:${op/gmx*100}%;background:var(--b5)"></div><div style="width:${ch/gmx*100}%;background:var(--b8)"></div></div><span style="text-align:right"><b>+${fmt(op)}</b> / +${fmt(ch)}</span></div>`:'—'}</td></tr>`}).join('');
-  $('ctable').innerHTML=`<tr><th>그룹</th><th>정의</th><th class="r">필터 인원</th><th class="r">전체</th><th>최다 연령</th><th>조치 후보</th><th>1인 월 효과 <span style="color:var(--b5)">■원패스</span> / <span style="color:var(--b8)">■충전(상한)</span></th></tr>${rows}
-    <tr><td></td><td class="mute">합계</td><td class="r"><b>${n}</b></td><td class="r mute">240</td><td colspan="3" class="mute">관련 사유는 그룹 정의에서 나온 가설이며, 그룹별 실제 배제 사유 분포는 재집계 후 표시</td></tr>`;
-  $('ctable').querySelectorAll('tr[data-g]').forEach(r=>r.onclick=()=>{gsel=gsel===r.dataset.g?null:r.dataset.g;usel=null;p2();});
-  dist(L);ucard(L);p2hero();
+  const L=U.filter(pass).filter(inG), n=L.length;
+  $('fsum').innerHTML=`<div><div class="mute">선택한 고객</div><div class="big">${n}<small>/ 240명</small></div></div>
+    <div><div class="mute">원패스 개선액 합계</div><div class="big" style="color:var(--b7)">+${fmt(sum(L,u=>u.c-u.a))}<small>원</small></div></div>`;
+  clist(L);ucard(L);p2hero();
 }
 function mode(a){const c={};a.forEach(x=>c[x]=(c[x]||0)+1);const k=Object.keys(c).sort((x,y)=>c[y]-c[x])[0];return k?`${k} ${c[k]}명`:null;}
-function dist(L){
-  const ages=FD.age, all=U;
-  $('agebars').innerHTML=ages.map(a=>{const p=L.length?L.filter(u=>u.age===a).length/L.length:0,q=all.filter(u=>u.age===a).length/240,c=L.filter(u=>u.age===a).length;
-    return `<div class="hbar" style="grid-template-columns:52px 1fr 90px"><span>${a}</span><div style="display:flex;flex-direction:column;gap:2px">
-      <div class="tr" style="height:11px"><div style="width:${p*100}%;background:var(--b7)"></div></div>
-      <div class="tr" style="height:6px"><div style="width:${q*100}%;background:var(--b2)"></div></div></div><span class="mute">${c}명 · ${Math.round(p*100)}%</span></div>`}).join('')
-    +`<div class="leg"><span><i style="background:var(--b7)"></i>선택 고객</span><span><i style="background:var(--b2)"></i>전체 240명</span></div>`;
-  const gc={};L.forEach(u=>gc[u.gu]=(gc[u.gu]||0)+1);
-  const top=Object.entries(gc).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  const sp=['저소비','중소비','고소비'].map((s,i)=>[s,L.filter(u=>u.sp===s).length,['var(--b2)','var(--b5)','var(--b8)'][i]]);
-  const t=L.length||1;
-  $('gubars').innerHTML=`<div>${top.map(([g,c])=>`<span class="chip">${g} ${c}명</span>`).join('')||'<span class="mute">해당 고객 없음</span>'}</div>
-    <div class="sbar" style="margin-top:12px">${sp.filter(s=>s[1]).map(([s,c,col])=>`<div style="width:${c/t*100}%;background:${col};${s==='저소비'?'color:var(--ink)':''}">${c/t>.08?s+' '+c:''}</div>`).join('')}</div>
-    <div class="leg">${sp.map(([s,c,col])=>`<span><i style="background:${col}"></i>${s} ${c}명</span>`).join('')}</div>`;
-}
 function rec(u){
-  if(u.ws==='미보유') return ['R1 동백전 가입 검토','동백전이 없어 동백전 혜택 후보에서 빠지는 고객. 가입 후 잠재 캐시백은 가입·충전·가맹점 이용을 모두 가정한 상한이라 별도 검증 전 금액을 붙이지 않음.'];
-  if(u.ws==='정보 없음') return ['데이터 보완 먼저','지갑 정보가 없어 판정을 유보. DB 지갑 상태 재조회 필요.'];
-  if(u.d-u.c>u.c-u.a) return ['R2 조건부 자동충전 검토',`잔액이 모자라 동백전 혜택이 끊긴 결제가 있습니다. 충전까지 되면 월 +${won(u.d-u.c)} 더 받을 수 있습니다(상한).`];
-  return ['원패스 선택 효과 설명',`이미 동백전을 쓰는 고객. 결제 카드를 자동으로 골라 주면 월 +${won(u.c-u.a)} 늘어납니다.`];
+  if(u.ws==='미보유') return ['R1 동백전 가입 검토','동백전이 없어 동백전 혜택 후보에서 빠지는 고객입니다. 가입 후 캐시백은 이 화면에서 계산하지 않습니다.'];
+  if(u.ws==='정보 없음') return ['데이터 보완 먼저','지갑 정보가 없어 판정을 미뤘습니다.'];
+  if(u.d-u.c>u.c-u.a) return ['R2 조건부 자동충전 검토',`잔액이 모자라 동백전 혜택이 끊긴 결제가 있습니다. 충전까지 되면 월 +${won(u.d-u.c)} 더 받습니다(가정·상한).`];
+  return ['원패스 선택 효과 설명',`결제 카드를 자동으로 골라 주면 월 +${won(u.c-u.a)} 늘어납니다.`];
+}
+function clist(L){
+  const sorted=[...L].sort((x,y)=>(y.d-y.a)-(x.d-x.a));
+  if(sorted.length&&(!usel||!sorted.find(u=>u.id===usel))) usel=sorted[0].id;
+  const mx=Math.max(1,...sorted.map(u=>u.d-u.a));
+  $('clist').innerHTML=`<div class="ct">고객 선택</div><div class="cs">${gsel?gsel.replace(',','·')+' 그룹 · ':''}${sorted.length}명 · 혜택이 많이 늘어나는 순</div>
+    <div class="scroll" style="flex:1;margin-top:8px">${sorted.map(u=>`<div data-u="${u.id}" class="crow ${u.id===usel?'on':''}">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b>${u.id}</b><span class="mute">${u.age} · ${u.gu}</span></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:3px"><span class="gchip" style="background:${GCOL[u.g]};color:${['G4','G5','G7'].includes(u.g)?'var(--ink)':'#fff'}">${u.g}</span>
+        <div class="tr" style="flex:1;height:7px;background:#F4EEF0;border-radius:4px;overflow:hidden"><div style="height:100%;width:${(u.d-u.a)/mx*100}%;background:var(--b5)"></div></div>
+        <span style="font-size:12px;font-weight:700;color:var(--b7);min-width:62px;text-align:right">+${fmt(u.d-u.a)}</span></div></div>`).join('')||'<div class="mute" style="padding:20px">조건에 맞는 고객이 없습니다.</div>'}</div>`;
+  $('clist').querySelectorAll('[data-u]').forEach(r=>r.onclick=()=>{usel=r.dataset.u;clist(L);ucard(L);});
 }
 function ucard(L){
-  const pool=L.filter(inG);
-  if(!pool.length){$('ucard').innerHTML='<div class="ct">대표 보정 고객 상세</div><div class="ph" style="flex:1"><b>조건에 맞는 고객이 없습니다</b>필터를 줄여 보세요.</div>';return;}
-  const sorted=[...pool].sort((x,y)=>(y.d-y.a)-(x.d-x.a));
-  if(!usel||!pool.find(u=>u.id===usel)) usel=sorted[0].id;
-  const u=UBY[usel], [ra,rb]=rec(u);
-  if(!(u.id in TXC)){TXC[u.id]=null;getJSON('/users/'+encodeURIComponent(u.id)+'/transactions').then(d=>{TXC[u.id]=d;if(usel===u.id)ucard(L);}).catch(()=>{TXC[u.id]=[];if(usel===u.id)ucard(L);});}
-  const tx=TXC[u.id]||[];
-  const changed=tx.filter(r=>r.selected_card.S01!==r.selected_card.S00||r.selected_card.S11!==r.selected_card.S00);
-  const rows=[...tx].sort((x,y)=>(y.benefit_won.S11-y.benefit_won.S00)-(x.benefit_won.S11-x.benefit_won.S00)).slice(0,40);
-  $('ucard').innerHTML=`<div class="ct">고객 상세 <span class="mute" style="font-weight:500">· 실제 개인정보 없음</span></div>
-   <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
-   <select class="s" id="usel" style="flex:1">${sorted.slice(0,240).map(x=>`<option value="${x.id}" ${x.id===usel?'selected':''}>${x.id} · ${x.g} · ${x.age} · ${x.gu} · 증가 ${sgn(x.d-x.a)}원</option>`).join('')}</select>
-   <span class="mute">${gsel?gsel.replace(',','·')+' 그룹 ':''}${pool.length}명 · 증가액 순</span></div>
-   <div style="display:flex;gap:16px;margin-top:12px">
-     <div style="flex:1"><div class="big" style="font-size:28px">${u.id}</div><div class="mute">${u.g} ${COH.find(c=>c[0]===u.g)[1]}</div>
-       <div style="margin-top:6px"><span class="chip">${u.age}</span><span class="chip">${u.gu}</span><span class="chip">${u.sp}</span><span class="chip">${u.st}</span></div>
-       <div class="blk" style="margin-top:8px"><h5>동백전</h5><p style="font-size:13.5px">${u.mem?'보유':'미보유'} · 지갑 ${u.ws} · 이용 수준 ${u.lv}</p></div>
+  if(!usel){$('ucard').innerHTML='<div class="ct">고객 상세</div><div class="ph" style="flex:1"><b>왼쪽에서 고객을 고르세요</b></div>';$('urec').innerHTML='';return;}
+  const u=UBY[usel], [ra,rb]=rec(u), tx=txRows(u.id, ()=>{if(usel===u.id)ucard(L);});
+  const rows=tx?[...tx].sort((x,y)=>(y.b3-y.b0)-(x.b3-x.b0)):[];
+  const changed=rows.filter(r=>r.c1!==r.c0||r.c3!==r.c0).length;
+  $('ucard').innerHTML=`<div style="display:flex;align-items:baseline;gap:12px"><div class="big" style="font-size:30px">${u.id}</div><div class="mute">${u.g} ${COH.find(c=>c[0]===u.g)[1]} · 실제 개인정보 없음</div></div>
+   <div style="display:flex;gap:18px;margin-top:10px">
+     <div style="flex:1;min-width:0">
+       <div><span class="chip">${u.age}</span><span class="chip">${u.gu}</span><span class="chip">${u.sp}</span><span class="chip">${u.st}</span></div>
+       <div class="blk" style="margin-top:8px"><h5>동백전</h5><p style="font-size:13.5px">${u.mem?'보유':'미보유'} · 지갑 ${u.ws} · ${u.lv}</p></div>
        <div class="blk" style="margin-top:8px"><h5>연결 카드 ${u.cc}장</h5>${u.cards.map(([n,p])=>`<span class="chip ${p?'b':''}">${n.replace('BNK ','').replace('합성','보정')}${p?' · 주카드':''}</span>`).join('')}</div></div>
-     <div style="flex:1.1"><h5 class="mute" style="font-weight:700;margin-bottom:4px">이 고객의 6월 혜택 · 4가지 조건</h5>${scenarioBars(u,'결제 '+tx.length+'건 · S10·S11은 잔액 가정 상한')}</div></div>
-   <div style="display:flex;gap:12px;margin-top:10px">
-     <div style="flex:1;background:var(--b1);border-radius:14px;padding:12px 14px">
-       <div class="mute" style="color:var(--b6);font-weight:700">조치 후보 · 규칙 기반</div>
-       <div style="font-size:17px;font-weight:900;color:var(--b7);margin-top:2px">${ra}</div><div style="font-size:13px;margin-top:3px;line-height:1.55">${rb}</div></div>
-     <div class="ph ml" style="flex:.8;margin-top:0;padding:12px 14px"><b>ML 연결 예정</b>비슷한 고객 묶음 · ML이 예측한 조치 · 예상 추가 혜택이 들어올 자리입니다. 규칙과 다르면 표시합니다.</div></div>
-   <h5 class="mute" style="font-weight:700;margin-top:12px">거래별 비교 · 혜택 변화가 큰 순 (${changed.length}/${tx.length}건이 다른 수단으로 바뀜)</h5>
-   <div class="scroll" style="flex:1;margin-top:4px"><table class="t txl"><tr><th>일시</th><th>가게 · 업종</th><th>경로</th><th class="r">금액</th><th>지금 → 원패스+잔액</th><th class="r">혜택 변화</th></tr>
-   ${TXC[u.id]===null?'<tr><td colspan="6" class="mute">거래 불러오는 중…</td></tr>':''}${rows.map(r=>{const nm=r.merchant_name||r.merchant_id,dt=r.requested_at.slice(5,16).replace('T',' ').replace('-','/');return `<tr><td>${dt}</td><td>${nm.length>14?nm.slice(0,14)+'…':nm} <span class="mute">${r.industry||''}${r.dongbaek_registered?' · 가맹':''}</span></td><td>${{OFFLINE:'오프라인',ONLINE:'온라인',SIMPLE_PAY:'간편결제'}[r.lane]||r.lane}</td><td class="r">${won(r.amount_won)}</td>
-     <td>${r.card_name.S00} → <b>${r.card_name.S11}</b></td><td class="r ${r.benefit_won.S11-r.benefit_won.S00>0?'up':''}">${won(r.benefit_won.S00)} → ${won(r.benefit_won.S11)}</td></tr>`;}).join('')}</table></div>`;
-  $('usel').onchange=e=>{usel=e.target.value;ucard(L);};
+     <div style="flex:1.05;min-width:0"><h5 class="mute" style="font-weight:700;margin-bottom:4px">6월 혜택 · 4가지 조건</h5>${scenarioBars(u,'결제 '+u.tx+'건 · S10·S11은 가정·상한')}</div></div>
+   <div style="background:var(--b1);border-radius:12px;padding:10px 14px;margin-top:10px;display:flex;gap:12px;align-items:center">
+     <div style="flex:1"><span style="font-size:15px;font-weight:900;color:var(--b7)">${ra}</span><div style="font-size:12.8px;margin-top:2px">${rb}</div></div></div>
+   <h5 class="mute" style="font-weight:700;margin-top:12px">거래 내역 · 혜택 변화가 큰 순 ${tx?`(${changed}/${rows.length}건이 다른 수단으로 바뀜)`:''}</h5>
+   <div class="scroll" style="flex:1;margin-top:4px"><table class="t txl"><tr><th>일시</th><th>가게 · 업종</th><th class="r">금액</th><th>지금 → 원패스+잔액</th><th class="r">혜택 변화</th></tr>
+   ${tx===null?'<tr><td colspan="5" class="mute">거래 불러오는 중…</td></tr>':''}${rows.map(r=>`<tr><td>${r.dt}</td><td>${r.m.length>13?r.m.slice(0,13)+'…':r.m} <span class="mute">${r.ind||''}</span></td><td class="r">${won(r.amt)}</td>
+     <td>${r.c0} → <b>${r.c3}</b></td><td class="r ${r.b3-r.b0>0?'up':''}">${won(r.b0)} → ${won(r.b3)}</td></tr>`).join('')}</table></div>`;
+  urec(u,rows,tx===null);
+}
+let RECDEC={};
+function urec(u,rows,loading){
+  if(loading){$('urec').innerHTML='<div class="ct">개인화 카드 추천</div><div class="ph" style="flex:1"><b>거래 불러오는 중…</b></div>';return;}
+  // 카드별: 지금(S00) 결제 건수 vs 원패스(S01)가 고른 건수, 원패스 기준 혜택
+  const cards={};rows.forEach(r=>{[[r.c0,'now'],[r.c1,'op']].forEach(([c,k])=>{cards[c]=cards[c]||{now:0,op:0,ben:0};cards[c][k]++;});cards[r.c1].ben+=r.b1;});
+  const list=Object.entries(cards).filter(([c])=>c!=='미배정').sort((a,b)=>b[1].op-a[1].op||b[1].now-a[1].now);
+  const best=[...list].sort((a,b)=>b[1].ben-a[1].ben)[0];
+  const mx=Math.max(1,...list.map(([,v])=>Math.max(v.now,v.op)));
+  // 업종별 추천 카드
+  const ind={};rows.forEach(r=>{const k=r.ind||'기타';ind[k]=ind[k]||{amt:0,c0:{},c1:{},gain:0};ind[k].amt+=r.amt;ind[k].c0[r.c0]=(ind[k].c0[r.c0]||0)+1;ind[k].c1[r.c1]=(ind[k].c1[r.c1]||0)+1;ind[k].gain+=r.b1-r.b0;});
+  const top=Object.entries(ind).sort((a,b)=>b[1].amt-a[1].amt).slice(0,5);
+  const md=o=>Object.entries(o).sort((a,b)=>b[1]-a[1])[0][0];
+  const d=RECDEC[u.id]||'';
+  $('urec').innerHTML=`<div class="ct">개인화 카드 추천 <span class="tag" style="background:#F1EFF0;color:var(--slate)">지금은 규칙 기반</span><span class="tag t-ml">ML 연결 예정</span></div>
+    <div class="cs">이 고객의 6월 결제를 원패스가 다시 골랐을 때 기준</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:12px;background:linear-gradient(160deg,var(--b1),#fff);border:1.5px solid var(--b3);border-radius:14px;padding:12px 16px">
+      <div style="flex:1"><div class="mute" style="font-weight:700;color:var(--b6)">주로 쓰면 좋은 카드</div><div style="font-size:20px;font-weight:900;color:var(--b7);margin-top:2px">${best?best[0]:'—'}</div>
+        <div class="mute">원패스 기준 ${best?best[1].op:0}건 · 혜택 ${best?won(best[1].ben):'—'}</div></div>
+      <div style="text-align:right"><div class="mute">원패스로 늘어남</div><div style="font-size:22px;font-weight:900;color:var(--b7)">+${won(u.c-u.a)}</div><div class="mute">월 · 현재 잔액 기준</div></div></div>
+    <h5 class="mute" style="font-weight:700;margin-top:12px">카드별 결제 건수 · 지금 vs 원패스 추천</h5>
+    ${list.slice(0,5).map(([c,v])=>`<div style="display:grid;grid-template-columns:118px 1fr 64px;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span>${c}</span>
+      <div style="display:flex;flex-direction:column;gap:2px"><div class="tr" style="height:8px;background:#F4EEF0;border-radius:3px;overflow:hidden"><div style="height:100%;width:${v.now/mx*100}%;background:#BDB4B8"></div></div>
+      <div class="tr" style="height:8px;background:#F4EEF0;border-radius:3px;overflow:hidden"><div style="height:100%;width:${v.op/mx*100}%;background:var(--b7)"></div></div></div>
+      <span style="text-align:right"><span class="mute">${v.now}</span> → <b>${v.op}</b></span></div>`).join('')}
+    <div class="leg"><span><i style="background:#BDB4B8"></i>지금 습관</span><span><i style="background:var(--b7)"></i>원패스 추천</span></div>
+    <h5 class="mute" style="font-weight:700;margin-top:12px">업종별 추천 카드</h5>
+    <table class="t" style="font-size:12.5px"><tr><th>업종</th><th>지금</th><th>추천</th><th class="r">혜택 변화</th></tr>
+    ${top.map(([k,v])=>`<tr><td>${k}</td><td class="mute">${md(v.c0)}</td><td><b>${md(v.c1)}</b></td><td class="r ${v.gain>0?'up':''}">${v.gain>0?'+':''}${fmt(v.gain)}원</td></tr>`).join('')}</table>
+    <div class="ph ml" style="margin-top:auto;padding:10px 14px"><b>ML 연결 예정</b>다음 달 결제 패턴을 예측해 추천 카드와 예상 혜택 범위를 보여 주고, 보유하지 않은 BNK 카드 중 이 고객에게 맞는 상품도 추천합니다.</div>
+    <div class="btns" style="margin-top:10px">${['추천 안내','보류','제외'].map(v=>`<button class="btn ${d===v?'':'ghost'}" data-d="${v}">${v}</button>`).join('')}</div>`;
+  $('urec').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{RECDEC[u.id]=RECDEC[u.id]===b.dataset.d?'':b.dataset.d;urec(u,rows,false);});
 }
 
 // ================= P3 =================
