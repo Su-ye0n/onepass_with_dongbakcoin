@@ -500,9 +500,62 @@ function renderTop5(){
       <div class="ds">혜택률 ${pct(s.rA)} → <b style="color:var(--b7)">${pct(s.rD)}</b></div></div>`;}).join('');
   $('top5').querySelectorAll('.t5').forEach(c=>{c.onclick=()=>selectGu(c.dataset.g);c.onkeydown=e=>{if(e.key==='Enter')selectGu(c.dataset.g);};});
 }
+let rankMode='pp';
+function renderRank(){
+  const M={pp:['혜택률 개선폭','결제액 대비 혜택률이 몇 %p 오르나',s=>s.pp,v=>'+'+(v*100).toFixed(2)+'%p'],
+           tot:['1인 월 증가','고객 한 명의 월 혜택 증가 (원패스+충전)',s=>s.tot,v=>'+'+won(v)],
+           sum:['구 전체 증가','구 고객 전체의 월 혜택 증가 합계',s=>s.sumTot,v=>'+'+fmt(v/10000)+'만']}[rankMode];
+  const all=Object.values(GUSTAT).sort((x,y)=>M[2](y)-M[2](x)), mx=Math.max(...all.map(M[2]));
+  $('rankpn').innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px"><h4 style="margin:0">구·군 순위</h4>
+    <span class="seg">${[['pp','혜택률 개선폭'],['tot','1인 증가'],['sum','구 합계']].map(([k,l])=>`<button data-m="${k}" class="${rankMode===k?'on':''}">${l}</button>`).join('')}</span></div>
+    <div class="mute" style="margin-bottom:6px">${M[1]}</div>
+    ${all.map(s=>{const [c]=sbOf(s.n),q=quad(s);return `<div class="vb" style="grid-template-columns:64px 1fr 120px;cursor:pointer" data-g="${s.g}"><span>${s.g}</span><div class="tr"><div style="width:${M[2](s)/mx*100}%;background:${rankMode==='pp'?q[2]:'var(--b7)'};opacity:${s.n<10?.45:1}"></div></div><span class="v">${M[3](M[2](s))} <span class="sb ${c}">${s.n}</span></span></div>`;}).join('')}
+    ${rankMode==='pp'?`<div class="leg" style="margin-top:6px"><span><i style="background:var(--b7)"></i>우선 권유</span><span><i style="background:var(--b5)"></i>원패스 설명</span><span><i style="background:var(--sand)"></i>원인 확인</span><span><i style="background:var(--slate)"></i>유지</span></div>`
+      :`<div class="mute" style="margin-top:6px">옆 숫자는 고객 수 · 흐린 막대는 10명 미만</div>`}`;
+  $('rankpn').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{rankMode=b.dataset.m;renderRank();});
+  $('rankpn').querySelectorAll('[data-g]').forEach(r=>r.onclick=()=>selectGu(r.dataset.g));
+}
+function donut(){
+  const keys=Object.keys(GSHORT), n=U.length, R=70, r=44, cx=90, cy=90;
+  let a0=-Math.PI/2, h=`<svg viewBox="0 0 180 180" style="width:170px;height:170px;flex-shrink:0" role="img" aria-label="고객 그룹 구성">`;
+  keys.forEach(g=>{const c=U.filter(u=>u.g===g).length;if(!c)return;const a1=a0+c/n*2*Math.PI,lg=a1-a0>Math.PI?1:0;
+    const p=(ang,rad)=>[cx+rad*Math.cos(ang),cy+rad*Math.sin(ang)];
+    const [x0,y0]=p(a0,R),[x1,y1]=p(a1,R),[x2,y2]=p(a1,r),[x3,y3]=p(a0,r);
+    h+=`<path data-grp="${g}" d="M${x0},${y0} A${R},${R} 0 ${lg} 1 ${x1},${y1} L${x2},${y2} A${r},${r} 0 ${lg} 0 ${x3},${y3}Z" fill="${GCOL[g]}" stroke="#fff" stroke-width="1.5" style="cursor:pointer"><title>${GSHORT[g]} ${c}명</title></path>`;a0=a1;});
+  h+=`<text x="${cx}" y="${cy-2}" text-anchor="middle" font-size="22" font-weight="900" fill="#241A1E">${n}</text><text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="11" fill="#8C8186">명</text></svg>`;
+  const act=U.filter(u=>u.ws==='활성').length;
+  return `<div style="display:flex;gap:12px;align-items:center">${h}<div style="flex:1;min-width:0">${keys.map(g=>{const c=U.filter(u=>u.g===g).length;return `<div data-grp="${g}" style="display:flex;align-items:center;gap:6px;font-size:12.5px;padding:2px 0;cursor:pointer"><i style="width:10px;height:10px;border-radius:2px;background:${GCOL[g]};flex-shrink:0"></i><span style="flex:1">${GSHORT[g]}</span><b>${c}</b></div>`;}).join('')}</div></div>
+    <div class="help-box"><b>읽는 법</b> 동백전을 쓰는 활성 고객(G1~G5)은 ${act}명이고, 나머지는 <b>동백전 가입 안내</b>(G6)나 정보 확인(G7) 대상입니다. 진한 조각일수록 동백전 사용이 적어 충전 권유 효과가 큽니다.</div>`;
+}
+function dumbbell(){
+  const ages=['20대','30대','40대','50대','60대','70대+'], rows=ages.map(a=>{const L=U.filter(u=>u.age===a);return [a,avg(L,u=>u.c-u.a),avg(L,u=>u.d-u.a),L.length];});
+  const W=340,H=24*rows.length+30,L=48,Rr=70,mx=Math.max(...rows.map(r=>r[2]))*1.05,X=v=>L+v/mx*(W-L-Rr);
+  let h=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="연령대별 1인 월 혜택 증가">`;
+  [0,10000,20000].filter(v=>v<=mx).forEach(v=>h+=`<line x1="${X(v)}" x2="${X(v)}" y1="4" y2="${H-22}" stroke="#EFE7EA"/><text x="${X(v)}" y="${H-8}" font-size="10" fill="#8C8186" text-anchor="middle">${v?fmt(v/1000)+'천':'0'}</text>`);
+  rows.forEach(([a,op,tot,n],i)=>{const y=14+i*24;
+    h+=`<text x="0" y="${y+4}" font-size="11.5" fill="#241A1E">${a}</text><line x1="${X(op)}" x2="${X(tot)}" y1="${y}" y2="${y}" stroke="#D9A0B2" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="${X(op)}" cy="${y}" r="5" fill="#B04E6B"/><circle cx="${X(tot)}" cy="${y}" r="6" fill="#5C1229"/>
+      <text x="${W-2}" y="${y+4}" font-size="11" font-weight="700" fill="#5C1229" text-anchor="end">+${fmt(tot)}원</text>`;});
+  h+='</svg>';
+  return h+`<div class="leg" style="margin-top:4px"><span><i style="background:#B04E6B;border-radius:50%"></i>원패스만</span><span><i style="background:#5C1229;border-radius:50%"></i>원패스+충전(상한)</span></div>`;
+}
+function waterfall(){
+  const n=U.length, a=V.sc.S00.tot/n, c=V.sc.S01.tot/n, d=V.sc.S11.tot/n;
+  const steps=[['지금',0,a,'#EBCDD7'],['+카드 선택',a,c,'#B04E6B'],['+충전',c,d,'#C49A5A'],['원패스+잔액',0,d,'#5C1229']];
+  const W=340,H=180,T=28,B=24,mx=d*1.1,Y=v=>T+(1-v/mx)*(H-T-B),bw=52,gap=(W-bw*4)/5;
+  let h=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="1인 월 혜택이 쌓이는 과정">`;
+  h+=`<line x1="0" x2="${W}" y1="${Y(0)}" y2="${Y(0)}" stroke="#D9D2D5"/>`;
+  steps.forEach(([l,lo,hi,col],i)=>{const x=gap+i*(bw+gap);
+    h+=`<rect x="${x}" y="${Y(hi)}" width="${bw}" height="${Y(lo)-Y(hi)}" rx="4" fill="${col}"/>`;
+    if(i<3)h+=`<line x1="${x+bw}" x2="${x+bw+gap}" y1="${Y(hi)}" y2="${Y(hi)}" stroke="#8C8186" stroke-dasharray="3 2"/>`;
+    h+=`<text x="${x+bw/2}" y="${Y(hi)-6}" font-size="11" font-weight="800" fill="#241A1E" text-anchor="middle">${i===1||i===2?'+':''}${fmt(i===1||i===2?hi-lo:hi)}</text>
+      <text x="${x+bw/2}" y="${H-6}" font-size="11" fill="#5F6470" text-anchor="middle">${l}</text>`;});
+  return h+`<text x="0" y="11" font-size="10" fill="#8C8186">단위: 원 · ${n}명 평균</text></svg>`;
+}
 function scatter(){
-  const W=640,H=300,L=46,Rr=14,T=14,B=38,xm=0.013,ym=0.03;
+  const W=640,H=430,L=46,Rr=14,T=14,B=38,xm=0.013,ym=0.03;
   const X=v=>L+v/xm*(W-L-Rr),Y=v=>T+(1-v/ym)*(H-T-B);
+  const smax=Math.max(...Object.values(GUSTAT).map(s=>s.sumTot));
   let h=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="구·군별 지금 혜택률과 개선폭">`;
   h+=`<rect x="${L}" y="${T}" width="${X(BUS.rA)-L}" height="${Y(BUS.pp)-T}" fill="#F7EBEF"/>`;
   [0,.005,.01].forEach(v=>h+=`<line x1="${X(v)}" x2="${X(v)}" y1="${T}" y2="${H-B}" stroke="#EFE7EA"/><text x="${X(v)}" y="${H-B+16}" font-size="11" fill="#8C8186" text-anchor="middle">${(v*100).toFixed(1)}%</text>`);
@@ -511,9 +564,13 @@ function scatter(){
   h+=`<text x="${L+8}" y="${T+16}" font-size="12" font-weight="800" fill="#7A1E3A">우선 권유 · 지금 낮고 개선 큼</text><text x="${W-Rr-8}" y="${T+16}" font-size="12" font-weight="700" fill="#8C8186" text-anchor="end">이미 받는 편 · 더 늘어남</text>
     <text x="${L+8}" y="${H-B-8}" font-size="12" font-weight="700" fill="#8C8186">지금도 낮고 개선도 작음 · 원인 확인</text><text x="${W-Rr-8}" y="${H-B-8}" font-size="12" font-weight="700" fill="#8C8186" text-anchor="end">이미 잘 받는 중</text>`;
   h+=`<text x="${(L+W-Rr)/2}" y="${H-4}" font-size="11.5" fill="#5F6470" text-anchor="middle">지금 혜택률 (기존 습관 · 받은 혜택 ÷ 결제액) →</text>`;
-  Object.values(GUSTAT).sort((a,b)=>b.n-a.n).forEach(s=>{const q=quad(s),r=4+Math.sqrt(s.n)*1.9;
-    h+=`<g data-g="${s.g}" style="cursor:pointer"><circle cx="${X(s.rA)}" cy="${Y(s.pp)}" r="${r}" fill="${q[2]}" fill-opacity="${s.n<10?.3:.82}" stroke="#fff" stroke-width="1.5"/>
-      <text x="${X(s.rA)+r+3}" y="${Y(s.pp)+4}" font-size="11.5" font-weight="700" fill="#241A1E">${s.g}</text></g>`;});
+  const lr=v=>5+Math.sqrt(v/smax)*21;
+  const SIDE={'남구':'left','부산진구':'below','해운대구':'right','강서구':'below','동래구':'above','중구':'left'};
+  Object.values(GUSTAT).sort((a,b)=>b.sumTot-a.sumTot).forEach(s=>{const q=quad(s),r=lr(s.sumTot);
+    h+=`<g data-g="${s.g}" style="cursor:pointer"><circle cx="${X(s.rA)}" cy="${Y(s.pp)}" r="${r}" fill="${q[2]}" fill-opacity="${s.n<10?.28:.72}" stroke="#fff" stroke-width="1.5"><title>${s.g} · ${s.n}명 · 월 +${won(s.sumTot)}</title></circle>
+      ${(()=>{const cx=X(s.rA),cy=Y(s.pp),side=SIDE[s.g]||(r>=15?'in':'right');
+        const [tx,ty,an]=side==='in'?[cx,cy+4,'middle']:side==='left'?[cx-r-4,cy+4,'end']:side==='below'?[cx,cy+r+13,'middle']:side==='above'?[cx,cy-r-5,'middle']:[cx+r+4,cy+4,'start'];
+        return `<text x="${tx}" y="${ty}" font-size="11.5" font-weight="800" fill="${side==='in'&&s.n>=10?'#fff':'#241A1E'}" text-anchor="${an}" style="pointer-events:none">${s.g}</text>`;})()}</g>`;});
   return h+'</svg>';
 }
 function selectGu(g){gusel=gusel===g?null:g;renderMap();renderTop5();renderInfo();}
@@ -533,28 +590,23 @@ function actCounts(L){return [['R1 동백전 가입 검토',L.filter(u=>u.ws==='
   ['데이터 보완 먼저',L.filter(u=>u.ws==='정보 없음').length,'지갑 정보 없음']];}
 function renderInfo(){
   if(!gusel){
-    const all=Object.values(GUSTAT).sort((x,y)=>y.tot-x.tot), mx=Math.max(...all.map(s=>s.tot));
-    const ages=['20대','30대','40대','50대','60대','70대+'], ag=ages.map(a=>[a,avg(U.filter(u=>u.age===a),u=>u.d-u.a),U.filter(u=>u.age===a).length]), amx=Math.max(...ag.map(x=>x[1]));
-    $('info').innerHTML=`<div class="info-empty"><b>부산 전체 240명</b>을 보고 있습니다. 왼쪽 지도에서 <b>구·군을 누르면</b> 그 지역 고객 구성, 권할 조치, 혜택이 많이 느는 고객이 이 자리에 나옵니다.</div>
-     <div style="display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:14px;margin-top:14px">
+    $('info').innerHTML=`<div class="info-empty"><b>부산 전체 ${U.length}명</b>을 보고 있습니다. 왼쪽 지도에서 <b>구·군을 누르면</b> 그 지역 고객 구성, 권할 조치, 혜택이 많이 느는 고객이 이 자리에 나옵니다.</div>
+     <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-top:14px">
       <div class="pn"><h4>지금 혜택률 대비 개선폭 · 어느 구에서 원패스 효과가 큰가 ${tag('t-sim','SIM·검증')}</h4>${scatter()}
-        <div class="help-box"><b>읽는 법</b> 가로는 지금 받는 혜택률(혜택 ÷ 결제액), 세로는 원패스+충전 시 그 비율이 몇 %p 오르는지입니다. 점선은 부산 평균(지금 ${pct(BUS.rA)}, 개선 +${(BUS.pp*100).toFixed(2)}%p)입니다. <b>왼쪽 위</b>가 지금은 적게 받는데 많이 오르는 곳, 즉 권유 효과가 가장 큰 구입니다. 원 크기는 고객 수, 흐린 원은 10명 미만입니다.</div></div>
-      <div class="pn"><h4>혜택률 개선폭 순위 (결제액 대비)</h4>
-        ${Object.values(GUSTAT).sort((x,y)=>y.pp-x.pp).map(s=>{const [c,l]=sbOf(s.n),q=quad(s);return `<div class="vb" style="grid-template-columns:64px 1fr 128px;cursor:pointer" data-g="${s.g}"><span>${s.g}</span><div class="tr"><div style="width:${s.pp/0.03*100}%;background:${q[2]};opacity:${s.n<10?.45:1}"></div></div><span class="v">+${(s.pp*100).toFixed(2)}%p <span class="sb ${c}">${s.n}</span></span></div>`;}).join('')}
-        <div class="leg" style="margin-top:6px"><span><i style="background:var(--b7)"></i>우선 권유</span><span><i style="background:var(--b5)"></i>원패스 설명</span><span><i style="background:var(--sand)"></i>원인 확인</span><span><i style="background:var(--slate)"></i>유지</span></div></div>
+        <div class="leg" style="margin-top:4px;align-items:center"><span style="display:inline-flex;align-items:center;gap:6px"><svg width="52" height="28"><circle cx="10" cy="18" r="6" fill="none" stroke="#8C8186"/><circle cx="36" cy="14" r="13" fill="none" stroke="#8C8186"/></svg>원 크기 = 구 전체 월 혜택 증가</span><span><i style="background:var(--b7)"></i>우선 권유</span><span><i style="background:var(--b5)"></i>원패스 설명</span><span><i style="background:var(--sand)"></i>원인 확인</span><span><i style="background:var(--slate)"></i>유지</span></div>
+        <div class="help-box"><b>읽는 법</b> 가로는 지금 받는 혜택률(혜택 ÷ 결제액), 세로는 원패스+충전 시 그 비율이 몇 %p 오르는지입니다. 점선은 부산 평균(지금 ${pct(BUS.rA)}, 개선 +${(BUS.pp*100).toFixed(2)}%p)입니다. <b>원이 클수록 그 구에서 늘어나는 혜택 합계가 큽니다.</b> 왼쪽 위의 큰 원이 먼저 챙길 구이고, 흐린 원은 고객 10명 미만입니다.</div></div>
+      <div class="pn" id="rankpn"></div>
      </div>
      <div class="p3c">
-      <div class="pn"><h4>구·군별 1인 월 혜택 증가 (원패스+충전)</h4>
-        ${all.map(s=>{const [c,l]=sbOf(s.n);return `<div class="vb" style="grid-template-columns:70px 1fr 120px;cursor:pointer" data-g="${s.g}"><span>${s.g}</span><div class="tr"><div style="width:${s.tot/mx*100}%;background:var(--b7);opacity:${s.n<10?.45:1}"></div></div><span class="v">+${won(s.tot)} <span class="sb ${c}">${s.n}</span></span></div>`;}).join('')}
-        <div class="help-box"><b>읽는 법</b> 막대가 길수록 그 구 고객 한 명이 원패스로 더 많이 받습니다. 옆 숫자는 고객 수, 연한 막대는 10명 미만이라 흔들리는 값입니다.</div></div>
-      <div class="pn"><h4>고객 그룹 구성 (240명)</h4>${groupBars(U)}
-        <div class="help-box"><b>읽는 법</b> 동백전 지갑 상태와 한 달 사용액으로 나눈 묶음입니다. G6(동백전 없음)이 가장 많아 <b>가입 안내</b> 대상이 크고, G1~G3는 <b>자동충전</b> 효과가 큰 묶음입니다.</div></div>
-      <div class="pn"><h4>연령대별 1인 월 혜택 증가</h4>
-        ${ag.map(([a,v,n])=>`<div class="vb" style="grid-template-columns:52px 1fr 110px"><span>${a}</span><div class="tr"><div style="width:${v/amx*100}%;background:var(--b5)"></div></div><span class="v">+${won(v)} <span class="mute">${n}명</span></span></div>`).join('')}
-        <div class="help-box"><b>읽는 법</b> 연령은 보조 축입니다. 연령보다 동백전 사용 상태(왼쪽 그룹)가 효과 차이를 더 크게 만듭니다.</div>
-        <h4 style="margin-top:14px">부산 전체 4가지 조건 (1인 월 혜택)</h4>${scenarioBars({a:V.sc.S00.tot/240,b:V.sc.S10.tot/240,c:V.sc.S01.tot/240,d:V.sc.S11.tot/240},'240명 평균 · S10·S11은 잔액 가정 상한')}</div>
+      <div class="pn"><h4>고객 그룹 구성 · 조각을 누르면 P2 그룹 보기</h4>${donut()}</div>
+      <div class="pn"><h4>연령대별 1인 월 혜택 증가 · 원패스만 → 충전까지</h4>${dumbbell()}
+        <div class="help-box"><b>읽는 법</b> 왼쪽 점은 원패스로 카드만 골라 줬을 때, 오른쪽 점은 충전까지 됐을 때입니다. 선이 길수록 <b>자동충전 권유</b> 효과가 큰 연령대입니다.</div></div>
+      <div class="pn"><h4>부산 전체 1인 월 혜택이 쌓이는 과정</h4>${waterfall()}
+        <div class="help-box"><b>읽는 법</b> 지금 받는 혜택에 카드 자동 선택 몫과 충전 몫이 차례로 더해져 원패스+잔액 넉넉 조건이 됩니다. 충전 몫은 잔액이 모두 채워졌다고 본 상한입니다.</div></div>
      </div>`;
+    renderRank();
     $('info').querySelectorAll('[data-g]').forEach(r=>r.onclick=()=>selectGu(r.dataset.g));
+    $('info').querySelectorAll('[data-grp]').forEach(r=>r.onclick=()=>{resetF();gsel=r.dataset.grp;usel=null;p2();show('p2');});
     return;
   }
   const s=GUSTAT[gusel],L=s.L,[c,l]=sbOf(s.n), allMem=U.filter(u=>u.mem).length/240;
