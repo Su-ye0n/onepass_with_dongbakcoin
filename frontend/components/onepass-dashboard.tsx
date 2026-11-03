@@ -407,7 +407,7 @@ export default function OnePassDashboard() {
       <header className="app-header">
         <div className="brand">
           <div className="brand-mark"><DongbaekMark small /></div>
-          <div><b>동백전 연계패스</b><span>부산시민플랫폼</span></div>
+          <div><b>원패스 카드</b><span>부산시민플랫폼</span></div>
         </div>
         <div className="header-actions">
           <button aria-label="알림"><Bell size={19} /></button>
@@ -591,9 +591,9 @@ function AuthScreen({
       <section className="auth-card">
         <div className="auth-brand">
           <div className="brand-mark"><DongbaekMark small /></div>
-          <div><b>동백전 연계패스</b><span>부산시민플랫폼</span></div>
+          <div><b>원패스 카드</b><span>부산시민플랫폼</span></div>
         </div>
-        <p className="auth-eyebrow">동백전 연계패스</p>
+        <p className="auth-eyebrow">원패스 카드</p>
         <h1>{registering ? '간편 회원가입' : '로그인'}</h1>
         <p className="auth-description">아이디와 비밀번호로 간편하게 시작하세요.</p>
         <div className="auth-tabs" role="tablist" aria-label="계정 메뉴">
@@ -711,7 +711,7 @@ function HomeScreen({
       <section className="walk-card"><div><b>조금 더 걸어볼까요?</b><br /><span>산책이라도 나설까요?</span><small>걷기사용 · 오늘의 걸음은 연결 후 표시됩니다</small></div><span className="walk-icon">◜◡◝</span></section>
       <div className="bento">
         <button onClick={onOpenMenu}><b>MY 플랫폼</b><span>내 정보를<br />한번에 확인하세요!</span><small>› 내정보 관리</small></button>
-        <button onClick={onOpenCard}><b>동백전 연계패스</b><span>내 카드와 혜택을 확인해요</span></button>
+        <button onClick={onOpenCard}><b>원패스 카드</b><span>내 카드와 혜택을 확인해요</span></button>
         <button onClick={onOpenReport}><b>월별 사용 리포트</b><span>결제 이용 내역을 확인해요</span></button>
       </div>
       <div className="quick-grid">{quickLinks.map(({ label, icon: Icon, tone }) => <button key={label} type="button" disabled><span className={`quick-icon ${tone}`}><Icon size={17} /></span><b>{label}</b></button>)}</div>
@@ -819,7 +819,7 @@ function CardDetail({
 
   return (
     <div className="screen-content detail-screen">
-      <div className="detail-head"><button onClick={onBack} aria-label="뒤로"><ArrowLeft size={19} /></button><strong>동백전 연계패스</strong><button onClick={onBack} aria-label="내 카드 관리"><Settings2 size={18} /></button></div>
+      <div className="detail-head"><button onClick={onBack} aria-label="뒤로"><ArrowLeft size={19} /></button><strong>원패스 카드</strong><button onClick={onBack} aria-label="내 카드 관리"><Settings2 size={18} /></button></div>
       <section className="benefit-card"><div><span>이번 달 승인 결제 혜택</span><strong>{formatWon(thisMonthBenefit)}</strong><b>결제 이용 내역 기준</b></div><div className="mascot">◔ᴥ◔</div></section>
       <section className="pay-section">
         <div className="section-title"><h3>카드 혜택 비교</h3><span>보유 카드 기준</span></div>
@@ -932,7 +932,7 @@ function CardManager({
   return (
     <div className="screen-content manager-screen">
       <div className="detail-head"><button onClick={onBack} aria-label="뒤로"><ArrowLeft size={19} /></button><strong>내 카드 관리</strong><button onClick={onBack} aria-label="메뉴"><Menu size={19} /></button></div>
-      <section className="primary-card"><div className="card-brand"><span className="mascot tiny">◔ᴥ◔</span><div><b>동백전 연계패스</b><small>{displayName ?? '프로필 정보 미등록'} · 보유 카드 {userCards.length}장</small></div></div></section>
+      <section className="primary-card"><div className="card-brand"><span className="mascot tiny">◔ᴥ◔</span><div><b>원패스 카드</b><small>{displayName ?? '프로필 정보 미등록'} · 보유 카드 {userCards.length}장</small></div></div></section>
       {pendingCard && <p className="card-action-status" role="status">카드 등록 상태를 변경하는 중입니다.</p>}
       {actionMessage && <p className="card-action-success" role="status">{actionMessage}</p>}
       <p className="list-label">내 보유 카드 {userCards.length}장</p>
@@ -1360,7 +1360,7 @@ function MyPlatform({
           {saved && <p className="topup-success" role="status">프로필 정보를 저장했습니다.</p>}
         </section>
       )}
-      <div className="settings-list"><div>동백전 연계패스&nbsp; · &nbsp;시민 생활 서비스</div><div>마케팅 및 혜택 알림 설정 · 미연결</div></div>
+      <div className="settings-list"><div>원패스 카드&nbsp; · &nbsp;시민 생활 서비스</div><div>마케팅 및 혜택 알림 설정 · 미연결</div></div>
     </div>
   )
 }

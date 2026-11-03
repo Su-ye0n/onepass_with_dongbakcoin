@@ -3,8 +3,8 @@ import './globals.css'
 import './integration.css'
 
 export const metadata: Metadata = {
-  title: '동백전 연계패스 | 부산시민플랫폼',
-  description: '동백전과 제휴 카드를 연결해 카드 혜택을 비교하는 서비스',
+  title: '원패스 카드 | 부산시민플랫폼',
+  description: '보유 카드의 혜택을 비교하고 이용 내역을 확인하는 서비스',
   generator: 'v0.app',
   icons: {
     icon: [
