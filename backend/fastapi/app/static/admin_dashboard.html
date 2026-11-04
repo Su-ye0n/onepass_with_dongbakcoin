@@ -10,9 +10,9 @@
 <style>
 /* BNK 브랜드 팔레트 · 1920×1080 고정 스테이지 · 현황 분석 + 고객 분류 */
 :root{
-  --b9:#5E0203; --b8:#8B0304; --b7:#D7191F; --b6:#B91319; --b5:#E5686B; --b3:#F2AEB0; --b2:#F9D9DA; --b1:#FDEFEF;
-  --sand:#896E4A; --sand1:#F2EDE4; --slate:#655C4F; --ink:#2B2622; --mute:#85807A; --line:#EAE6E0; --bg:#F4F2EF; --card:#FFFFFF;
-  --ok:#655C4F; --warn:#B91319; --ml:#655C4F; --ml1:#F1EEE9;
+  --b9:#3B342B; --b8:#4A4035; --b7:#655C4F; --b6:#554C40; --b5:#A8987F; --b3:#CFC4B4; --b2:#E6DFD4; --b1:#F3EFE8;
+  --sand:#B08D57; --sand1:#F2EDE4; --slate:#655C4F; --ink:#2B2622; --mute:#85807A; --line:#EAE6E0; --bg:#F4F2EF; --card:#FFFFFF;
+  --ok:#655C4F; --warn:#554C40; --ml:#655C4F; --ml1:#F1EEE9;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#1F1B17;overflow:hidden}
@@ -22,7 +22,7 @@ button:focus-visible,select:focus-visible{outline:2px solid var(--b5);outline-of
 /* top bar */
 .top{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 32px;gap:20px;color:var(--ink)}
 .brand{font-size:22px;font-weight:900;color:var(--b8);letter-spacing:-.5px;white-space:nowrap;display:flex;align-items:center;gap:10px}
-.brand::before{content:'';width:6px;height:28px;background:var(--b7);border-radius:3px}
+.brand::before{content:'';width:6px;height:28px;background:#D7191F;border-radius:3px}
 .brand span{font-weight:500;color:var(--mute);font-size:15px;margin-left:2px}
 .meta{display:flex;gap:8px;flex-wrap:nowrap}
 .meta b{font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:20px;background:var(--bg);color:var(--slate);white-space:nowrap}
@@ -46,7 +46,7 @@ main{position:absolute;top:68px;left:0;right:0;bottom:36px;padding:20px 28px}
 .cs{font-size:12.5px;color:var(--mute);margin-top:3px}
 .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
 .t-db{background:#EFEBE5;color:#655C4F}.t-base{background:#EFEBE5;color:#655C4F}.t-sim{background:var(--b1);color:var(--b7)}
-.t-asm{background:var(--sand1);color:#6B5438}.t-ext{background:#EFECE7;color:var(--ok)}.t-est{background:#EFECE7;color:var(--slate)}.t-none{background:#F6E4E1;color:var(--warn)}
+.t-asm{background:var(--sand1);color:#8A6F45}.t-ext{background:#EFECE7;color:var(--ok)}.t-est{background:#EFECE7;color:var(--slate)}.t-none{background:#F6E4E1;color:var(--warn)}
 .t-ml{background:var(--ml1);color:var(--ml)}
 .big{font-size:34px;font-weight:900;letter-spacing:-.8px;line-height:1.1}
 .big small{font-size:16px;font-weight:700;color:var(--slate);margin-left:2px}
@@ -70,7 +70,7 @@ main{position:absolute;top:68px;left:0;right:0;bottom:36px;padding:20px 28px}
 .xrow .v{text-align:right;font-weight:800;font-size:16px}
 .xrow .v small{display:block;font-size:11.5px;color:var(--mute);font-weight:500}
 .pill{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
-.p-fix{background:var(--b1);color:var(--b7)}.p-no{background:#EFECE7;color:var(--slate)}.p-hold{background:var(--sand1);color:#6B5438}
+.p-fix{background:var(--b1);color:var(--b7)}.p-no{background:#EFECE7;color:var(--slate)}.p-hold{background:var(--sand1);color:#8A6F45}
 .blk{margin-top:12px}
 .blk h5{font-size:12.5px;color:var(--mute);font-weight:700;margin-bottom:4px}
 .blk p{font-size:14px;line-height:1.6}
@@ -124,7 +124,7 @@ select.s{font:600 13.5px 'Noto Sans KR',sans-serif;padding:7px 10px;border-radiu
 .mx .cell.best{background:var(--b8)}.mx .cell.best .v{color:#fff}.mx .cell.best .n,.mx .cell.best .id{color:#E3BFCB}
 .mx .cell.asm{background:var(--sand1)}
 #p1hero .t5:first-child,#p2hero .t5:first-child,#p3hero .t5:first-child{background:#fff;border-color:var(--line)}
-#p1hero .t5.on,#p2hero .t5.on,#p3hero .t5.on{border-color:var(--b7);box-shadow:0 0 0 3px rgba(215,25,31,.25);background:linear-gradient(160deg,var(--b1),#fff)}
+#p1hero .t5.on,#p2hero .t5.on,#p3hero .t5.on{border-color:var(--b7);box-shadow:0 0 0 3px rgba(101,92,79,.25);background:linear-gradient(160deg,var(--b1),#fff)}
 .mx .cell.pick{outline:3px solid var(--sand);outline-offset:2px}
 .mx .ar{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--b7);text-align:center;line-height:1.3}
 .mx .ar b{font-size:18px}
@@ -163,9 +163,9 @@ ul.as li .tag{margin-top:2px}
 .hero .hint{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:700;color:var(--b6)}
 .top5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
 .t5{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:3px;transition:transform .12s,box-shadow .12s}
-.t5:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(215,25,31,.15);border-color:var(--b3)}
+.t5:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(101,92,79,.15);border-color:var(--b3)}
 .t5:first-child{background:linear-gradient(160deg,var(--b1),#fff);border-color:var(--b5)}
-.t5.on{border-color:var(--b7);box-shadow:0 0 0 3px rgba(215,25,31,.25)}
+.t5.on{border-color:var(--b7);box-shadow:0 0 0 3px rgba(101,92,79,.25)}
 .t5 .h{display:flex;justify-content:space-between;align-items:flex-start}
 .t5 .rk{font-size:13px;font-weight:900;color:#fff;background:var(--b7);border-radius:8px;padding:2px 8px}
 .t5 .gv{font-size:24px;font-weight:900;color:var(--b7);line-height:1;text-align:right}
@@ -187,9 +187,9 @@ ul.as li .tag{margin-top:2px}
 .gl-t{font-size:1.25px;font-weight:700;pointer-events:none;text-anchor:middle}
 .tip{position:absolute;background:var(--b9);color:#fff;padding:8px 11px;border-radius:8px;font-size:12.5px;pointer-events:none;display:none;z-index:5;white-space:nowrap;line-height:1.5}
 .mfoot{display:flex;align-items:center;gap:14px;margin-top:10px;font-size:12px;color:var(--slate);flex-wrap:wrap}
-.grad{width:110px;height:9px;border-radius:3px;background:linear-gradient(90deg,#FDEFEF,#E5686B,#5E0203)}
+.grad{width:110px;height:9px;border-radius:3px;background:linear-gradient(90deg,#F3EFE8,#A8987F,#3B342B)}
 .sb{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
-.sb-big{background:#EFECE7;color:var(--ok)}.sb-mid{background:var(--sand1);color:#6B5438}.sb-small{background:#F6E4E1;color:var(--warn)}
+.sb-big{background:#EFECE7;color:var(--ok)}.sb-mid{background:var(--sand1);color:#8A6F45}.sb-small{background:#F6E4E1;color:var(--warn)}
 .info{overflow:auto}
 .info-empty{padding:10px 14px;background:#fff;border:1px solid var(--line);border-left:3px solid var(--b5);border-radius:8px;font-size:13.5px;line-height:1.55}
 .pn{display:flex;flex-direction:column}
@@ -274,7 +274,7 @@ ul.as li .tag{margin-top:2px}
           <div class="cs" id="maptitle"></div>
           <div class="mapbox" id="mapbox"><svg id="mapsvg" role="img" aria-label="부산 구·군 지도"></svg><div class="tip" id="tip"></div></div>
           <div class="mfoot"><span>낮음</span><div class="grad"></div><span>높음</span>
-            <span style="display:inline-flex;align-items:center;gap:5px;margin-left:8px"><i style="width:12px;height:12px;background:#896E4A;border-radius:3px;display:inline-block"></i>선택한 구</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border:2px solid #896E4A;border-radius:3px;display:inline-block"></i>합계 TOP 5</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;margin-left:8px"><i style="width:12px;height:12px;background:#D7191F;border-radius:3px;display:inline-block"></i>선택한 구</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border:2px solid #B08D57;border-radius:3px;display:inline-block"></i>합계 TOP 5</span>
             <span style="margin-left:auto" class="mute">고객 거주 구·군 기준</span></div>
         </div>
         <div class="card info" id="info"></div>
@@ -425,7 +425,7 @@ const METRIC={pp:{k:'혜택률 개선폭',t:'혜택률 개선폭 (원패스+충�
   op:{k:'1인 월 혜택 증가(원패스만)',t:'1인 월 혜택 증가 (원패스만, 현재 잔액)',f:s=>s.op,fmt:v=>'+'+won(v)},
   mem:{k:'동백전 보유율',t:'동백전 보유율',f:s=>s.mem,fmt:v=>Math.round(v*100)+'%'},
   n:{k:'보정 고객 수',t:'보정 고객 수',f:s=>s.n,fmt:v=>fmt(v)+'명'}};
-function lerp(t){const st=[[253,239,239],[215,25,31],[139,3,4]];const k=t<.5?0:1,u=t<.5?t*2:(t-.5)*2;
+function lerp(t){const st=[[243,239,232],[101,92,79],[59,52,43]];const k=t<.5?0:1,u=t<.5?t*2:(t-.5)*2;
   return 'rgb('+st[k].map((x,i)=>Math.round(x+(st[k+1][i]-x)*u)).join(',')+')';}
 function centroid(d){const p=[...d.matchAll(/([\d.]+),([\d.]+)/g)].map(m=>[+m[1],+m[2]]);
   let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;p.forEach(([x,y])=>{x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);});
@@ -438,9 +438,9 @@ function renderMap(){
   let h='';
   GUS.forEach(g=>{const s=GUSTAT[g],t=mx>mn?(M.f(s)-mn)/(mx-mn):0;
     const cls=['gu',s.n<10?'small':'',bigOnly&&s.n<20?'dim':'',TOP5.includes(g)?'top':'',gusel===g?'sel':''].join(' ');
-    h+=`<path class="${cls}" data-g="${g}" d="${PATHS[g]}" fill="${gusel===g?'#896E4A':lerp(t)}" tabindex="0" aria-label="${g}"></path>`;});
+    h+=`<path class="${cls}" data-g="${g}" d="${PATHS[g]}" fill="${gusel===g?'#D7191F':lerp(t)}" tabindex="0" aria-label="${g}"></path>`;});
   GUS.forEach(g=>{const s=GUSTAT[g],t=mx>mn?(M.f(s)-mn)/(mx-mn):0,[x,y]=CEN[g];
-    h+=`<text class="gl-t" x="${x}" y="${y}" fill="${gusel===g?'#2B2622':t>.45?'#fff':'#2B2622'}" ${gusel===g?'font-size="1.5"':''}>${g}</text>`;});
+    h+=`<text class="gl-t" x="${x}" y="${y}" fill="${gusel===g?'#fff':t>.45?'#fff':'#2B2622'}" ${gusel===g?'font-size="1.5"':''}>${g}</text>`;});
   // 선택/TOP5 테두리를 위로
   $('mapsvg').setAttribute('viewBox','407.5 464 53.5 59.5');
   $('mapsvg').innerHTML=h;
@@ -472,11 +472,11 @@ function scatter(){
   const X=v=>L+v/xm*(W-L-Rr),Y=v=>T+(1-v/ym)*(H-T-B);
   const smax=Math.max(...Object.values(GUSTAT).map(s=>s.sumTot));
   let h=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="구·군별 지금 혜택률과 개선폭">`;
-  h+=`<rect x="${L}" y="${T}" width="${X(BUS.rA)-L}" height="${Y(BUS.pp)-T}" fill="#FDEFEF"/>`;
+  h+=`<rect x="${L}" y="${T}" width="${X(BUS.rA)-L}" height="${Y(BUS.pp)-T}" fill="#F3EFE8"/>`;
   [0,.005,.01].forEach(v=>h+=`<line x1="${X(v)}" x2="${X(v)}" y1="${T}" y2="${H-B}" stroke="#EAE6E0"/><text x="${X(v)}" y="${H-B+16}" font-size="11" fill="#85807A" text-anchor="middle">${(v*100).toFixed(1)}%</text>`);
   [0,.01,.02,.03].forEach(v=>h+=`<line x1="${L}" x2="${W-Rr}" y1="${Y(v)}" y2="${Y(v)}" stroke="#EAE6E0"/><text x="${L-6}" y="${Y(v)+4}" font-size="11" fill="#85807A" text-anchor="end">+${(v*100).toFixed(0)}%p</text>`);
-  h+=`<line x1="${X(BUS.rA)}" x2="${X(BUS.rA)}" y1="${T}" y2="${H-B}" stroke="#E5686B" stroke-dasharray="4 3"/><line x1="${L}" x2="${W-Rr}" y1="${Y(BUS.pp)}" y2="${Y(BUS.pp)}" stroke="#E5686B" stroke-dasharray="4 3"/>`;
-  h+=`<text x="${L+8}" y="${T+16}" font-size="12" font-weight="800" fill="#D7191F">우선 권유 · 지금 낮고 개선 큼</text><text x="${W-Rr-8}" y="${T+16}" font-size="12" font-weight="700" fill="#85807A" text-anchor="end">이미 받는 편 · 더 늘어남</text>
+  h+=`<line x1="${X(BUS.rA)}" x2="${X(BUS.rA)}" y1="${T}" y2="${H-B}" stroke="#A8987F" stroke-dasharray="4 3"/><line x1="${L}" x2="${W-Rr}" y1="${Y(BUS.pp)}" y2="${Y(BUS.pp)}" stroke="#A8987F" stroke-dasharray="4 3"/>`;
+  h+=`<text x="${L+8}" y="${T+16}" font-size="12" font-weight="800" fill="#655C4F">우선 권유 · 지금 낮고 개선 큼</text><text x="${W-Rr-8}" y="${T+16}" font-size="12" font-weight="700" fill="#85807A" text-anchor="end">이미 받는 편 · 더 늘어남</text>
     <text x="${L+8}" y="${H-B-8}" font-size="12" font-weight="700" fill="#85807A">지금도 낮고 개선도 작음 · 원인 확인</text><text x="${W-Rr-8}" y="${H-B-8}" font-size="12" font-weight="700" fill="#85807A" text-anchor="end">이미 잘 받는 중</text>`;
   h+=`<text x="${(L+W-Rr)/2}" y="${H-4}" font-size="11.5" fill="#655C4F" text-anchor="middle">지금 혜택률 (기존 습관 · 받은 혜택 ÷ 결제액) →</text>`;
   const lr=v=>5+Math.sqrt(v/smax)*21;
@@ -495,7 +495,7 @@ function scenarioBars(s,unit){
   const mx=Math.max(...rows.map(r=>r[1]),1);
   return rows.map(r=>`<div class="vb"><span>${r[0]}</span><div class="tr"><div style="width:${r[1]/mx*100}%;background:${r[2]}"></div></div><span class="v">${won(r[1])}</span></div>`).join('')+`<div class="mute" style="margin-top:4px">${unit}</div>`;
 }
-const GCOL={G1:'#5E0203',G2:'#D7191F',G3:'#E5686B',G4:'#F2AEB0',G5:'#F9D9DA',G6:'#896E4A',G7:'#B7A997'};
+const GCOL={G1:'#3B342B',G2:'#655C4F',G3:'#A8987F',G4:'#CFC4B4',G5:'#E6DFD4',G6:'#B08D57',G7:'#B7A997'};
 const GSHORT={G1:'G1 가입 후 미사용',G2:'G2 월 10만 미만',G3:'G3 월 10~30만',G4:'G4 월 30~50만',G5:'G5 월 50만 이상',G6:'G6 동백전 없음',G7:'G7 정보 없음'};
 function groupBars(L){const n=L.length||1;
   return Object.keys(GSHORT).map(g=>{const c=L.filter(u=>u.g===g).length;
@@ -664,8 +664,8 @@ function p2real(){
    ${rsel==='T1'?`<h5 class="mute" style="font-weight:700;margin-top:12px">미충전으로 캐시백을 못 받은 3건 · AS-IS vs TO-BE</h5>
    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px">${focus.map(t=>`<div style="border:1.5px solid var(--b3);border-radius:10px;padding:8px 12px"><div style="font-weight:800">${t.m.length>14?t.m.slice(0,14)+'…':t.m}</div><div class="mute">${t.dt.replace('-','/')} · ${won(t.amt)}${t.survey.includes('%')?' · 선행조사 '+t.survey.replace('동백전 가맹점, ',''):''}</div>
      <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:13px"><span>실제 <b>0원</b></span><span>충전했다면 <b style="color:var(--b7)">${won(Math.floor(t.amt*rate))}</b></span></div></div>`).join('')}</div>
-   <div class="mute" style="margin-top:4px">충전했다면 = 10% 가맹점·한도 내라고 본 조건부 값 ${stTag('가정','#6B5438')} · 합계 ${won(est)}</div>`:
-   `<div style="background:var(--sand1);border-radius:10px;padding:8px 12px;margin-top:12px;font-size:12.8px;color:#6B5438">동백전 가맹점 2건이 어느 거래인지 아직 연결되지 않아, 거래별 추가 혜택은 계산하지 않았습니다. 나머지 14건도 비가맹으로 확정된 것이 아닙니다.</div>`}
+   <div class="mute" style="margin-top:4px">충전했다면 = 10% 가맹점·한도 내라고 본 조건부 값 ${stTag('가정','#8A6F45')} · 합계 ${won(est)}</div>`:
+   `<div style="background:var(--sand1);border-radius:10px;padding:8px 12px;margin-top:12px;font-size:12.8px;color:#8A6F45">동백전 가맹점 2건이 어느 거래인지 아직 연결되지 않아, 거래별 추가 혜택은 계산하지 않았습니다. 나머지 14건도 비가맹으로 확정된 것이 아닙니다.</div>`}
    <h5 class="mute" style="font-weight:700;margin-top:12px">거래 ${tx.length}건 · 받은 혜택은 기록된 값만 (미기재 ≠ 0원)</h5>
    <div class="scroll" style="flex:1;margin-top:4px"><table class="t txl"><tr><th>일자</th><th>가게 · 업종</th><th class="r">금액</th><th>결제 수단</th><th>가맹 표기</th><th class="r">받은 혜택</th></tr>
    ${rows.map(t=>`<tr ${t.tool==='동백전'?'style="background:var(--b1)"':''}><td>${t.dt.replace('-','/')}</td><td>${t.m.length>14?t.m.slice(0,14)+'…':t.m} <span class="mute">${t.ind}</span></td><td class="r">${won(t.amt)}</td>
