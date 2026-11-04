@@ -8,44 +8,45 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-/* 원본 버건디 팔레트 유지 · 1920×1080 고정 스테이지 · 지도 + 클릭 상세 형식 */
+/* BNK 브랜드 팔레트 · 1920×1080 고정 스테이지 · 현황 분석 + 고객 분류 */
 :root{
-  --b9:#3F0B1E; --b8:#5C1229; --b7:#7A1E3A; --b6:#93304F; --b5:#B04E6B; --b3:#D9A0B2; --b2:#EBCDD7; --b1:#F7EBEF;
-  --sand:#C49A5A; --sand1:#F6EEDF; --slate:#5F6470; --ink:#241A1E; --mute:#8C8186; --line:#EFE7EA; --bg:#F6F2F3; --card:#FFFFFF;
-  --ok:#2E7D5B; --warn:#B4541A; --ml:#5B3E8C; --ml1:#F1ECF8;
+  --b9:#5E0203; --b8:#8B0304; --b7:#D7191F; --b6:#B91319; --b5:#E5686B; --b3:#F2AEB0; --b2:#F9D9DA; --b1:#FDEFEF;
+  --sand:#896E4A; --sand1:#F2EDE4; --slate:#655C4F; --ink:#2B2622; --mute:#85807A; --line:#EAE6E0; --bg:#F4F2EF; --card:#FFFFFF;
+  --ok:#655C4F; --warn:#B91319; --ml:#655C4F; --ml1:#F1EEE9;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#2A1F23;overflow:hidden}
+html,body{height:100%;background:#1F1B17;overflow:hidden}
 body{font-family:'Noto Sans KR','Noto Sans CJK KR',sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
 button:focus-visible,select:focus-visible{outline:2px solid var(--b5);outline-offset:2px}
 #stage{width:1920px;height:1080px;background:var(--bg);position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden}
 /* top bar */
-.top{height:76px;background:var(--b8);display:flex;align-items:center;padding:0 32px;gap:22px;color:#F3E3E8}
-.brand{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.5px;white-space:nowrap}
-.brand span{font-weight:500;color:#E3BFCB;font-size:17px;margin-left:8px}
+.top{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 32px;gap:20px;color:var(--ink)}
+.brand{font-size:22px;font-weight:900;color:var(--b8);letter-spacing:-.5px;white-space:nowrap;display:flex;align-items:center;gap:10px}
+.brand::before{content:'';width:6px;height:28px;background:var(--b7);border-radius:3px}
+.brand span{font-weight:500;color:var(--mute);font-size:15px;margin-left:2px}
 .meta{display:flex;gap:8px;flex-wrap:nowrap}
-.meta b{font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:20px;background:rgba(255,255,255,.1);color:#F6DDE5;white-space:nowrap}
-.meta b.hl{background:#F6DDE5;color:var(--b8)}
-.tabs{margin-left:auto;display:flex;gap:4px;background:rgba(0,0,0,.18);padding:5px;border-radius:12px}
-.tabs button{border:0;background:transparent;color:#E8CBD4;font:700 15px 'Noto Sans KR',sans-serif;padding:10px 18px;border-radius:9px;cursor:pointer;white-space:nowrap}
-.tabs button.on{background:#fff;color:var(--b8)}
+.meta b{font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:20px;background:var(--bg);color:var(--slate);white-space:nowrap}
+.meta b.hl{background:var(--b1);color:var(--b7)}
+.tabs{margin-left:auto;display:flex;gap:6px}
+.tabs button{border:0;background:transparent;color:var(--slate);font:700 16px 'Noto Sans KR',sans-serif;padding:10px 24px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.tabs button.on{background:var(--b7);color:#fff}
 .tabs button small{font-weight:500;opacity:.7;margin-right:6px}
-.help{border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;font:700 14px 'Noto Sans KR',sans-serif;padding:9px 14px;border-radius:10px;cursor:pointer;white-space:nowrap}
-.help:hover{background:rgba(255,255,255,.12)}
-main{position:absolute;top:76px;left:0;right:0;bottom:46px;padding:20px 28px}
+.help{border:1px solid var(--line);background:#fff;color:var(--slate);font:700 13.5px 'Noto Sans KR',sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.help:hover{background:var(--bg)}
+main{position:absolute;top:68px;left:0;right:0;bottom:36px;padding:20px 28px}
 .page{display:none;height:100%}
 .page.on{display:grid;gap:16px}
 /* footer strip */
-.foot{position:absolute;left:0;right:0;bottom:0;height:46px;background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;gap:26px;padding:0 32px;font-size:13px;color:var(--slate)}
+.foot{position:absolute;left:0;right:0;bottom:0;height:36px;background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;gap:26px;padding:0 32px;font-size:12.5px;color:var(--mute)}
 .foot b{color:var(--ink);font-weight:800;margin-left:4px}
 .foot .warn{margin-left:auto;color:var(--mute);font-size:12.5px}
 /* cards */
-.card{background:var(--card);border-radius:16px;padding:18px 20px;box-shadow:0 1px 2px rgba(60,20,35,.05),0 6px 18px rgba(60,20,35,.05);min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.card{background:var(--card);border-radius:14px;padding:18px 20px;border:1px solid var(--line);box-shadow:0 1px 2px rgba(40,30,20,.04);min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 .ct{font-size:16px;font-weight:800;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .cs{font-size:12.5px;color:var(--mute);margin-top:3px}
 .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
-.t-db{background:#EEE9F6;color:#5B3E8C}.t-base{background:#E9EEF6;color:#36507A}.t-sim{background:var(--b1);color:var(--b7)}
-.t-asm{background:var(--sand1);color:#8A6326}.t-ext{background:#E7F2EC;color:var(--ok)}.t-est{background:#F1EFF0;color:var(--slate)}.t-none{background:#F4E4DA;color:var(--warn)}
+.t-db{background:#EFEBE5;color:#655C4F}.t-base{background:#EFEBE5;color:#655C4F}.t-sim{background:var(--b1);color:var(--b7)}
+.t-asm{background:var(--sand1);color:#6B5438}.t-ext{background:#EFECE7;color:var(--ok)}.t-est{background:#EFECE7;color:var(--slate)}.t-none{background:#F6E4E1;color:var(--warn)}
 .t-ml{background:var(--ml1);color:var(--ml)}
 .big{font-size:34px;font-weight:900;letter-spacing:-.8px;line-height:1.1}
 .big small{font-size:16px;font-weight:700;color:var(--slate);margin-left:2px}
@@ -60,48 +61,48 @@ main{position:absolute;top:76px;left:0;right:0;bottom:46px;padding:20px 28px}
 .seg button{border:0;background:transparent;font:700 11.5px 'Noto Sans KR',sans-serif;color:var(--b6);padding:3px 8px;border-radius:6px;cursor:pointer}
 .seg button.on{background:var(--b7);color:#fff}
 .xrow{display:grid;grid-template-columns:150px 1fr 120px;align-items:center;gap:12px;padding:5px 10px;border-radius:10px;cursor:pointer}
-.xrow:hover{background:#FBF6F8}
+.xrow:hover{background:#FAF8F4}
 .xrow.on{background:var(--b1);outline:1.5px solid var(--b3)}
 .xrow .n{font-size:14px;font-weight:700}
 .xrow .n small{display:block;font-size:11px;color:var(--mute);font-weight:500}
-.track{height:24px;background:#F4EEF0;border-radius:6px;overflow:hidden}
+.track{height:24px;background:#EFEBE5;border-radius:6px;overflow:hidden}
 .fill{height:100%;border-radius:6px}
 .xrow .v{text-align:right;font-weight:800;font-size:16px}
 .xrow .v small{display:block;font-size:11.5px;color:var(--mute);font-weight:500}
 .pill{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
-.p-fix{background:var(--b1);color:var(--b7)}.p-no{background:#F1EFF0;color:var(--slate)}.p-hold{background:var(--sand1);color:#8A6326}
+.p-fix{background:var(--b1);color:var(--b7)}.p-no{background:#EFECE7;color:var(--slate)}.p-hold{background:var(--sand1);color:#6B5438}
 .blk{margin-top:12px}
 .blk h5{font-size:12.5px;color:var(--mute);font-weight:700;margin-bottom:4px}
 .blk p{font-size:14px;line-height:1.6}
 .btn{white-space:nowrap;border:0;background:var(--b7);color:#fff;font:700 13.5px 'Noto Sans KR',sans-serif;padding:10px 16px;border-radius:10px;cursor:pointer;align-self:flex-start}
 .btn.ghost{background:var(--b1);color:var(--b7)}
-.ph{border:1.5px dashed #E2D3D9;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;color:var(--mute);font-size:13px;padding:14px;margin-top:10px}
+.ph{border:1.5px dashed #DAD3C8;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;color:var(--mute);font-size:13px;padding:14px;margin-top:10px}
 .ph b{color:var(--slate);font-size:14.5px}
-.mlbox{border:1.5px solid #BFAEDD;background:var(--ml1);border-radius:12px;padding:10px 14px;font-size:13px;flex-shrink:0}
+.mlbox{border:1.5px solid #B7A997;background:var(--ml1);border-radius:12px;padding:10px 14px;font-size:13px;flex-shrink:0}
 .mlbox>b{color:var(--ml)}
 
-.ph.ml{border-color:#BFAEDD;background:var(--ml1);color:var(--ml);align-items:flex-start;text-align:left}
+.ph.ml{border-color:#B7A997;background:var(--ml1);color:var(--ml);align-items:flex-start;text-align:left}
 .ph.ml b{color:var(--ml)}
 .sbar{display:flex;height:40px;border-radius:8px;overflow:hidden;margin:8px 0 6px}
 .sbar div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden}
 .leg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--slate)}
 .leg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
 table.t{width:100%;border-collapse:collapse;font-size:13.5px}
-table.t th{text-align:left;font-size:12px;color:var(--mute);font-weight:700;padding:8px 8px;border-bottom:1px solid var(--line);background:#FCFAFB;position:sticky;top:0;white-space:nowrap;z-index:1}
-table.t td{padding:7px 8px;border-bottom:1px solid #F5EFF1;white-space:nowrap}
+table.t th{text-align:left;font-size:12px;color:var(--mute);font-weight:700;padding:8px 8px;border-bottom:1px solid var(--line);background:#FBFAF7;position:sticky;top:0;white-space:nowrap;z-index:1}
+table.t td{padding:7px 8px;border-bottom:1px solid #F0EDE7;white-space:nowrap}
 table.t td.r,table.t th.r{text-align:right}
 table.t tr.sel td{background:var(--b1)}
 table.t tr.ck{cursor:pointer}
-table.t tr.ck:hover td{background:#FBF6F8}
+table.t tr.ck:hover td{background:#FAF8F4}
 .scroll{overflow:auto;min-height:0}
 .crow{padding:8px 10px;border-radius:10px;cursor:pointer;border:1.5px solid transparent;margin-bottom:2px}
-.crow:hover{background:#FBF6F8}
+.crow:hover{background:#FAF8F4}
 .crow.on{background:var(--b1);border-color:var(--b3)}
 .gchip{font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:6px}
 
 #ctable td{padding:3px 8px}
 #ctable .chip{margin:1px 0}
-.chip{display:inline-block;font-size:12.5px;padding:4px 10px;border-radius:20px;background:#F4EEF0;color:var(--ink);margin:2px 4px 2px 0}
+.chip{display:inline-block;font-size:12.5px;padding:4px 10px;border-radius:20px;background:#EFEBE5;color:var(--ink);margin:2px 4px 2px 0}
 .chip.b{background:var(--b1);color:var(--b7);font-weight:700}
 .fgrp{display:flex;flex-direction:column;gap:6px}
 #filters .fgrp{flex-direction:row;align-items:center;gap:8px}
@@ -109,13 +110,13 @@ table.t tr.ck:hover td{background:#FBF6F8}
 #fsum .big{font-size:24px!important}
 .fgrp h6{font-size:12px;color:var(--mute);font-weight:700}
 .fbtns{display:flex;gap:5px;flex-wrap:wrap}
-.fbtns button{border:1.5px solid #E8DDE1;background:#fff;font:600 13px 'Noto Sans KR',sans-serif;color:var(--ink);padding:6px 11px;border-radius:18px;cursor:pointer}
+.fbtns button{border:1.5px solid #E3DDD4;background:#fff;font:600 13px 'Noto Sans KR',sans-serif;color:var(--ink);padding:6px 11px;border-radius:18px;cursor:pointer}
 .fbtns button.on{background:var(--b7);border-color:var(--b7);color:#fff}
-select.s{font:600 13.5px 'Noto Sans KR',sans-serif;padding:7px 10px;border-radius:10px;border:1.5px solid #E8DDE1;background:#fff;color:var(--ink)}
+select.s{font:600 13.5px 'Noto Sans KR',sans-serif;padding:7px 10px;border-radius:10px;border:1.5px solid #E3DDD4;background:#fff;color:var(--ink)}
 .mx{display:grid;grid-template-columns:100px 1fr 120px 1fr;grid-template-rows:auto 1fr 44px 1fr;gap:6px;flex:1;margin-top:10px}
 .mx .hd{font-size:13px;font-weight:800;color:var(--slate);display:flex;align-items:end;justify-content:center;padding-bottom:2px}
 .mx .rh{font-size:13px;font-weight:800;color:var(--slate);display:flex;flex-direction:column;justify-content:center}
-.mx .cell{border-radius:14px;padding:12px 16px;background:#FAF5F7;display:flex;flex-direction:column;justify-content:center}
+.mx .cell{border-radius:14px;padding:12px 16px;background:#F8F6F2;display:flex;flex-direction:column;justify-content:center}
 .mx .cell .id{font-size:11px;color:var(--mute);font-weight:700}
 .mx .cell .v{font-size:25px;font-weight:900;letter-spacing:-.6px}
 .mx .cell .n{font-size:12px;color:var(--mute)}
@@ -123,7 +124,7 @@ select.s{font:600 13.5px 'Noto Sans KR',sans-serif;padding:7px 10px;border-radiu
 .mx .cell.best{background:var(--b8)}.mx .cell.best .v{color:#fff}.mx .cell.best .n,.mx .cell.best .id{color:#E3BFCB}
 .mx .cell.asm{background:var(--sand1)}
 #p1hero .t5:first-child,#p2hero .t5:first-child,#p3hero .t5:first-child{background:#fff;border-color:var(--line)}
-#p1hero .t5.on,#p2hero .t5.on,#p3hero .t5.on{border-color:var(--b7);box-shadow:0 0 0 3px rgba(122,30,58,.25);background:linear-gradient(160deg,var(--b1),#fff)}
+#p1hero .t5.on,#p2hero .t5.on,#p3hero .t5.on{border-color:var(--b7);box-shadow:0 0 0 3px rgba(215,25,31,.25);background:linear-gradient(160deg,var(--b1),#fff)}
 .mx .cell.pick{outline:3px solid var(--sand);outline-offset:2px}
 .mx .ar{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--b7);text-align:center;line-height:1.3}
 .mx .ar b{font-size:18px}
@@ -140,7 +141,7 @@ select.s{font:600 13.5px 'Noto Sans KR',sans-serif;padding:7px 10px;border-radiu
 .sg .c .v{font-size:21px;font-weight:900}
 .sg .c .n{font-size:11.5px;opacity:.85}
 .dl{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.dl>div{background:#FAF5F7;border-radius:12px;padding:8px 12px}
+.dl>div{background:#F8F6F2;border-radius:12px;padding:8px 12px}
 .dl div .l{font-size:12px;color:var(--mute);font-weight:700}
 .dl div .v{font-size:19px;font-weight:900;margin-top:4px;letter-spacing:-.5px}
 .dl div .s{font-size:11.5px;color:var(--mute);margin-top:2px}
@@ -148,9 +149,9 @@ ul.as{list-style:none;font-size:13px;line-height:1.55}
 ul.as li{padding:6px 0;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:flex-start}
 ul.as li .tag{margin-top:2px}
 .hbar{display:grid;grid-template-columns:96px 1fr 70px;align-items:center;gap:8px;font-size:12.5px;margin:4px 0}
-.hbar .tr{height:16px;background:#F4EEF0;border-radius:4px;overflow:hidden;display:flex}
+.hbar .tr{height:16px;background:#EFEBE5;border-radius:4px;overflow:hidden;display:flex}
 /* 읽는 법 박스 (F-SOI chart-help 형식) */
-.help-box{margin-top:10px;padding:10px 13px;background:#FBF6F8;border-left:3px solid var(--b5);border-radius:0 8px 8px 0;font-size:12.8px;line-height:1.6}
+.help-box{margin-top:10px;padding:10px 13px;background:#FAF8F4;border-left:3px solid var(--b5);border-radius:0 8px 8px 0;font-size:12.8px;line-height:1.6}
 .help-box b{color:var(--b7)}
 .help-box{min-height:84px;box-sizing:border-box}
 .help-box>b:first-child{display:block;font-size:12px;letter-spacing:.02em;margin-bottom:3px}
@@ -162,9 +163,9 @@ ul.as li .tag{margin-top:2px}
 .hero .hint{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:700;color:var(--b6)}
 .top5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
 .t5{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:3px;transition:transform .12s,box-shadow .12s}
-.t5:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(122,30,58,.15);border-color:var(--b3)}
+.t5:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(215,25,31,.15);border-color:var(--b3)}
 .t5:first-child{background:linear-gradient(160deg,var(--b1),#fff);border-color:var(--b5)}
-.t5.on{border-color:var(--b7);box-shadow:0 0 0 3px rgba(122,30,58,.25)}
+.t5.on{border-color:var(--b7);box-shadow:0 0 0 3px rgba(215,25,31,.25)}
 .t5 .h{display:flex;justify-content:space-between;align-items:flex-start}
 .t5 .rk{font-size:13px;font-weight:900;color:#fff;background:var(--b7);border-radius:8px;padding:2px 8px}
 .t5 .gv{font-size:24px;font-weight:900;color:var(--b7);line-height:1;text-align:right}
@@ -175,20 +176,20 @@ ul.as li .tag{margin-top:2px}
 .hero .top5{height:100%;align-items:stretch}
 .hero .t5{height:145px;box-sizing:border-box;align-self:center}
 .mapwrap{display:grid;grid-template-columns:660px minmax(0,1fr);gap:16px;min-height:0}
-.mapbox{position:relative;flex:1;min-height:0;margin-top:10px;background:#FBF7F8;border-radius:12px;border:1px solid var(--line)}
+.mapbox{position:relative;flex:1;min-height:0;margin-top:10px;background:#FAF8F5;border-radius:12px;border:1px solid var(--line)}
 #mapsvg{position:absolute;inset:8px;width:calc(100% - 16px);height:calc(100% - 16px)}
 .gu{stroke:#fff;stroke-width:.18;cursor:pointer;transition:opacity .12s}
 .gu:hover{stroke:var(--ink);stroke-width:.35}
-.gu.small{stroke-dasharray:.6,.4;stroke:#8C8186}
+.gu.small{stroke-dasharray:.6,.4;stroke:#85807A}
 .gu.dim{opacity:.18}
 .gu.top{stroke:var(--sand);stroke-width:.55}
 .gu.sel{stroke:#fff;stroke-width:.35;stroke-dasharray:none}
 .gl-t{font-size:1.25px;font-weight:700;pointer-events:none;text-anchor:middle}
 .tip{position:absolute;background:var(--b9);color:#fff;padding:8px 11px;border-radius:8px;font-size:12.5px;pointer-events:none;display:none;z-index:5;white-space:nowrap;line-height:1.5}
 .mfoot{display:flex;align-items:center;gap:14px;margin-top:10px;font-size:12px;color:var(--slate);flex-wrap:wrap}
-.grad{width:110px;height:9px;border-radius:3px;background:linear-gradient(90deg,#F7EBEF,#B04E6B,#3F0B1E)}
+.grad{width:110px;height:9px;border-radius:3px;background:linear-gradient(90deg,#FDEFEF,#E5686B,#5E0203)}
 .sb{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
-.sb-big{background:#E7F2EC;color:var(--ok)}.sb-mid{background:var(--sand1);color:#8A6326}.sb-small{background:#F4E4DA;color:var(--warn)}
+.sb-big{background:#EFECE7;color:var(--ok)}.sb-mid{background:var(--sand1);color:#6B5438}.sb-small{background:#F6E4E1;color:var(--warn)}
 .info{overflow:auto}
 .info-empty{padding:10px 14px;background:#fff;border:1px solid var(--line);border-left:3px solid var(--b5);border-radius:8px;font-size:13.5px;line-height:1.55}
 .pn{display:flex;flex-direction:column}
@@ -199,13 +200,13 @@ ul.as li .tag{margin-top:2px}
 .pn{border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
 .pn h4{font-size:13px;color:var(--slate);font-weight:800;margin-bottom:8px}
 .k4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
-.k4>div{background:#FAF5F7;border-radius:12px;padding:12px 14px}
+.k4>div{background:#F8F6F2;border-radius:12px;padding:12px 14px}
 .k4 .l{font-size:12px;color:var(--mute);font-weight:700}
 .k4 .v{font-size:24px;font-weight:900;margin-top:4px;letter-spacing:-.5px}
 .k4 .s{font-size:11.5px;color:var(--mute);margin-top:2px}
 .k4>div.hi{background:var(--b1)}.k4>div.hi .v{color:var(--b7)}
 .vb{display:grid;grid-template-columns:118px 1fr 92px;gap:8px;align-items:center;font-size:12.5px;margin:5px 0}
-.vb .tr{height:14px;background:#F4EEF0;border-radius:4px;overflow:hidden}
+.vb .tr{height:14px;background:#EFEBE5;border-radius:4px;overflow:hidden}
 .vb .tr div{height:100%;border-radius:4px}
 .vb .v{text-align:right;font-weight:700}
 /* modal */
@@ -221,80 +222,66 @@ ul.as li .tag{margin-top:2px}
 .gi .gd i{font-style:normal;color:var(--slate)}
 .txl td{font-size:12.5px}
 .up{color:var(--b7);font-weight:800}
+
+/* ===== BNK 팔레트 · 2화면 구성 ===== */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.kpis .kpi{padding:14px 20px;justify-content:center}
+.kpis .kpi .big{font-size:30px;margin-top:4px}
+.kpis .kpi.hi{background:var(--b7);border-color:var(--b7)}
+.kpis .kpi.hi .l,.kpis .kpi.hi .s,.kpis .kpi.hi .big,.kpis .kpi.hi .big small{color:#fff}
+.kpis .kpi.hi .s{opacity:.85}
+.ihead{display:flex;align-items:baseline;gap:12px}
+.k3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.k3>div{background:var(--bg);border-radius:12px;padding:12px 16px}
+.k3 .l{font-size:12px;color:var(--mute);font-weight:700}
+.k3 .v{font-size:26px;font-weight:900;margin-top:4px;letter-spacing:-.5px}
+.k3 .v small{font-size:13px;font-weight:700;color:var(--slate);margin:0 2px}
+.k3 .s{font-size:12px;color:var(--mute);margin-top:2px}
+.k3>div.hi{background:var(--b7)}.k3>div.hi .l,.k3>div.hi .s,.k3>div.hi .v,.k3>div.hi .v small{color:#fff}
+.gstack{display:flex;height:34px;border-radius:8px;overflow:hidden;margin-top:6px}
+.gstack div{display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800;cursor:pointer;border-right:2px solid #fff}
+.gstack div:last-child{border-right:0}
+.gleg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;font-size:12.5px;color:var(--slate)}
+.gleg span{cursor:pointer;display:inline-flex;align-items:center;gap:5px}.gleg i{width:10px;height:10px;border-radius:3px;display:inline-block}
 </style>
 </head>
 <body>
 <div id="stage">
   <header class="top">
     <div class="brand">동백원카드<span>직원용 기회 분석</span></div>
-    <div class="meta"><b class="hl">보정 데이터</b><b>평가월 2026-06</b></div>
+    <div class="meta"><b class="hl">보정 데이터</b><b>2026-06</b></div>
     <nav class="tabs" id="tabs">
-      <button data-p="p0"><small>P0</small>구·군 현황</button>
-      <button data-p="p1"><small>P1</small>문제 진단</button>
-      <button data-p="p2"><small>P2</small>고객 탐색</button>
-      <button data-p="p3"><small>P3</small>시나리오 비교</button>
+      <button data-p="p0">현황 분석</button>
+      <button data-p="p2">고객 분류</button>
     </nav>
     <button class="help" id="helpbtn">? 용어 설명</button>
   </header>
   <main>
-    <!-- ================= P0 구·군 현황 ================= -->
-    <section class="page" id="p0" style="grid-template-rows:172px 1fr">
-      <div class="card hero">
-        <div>
-          <h2>지금 <em>먼저 챙길 구·군</em>은<br>어디일까요?</h2>
-          <div class="sub">원패스와 자동충전을 함께 쓸 때 고객 혜택이 가장 많이 늘어나는 구·군 TOP 5입니다. 순위 기준은 아래 지도 위에서 바꿀 수 있습니다.</div>
-        </div>
-        <div class="top5" id="top5"></div>
-      </div>
+    <!-- ================= 현황 분석 ================= -->
+    <section class="page" id="p0" style="grid-template-rows:96px 1fr">
+      <div class="kpis" id="kpis"></div>
       <div class="mapwrap">
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
             <div class="ct">부산 16개 구·군</div>
-            <div style="display:flex;gap:8px;align-items:center">
-              <span class="mute" style="font-weight:700">TOP 5</span><span class="seg" id="t5seg"><button data-b="sum">증가 합계</button><button data-b="pp">개선폭</button></span>
-              <select class="s" id="metric" aria-label="지도 색 기준">
-                <option value="pp">혜택률 개선폭 (결제액 대비, %p)</option>
-                <option value="rate">지금 혜택률 (혜택 ÷ 결제액)</option>
-                <option value="tot">1인 월 혜택 증가 (원패스+충전)</option>
-                <option value="op">1인 월 혜택 증가 (원패스만)</option>
-                <option value="mem">동백전 보유율</option>
-                <option value="n">보정 고객 수</option>
-              </select>
-              <div class="seg"><button id="bigonly">대표본만</button></div>
-            </div>
+            <select class="s" id="metric" aria-label="지도 색 기준">
+              <option value="pp">혜택률 개선폭 (%p)</option>
+              <option value="tot">1인 월 혜택 증가</option>
+              <option value="mem">동백전 보유율</option>
+              <option value="n">고객 수</option>
+            </select>
           </div>
           <div class="cs" id="maptitle"></div>
           <div class="mapbox" id="mapbox"><svg id="mapsvg" role="img" aria-label="부산 구·군 지도"></svg><div class="tip" id="tip"></div></div>
           <div class="mfoot"><span>낮음</span><div class="grad"></div><span>높음</span>
-            <span style="display:inline-flex;align-items:center;gap:5px;margin-left:8px"><i style="width:12px;height:12px;background:#C49A5A;border-radius:3px;display:inline-block"></i>선택한 구</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border:2px solid var(--sand);border-radius:3px;display:inline-block"></i>TOP 5</span>
-            <span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border:1.5px dashed #8C8186;border-radius:3px;display:inline-block"></i>소표본(10명 미만)</span>
-            <span style="margin-left:auto" class="mute">고객 거주 구·군 기준 · 가맹점 위치 아님</span></div>
+            <span style="display:inline-flex;align-items:center;gap:5px;margin-left:8px"><i style="width:12px;height:12px;background:#896E4A;border-radius:3px;display:inline-block"></i>선택한 구</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border:2px solid #896E4A;border-radius:3px;display:inline-block"></i>합계 TOP 5</span>
+            <span style="margin-left:auto" class="mute">고객 거주 구·군 기준</span></div>
         </div>
         <div class="card info" id="info"></div>
       </div>
     </section>
 
-    <!-- ================= P1 ================= -->
-    <section class="page" id="p1" style="grid-template-rows:172px 1fr">
-      <div class="card hero">
-        <div>
-          <h2>동백전 혜택은 <em>어디서 끊기고</em><br>누가 풀 수 있나요?</h2>
-          <div class="sub">원패스가 카드를 골라 줘도 동백전 혜택이 안 붙은 결제를 이유별로 나눴습니다. 직원 권유로 풀 수 있는 이유와 정책 영역을 구분해서 봅니다.</div>
-        </div>
-        <div class="top5" id="p1hero"></div>
-      </div>
-      <div class="row">
-        <div class="card" style="width:760px" id="waffle"></div>
-        <div class="card" style="width:500px" id="alloc"></div>
-        <div style="flex:1;display:flex;flex-direction:column;gap:16px;min-width:0">
-          <div class="card" id="p1policy" style="flex:0 0 auto"></div>
-          <div class="card grow" id="p1ind"></div>
-        </div>
-      </div>
-    </section>
-
-    
-<!-- ================= P2 ================= -->
+    <!-- ================= P2 ================= -->
     <section class="page" id="p2" style="grid-template-rows:172px 66px 1fr">
       <div class="card hero">
         <div>
@@ -314,42 +301,7 @@ ul.as li .tag{margin-top:2px}
       </div>
     </section>
 
-    <!-- ================= P3 ================= -->
-    <section class="page" id="p3" style="grid-template-rows:172px 334px 1fr">
-      <div class="card hero">
-        <div>
-          <h2>원패스를 넣으면 <em>무엇이 얼마나</em><br>달라지나요?</h2>
-          <div class="sub">같은 결제 7,540건을 조건만 바꿔 다시 계산했습니다. ① 4가지 조건 비교 → ② 늘어난 몫 나누기 → ③ 자동충전 현실 추정 순서로 읽으면 됩니다.</div>
-        </div>
-        <div class="top5" id="p3hero"></div>
-      </div>
-      <div class="row">
-        <div class="card" style="width:900px">
-          <div class="ct">① 4가지 조건 비교 <span class="mute" style="font-weight:500">· 240명 월 혜택 합계</span> <span class="tag t-asm">아랫줄 가정·상한</span></div>
-          
-          <div class="mx" id="mx"></div>
-        </div>
-        <div class="card grow" id="p3split"></div>
-      </div>
-      <div class="row">
-        <div class="card" style="width:700px">
-          <div class="ct">③ 자동충전 현실 추정 <span class="mute" style="font-weight:500">· 동의율 × 1인 충전 자금</span> <span class="tag t-asm">가정</span></div>
-          <div class="cs">칸 = 원패스만 쓸 때보다 더 늘어나는 월 혜택 (240명 합계)</div>
-          <div class="sg" id="sg"></div>
-        </div>
-        <div class="card" style="width:460px" id="s02d"></div>
-        <div class="card grow">
-          <div class="ct">숫자를 읽을 때 전제</div>
-          <ul class="as" style="margin-top:8px">
-            <li>보정 데이터 2026-06 결제 7,540건 · 실제 거래 아님</li>
-            <li>혜택 = 동백전 캐시백 + BNK 현금성 할인 (카드 포인트 0원)</li>
-            <li><span class="tag t-asm">상한</span>잔액 넉넉 = 잔액이 항상 충분하다고 본 이론값</li>
-            <li><span class="tag t-asm">가정</span>동의율 38.4%는 다른 설문 문항 응답을 빌린 값 · 25%·50%와 1인 충전 자금도 가정</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-  </main>
+    </main>
   <footer class="foot" id="foot"></footer>
 
   <div id="gl" role="dialog" aria-modal="true" aria-labelledby="glt">
@@ -360,10 +312,8 @@ ul.as li .tag{margin-top:2px}
         <div class="gi"><div class="gt">혜택률 · 혜택률 개선폭 (%p)</div><div class="gd"><b>혜택률</b>은 받은 혜택 ÷ 결제액, 즉 "1만 원 쓸 때 몇 원 돌려받나"입니다. <b>개선폭</b>은 원패스+충전 시 그 비율이 몇 %p 오르는지입니다. 고객 수와 결제 규모가 다른 구를 공정하게 비교하는 기준입니다.<br><i>예) 동래구는 지금 0.93%(1만 원당 93원) → 3.08%(308원), 개선폭 +2.15%p입니다.</i></div></div>
         <div class="gi"><div class="gt"><span class="sb sb-big">대표본</span><span class="sb sb-mid">중간</span><span class="sb sb-small">소표본</span></div><div class="gd"><b>그 구의 숫자를 몇 명으로 계산했는지</b>입니다. 20명 이상 대표본, 10~19명 중간, 10명 미만 소표본입니다.<br><i>예) 중구는 고객이 2명뿐이라 한 명만 달라도 평균이 크게 흔들립니다. 소표본 구는 참고만 하세요.</i></div></div>
         <div class="gi"><div class="gt">원패스 · 자동충전</div><div class="gd"><b>원패스</b>는 동백전과 BNK 카드 중 결제 순간 혜택이 가장 큰 수단을 자동으로 골라 주는 서비스(제안)입니다. <b>자동충전</b>은 동백전 잔액이 모자랄 때, 고객이 동의한 한도 안에서 부족한 만큼만 채워 줍니다.<br><i>예) 잔액 1만 원에 3만 원 결제 → 지금은 다른 카드로 결제돼 캐시백 0원, 자동충전이면 2만 원을 채워 동백전 캐시백을 받습니다.</i></div></div>
-        <div class="gi"><div class="gt">4가지 조건 (S00 · S10 · S01 · S11)</div><div class="gd">같은 결제를 조건만 바꿔 다시 계산한 것입니다. <b>S00</b> 지금 그대로, <b>S10</b> 잔액만 넉넉, <b>S01</b> 원패스로 카드만 자동 선택, <b>S11</b> 원패스 + 잔액 넉넉.<br><i>예) S01 − S00 = "원패스만 써도 늘어나는 혜택", S11은 충전이 모두 성공했다고 본 최대치입니다.</i></div></div>
         <div class="gi"><div class="gt">혜택(원)</div><div class="gd">동백전 캐시백과 BNK 카드의 현금성 할인을 더한 값입니다. <b>카드 포인트는 0원으로 계산</b>했습니다(현금처럼 쓸 수 있는지 확인 전).<br><i>예) 캐시백 3,000원 + 카드 할인 500원 + 포인트 200점 = 혜택 3,500원.</i></div></div>
         <div class="gi"><div class="gt">고객 그룹 G1 ~ G7</div><div class="gd">동백전 지갑이 있는지, 있다면 한 달에 얼마나 쓰는지로 나눈 7개 묶음입니다. 한 고객은 한 그룹에만 속합니다.<br><i>예) G1은 동백전을 만들었지만 이번 달 안 쓴 고객 → 잔액이 없어 혜택이 끊기니 자동충전 권유가 핵심입니다.</i></div></div>
-        <div class="gi"><div class="gt">자동충전 민감도 (S02)</div><div class="gd">"자동충전에 동의하는 사람이 몇 %이고, 한 사람이 얼마까지 충전할 수 있으면" 혜택이 얼마나 느는지 9가지 경우로 계산했습니다.<br><i>예) 동의율 38.4% × 1인 18만 원 칸 = 원패스만 쓸 때보다 240명 합계 +440,902원. 동의율 값은 모두 가정입니다.</i></div></div>
         <div class="gi"><div class="gt"><span class="tag t-asm">가정</span><span class="tag t-ml">ML</span></div><div class="gd">화면의 숫자는 <b>규칙 기반 판정 모델</b>(원패스 엔진)이 같은 결제를 조건만 바꿔 다시 계산한 값입니다. <b>가정</b> 표시는 상한이나 임의로 정한 값이 들어간 숫자에만 붙입니다. <b>ML</b> 칸은 보정 고객 240명으로 학습한 모델이 결제 패턴만 보고 낸 예측입니다(추천 카드 정확도 70%, 혜택 증가 오차 평균 7,626원).<br><i>예) 가정 표시가 붙은 숫자는 발표에서 "~라면" 형태로 말해야 합니다.</i></div></div>
       </div>
     </div>
@@ -475,7 +425,7 @@ const METRIC={pp:{k:'혜택률 개선폭',t:'혜택률 개선폭 (원패스+충�
   op:{k:'1인 월 혜택 증가(원패스만)',t:'1인 월 혜택 증가 (원패스만, 현재 잔액)',f:s=>s.op,fmt:v=>'+'+won(v)},
   mem:{k:'동백전 보유율',t:'동백전 보유율',f:s=>s.mem,fmt:v=>Math.round(v*100)+'%'},
   n:{k:'보정 고객 수',t:'보정 고객 수',f:s=>s.n,fmt:v=>fmt(v)+'명'}};
-function lerp(t){const st=[[247,235,239],[176,78,107],[63,11,30]];const k=t<.5?0:1,u=t<.5?t*2:(t-.5)*2;
+function lerp(t){const st=[[253,239,239],[215,25,31],[139,3,4]];const k=t<.5?0:1,u=t<.5?t*2:(t-.5)*2;
   return 'rgb('+st[k].map((x,i)=>Math.round(x+(st[k+1][i]-x)*u)).join(',')+')';}
 function centroid(d){const p=[...d.matchAll(/([\d.]+),([\d.]+)/g)].map(m=>[+m[1],+m[2]]);
   let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;p.forEach(([x,y])=>{x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);});
@@ -488,9 +438,9 @@ function renderMap(){
   let h='';
   GUS.forEach(g=>{const s=GUSTAT[g],t=mx>mn?(M.f(s)-mn)/(mx-mn):0;
     const cls=['gu',s.n<10?'small':'',bigOnly&&s.n<20?'dim':'',TOP5.includes(g)?'top':'',gusel===g?'sel':''].join(' ');
-    h+=`<path class="${cls}" data-g="${g}" d="${PATHS[g]}" fill="${gusel===g?'#C49A5A':lerp(t)}" tabindex="0" aria-label="${g}"></path>`;});
+    h+=`<path class="${cls}" data-g="${g}" d="${PATHS[g]}" fill="${gusel===g?'#896E4A':lerp(t)}" tabindex="0" aria-label="${g}"></path>`;});
   GUS.forEach(g=>{const s=GUSTAT[g],t=mx>mn?(M.f(s)-mn)/(mx-mn):0,[x,y]=CEN[g];
-    h+=`<text class="gl-t" x="${x}" y="${y}" fill="${gusel===g?'#241A1E':t>.45?'#fff':'#241A1E'}" ${gusel===g?'font-size="1.5"':''}>${g}</text>`;});
+    h+=`<text class="gl-t" x="${x}" y="${y}" fill="${gusel===g?'#2B2622':t>.45?'#fff':'#2B2622'}" ${gusel===g?'font-size="1.5"':''}>${g}</text>`;});
   // 선택/TOP5 테두리를 위로
   $('mapsvg').setAttribute('viewBox','407.5 464 53.5 59.5');
   $('mapsvg').innerHTML=h;
@@ -501,18 +451,6 @@ function renderMap(){
       $('tip').innerHTML=`<b>${s.g}</b> · ${s.n}명 (${l})<br>${M.k}: <b>${M.fmt(M.f(s))}</b><br>혜택률 ${pct(s.rA)} → ${pct(s.rD)}`;
       $('tip').style.display='block';const W=$('mapbox').offsetWidth,tw=$('tip').offsetWidth;let x=(e.clientX-b.left)/sc+14;if(x+tw>W-6)x=Math.max(4,(e.clientX-b.left)/sc-tw-14);$('tip').style.left=x+'px';$('tip').style.top=((e.clientY-b.top)/sc+10)+'px';};
     p.onmouseleave=()=>$('tip').style.display='none';});
-}
-function renderTop5(){
-  if(0)$('herosub').textContent=t5basis==='sum'?'원패스와 자동충전을 함께 쓰면 고객 혜택이 합계로 가장 많이 늘어나는 구·군 TOP 5입니다. 고객이 많은 구가 위로 옵니다.'
-    :'결제액 대비 혜택률이 가장 많이 오르는 구·군 TOP 5입니다. 고객 수와 상관없이 "같은 돈을 써도 혜택이 얼마나 더 붙나"로 비교합니다. 10명 미만 구는 뺐습니다.';
-  $('t5seg').querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.b===t5basis);b.onclick=()=>{t5basis=b.dataset.b;calcTop5();renderTop5();renderMap();};});
-  $('top5').innerHTML=TOP5.map((g,i)=>{const s=GUSTAT[g],[c,l]=sbOf(s.n);
-    const big=t5basis==='sum'?`+${fmt(s.sumTot/10000)}만`:`+${(s.pp*100).toFixed(2)}%p`, lab=t5basis==='sum'?'월 혜택 증가 합계(원)':'혜택률 개선폭';
-    return `<div class="t5 ${gusel===g?'on':''}" data-g="${g}" tabindex="0"><div class="h"><span class="rk">${i+1}위</span>
-      <div><div class="gv">${big}</div><div class="gl">${lab}</div></div></div>
-      <div class="nm">${g}</div><div class="ds">고객 ${s.n}명 <span class="sb ${c}">${l}</span> · 1인 +${won(s.tot)}</div>
-      <div class="ds">혜택률 ${pct(s.rA)} → <b style="color:var(--b7)">${pct(s.rD)}</b></div></div>`;}).join('');
-  $('top5').querySelectorAll('.t5').forEach(c=>{c.onclick=()=>selectGu(c.dataset.g);c.onkeydown=e=>{if(e.key==='Enter')selectGu(c.dataset.g);};});
 }
 let rankMode='pp';
 function renderRank(){
@@ -526,57 +464,21 @@ function renderRank(){
     ${all.map(s=>{const [c]=sbOf(s.n),q=quad(s);return `<div class="vb" style="grid-template-columns:64px 1fr 120px;cursor:pointer;margin:3px 0" data-g="${s.g}"><span>${s.g}</span><div class="tr"><div style="width:${M[2](s)/mx*100}%;background:${rankMode==='pp'?q[2]:'var(--b7)'};opacity:${s.n<10?.45:1}"></div></div><span class="v">${M[3](M[2](s))} <span class="sb ${c}">${s.n}</span></span></div>`;}).join('')}
     ${rankMode==='pp'?`<div class="leg" style="margin-top:6px"><span><i style="background:var(--b7)"></i>우선 권유</span><span><i style="background:var(--b5)"></i>원패스 설명</span><span><i style="background:var(--sand)"></i>원인 확인</span><span><i style="background:var(--slate)"></i>유지</span></div>`
       :`<div class="mute" style="margin-top:6px">옆 숫자는 고객 수 · 흐린 막대는 10명 미만</div>`}`;
-  $('rankpn').insertAdjacentHTML('beforeend','<div class="help-box"><b>읽는 법</b>버튼으로 순위 기준을 바꿉니다. 혜택률 개선폭은 고객 수와 상관없는 효율, 구 합계는 기회의 크기입니다. 막대를 누르면 그 구 상세가 열립니다.</div>');
   $('rankpn').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{rankMode=b.dataset.m;renderRank();});
   $('rankpn').querySelectorAll('[data-g]').forEach(r=>r.onclick=()=>selectGu(r.dataset.g));
-}
-function donut(){
-  const keys=Object.keys(GSHORT), n=U.length, R=70, r=44, cx=90, cy=90;
-  let a0=-Math.PI/2, h=`<svg viewBox="0 0 180 180" style="width:170px;height:170px;flex-shrink:0" role="img" aria-label="고객 그룹 구성">`;
-  keys.forEach(g=>{const c=U.filter(u=>u.g===g).length;if(!c)return;const a1=a0+c/n*2*Math.PI,lg=a1-a0>Math.PI?1:0;
-    const p=(ang,rad)=>[cx+rad*Math.cos(ang),cy+rad*Math.sin(ang)];
-    const [x0,y0]=p(a0,R),[x1,y1]=p(a1,R),[x2,y2]=p(a1,r),[x3,y3]=p(a0,r);
-    h+=`<path data-grp="${g}" d="M${x0},${y0} A${R},${R} 0 ${lg} 1 ${x1},${y1} L${x2},${y2} A${r},${r} 0 ${lg} 0 ${x3},${y3}Z" fill="${GCOL[g]}" stroke="#fff" stroke-width="1.5" style="cursor:pointer"><title>${GSHORT[g]} ${c}명</title></path>`;a0=a1;});
-  h+=`<text x="${cx}" y="${cy-2}" text-anchor="middle" font-size="22" font-weight="900" fill="#241A1E">${n}</text><text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="11" fill="#8C8186">명</text></svg>`;
-  return `<div style="display:flex;gap:12px;align-items:center">${h}<div style="flex:1;min-width:0">${keys.map(g=>{const c=U.filter(u=>u.g===g).length;return `<div data-grp="${g}" style="display:flex;align-items:center;gap:6px;font-size:12.5px;padding:2px 0;cursor:pointer"><i style="width:10px;height:10px;border-radius:2px;background:${GCOL[g]};flex-shrink:0"></i><span style="flex:1">${GSHORT[g]}</span><b>${c}</b></div>`;}).join('')}</div></div>`;
-}
-function dumbbell(){
-  const ages=['20대','30대','40대','50대','60대','70대+'], rows=ages.map(a=>{const L=U.filter(u=>u.age===a);return [a,avg(L,u=>u.c-u.a),avg(L,u=>u.d-u.a),L.length];});
-  const W=340,H=24*rows.length+30,L=48,Rr=70,mx=Math.max(...rows.map(r=>r[2]))*1.05,X=v=>L+v/mx*(W-L-Rr);
-  let h=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="연령대별 1인 월 혜택 증가">`;
-  [0,10000,20000].filter(v=>v<=mx).forEach(v=>h+=`<line x1="${X(v)}" x2="${X(v)}" y1="4" y2="${H-22}" stroke="#EFE7EA"/><text x="${X(v)}" y="${H-8}" font-size="10" fill="#8C8186" text-anchor="middle">${v?fmt(v/1000)+'천':'0'}</text>`);
-  rows.forEach(([a,op,tot,n],i)=>{const y=14+i*24;
-    h+=`<text x="0" y="${y+4}" font-size="11.5" fill="#241A1E">${a}</text><line x1="${X(op)}" x2="${X(tot)}" y1="${y}" y2="${y}" stroke="#D9A0B2" stroke-width="4" stroke-linecap="round"/>
-      <circle cx="${X(op)}" cy="${y}" r="5" fill="#B04E6B"/><circle cx="${X(tot)}" cy="${y}" r="6" fill="#5C1229"/>
-      <text x="${W-2}" y="${y+4}" font-size="11" font-weight="700" fill="#5C1229" text-anchor="end">+${fmt(tot)}원</text>`;});
-  h+='</svg>';
-  return h+`<div class="leg" style="margin-top:4px"><span><i style="background:#B04E6B;border-radius:50%"></i>원패스만</span><span><i style="background:#5C1229;border-radius:50%"></i>원패스+충전(상한)</span></div>`;
-}
-function waterfall(){
-  const n=U.length, a=V.sc.S00.tot/n, c=V.sc.S01.tot/n, d=V.sc.S11.tot/n;
-  const steps=[['지금',0,a,'#EBCDD7'],['+카드 선택',a,c,'#B04E6B'],['+충전',c,d,'#C49A5A'],['원패스+잔액',0,d,'#5C1229']];
-  const W=340,H=180,T=28,B=24,mx=d*1.1,Y=v=>T+(1-v/mx)*(H-T-B),bw=52,gap=(W-bw*4)/5;
-  let h=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="1인 월 혜택이 쌓이는 과정">`;
-  h+=`<line x1="0" x2="${W}" y1="${Y(0)}" y2="${Y(0)}" stroke="#D9D2D5"/>`;
-  steps.forEach(([l,lo,hi,col],i)=>{const x=gap+i*(bw+gap);
-    h+=`<rect x="${x}" y="${Y(hi)}" width="${bw}" height="${Y(lo)-Y(hi)}" rx="4" fill="${col}"/>`;
-    if(i<3)h+=`<line x1="${x+bw}" x2="${x+bw+gap}" y1="${Y(hi)}" y2="${Y(hi)}" stroke="#8C8186" stroke-dasharray="3 2"/>`;
-    h+=`<text x="${x+bw/2}" y="${Y(hi)-6}" font-size="11" font-weight="800" fill="#241A1E" text-anchor="middle">${i===1||i===2?'+':''}${fmt(i===1||i===2?hi-lo:hi)}</text>
-      <text x="${x+bw/2}" y="${H-6}" font-size="11" fill="#5F6470" text-anchor="middle">${l}</text>`;});
-  return h+`<text x="0" y="11" font-size="10" fill="#8C8186">단위: 원 · ${n}명 평균</text></svg>`;
 }
 function scatter(){
   const W=640,H=380,L=46,Rr=14,T=14,B=38,xm=0.013,ym=0.03;
   const X=v=>L+v/xm*(W-L-Rr),Y=v=>T+(1-v/ym)*(H-T-B);
   const smax=Math.max(...Object.values(GUSTAT).map(s=>s.sumTot));
   let h=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="구·군별 지금 혜택률과 개선폭">`;
-  h+=`<rect x="${L}" y="${T}" width="${X(BUS.rA)-L}" height="${Y(BUS.pp)-T}" fill="#F7EBEF"/>`;
-  [0,.005,.01].forEach(v=>h+=`<line x1="${X(v)}" x2="${X(v)}" y1="${T}" y2="${H-B}" stroke="#EFE7EA"/><text x="${X(v)}" y="${H-B+16}" font-size="11" fill="#8C8186" text-anchor="middle">${(v*100).toFixed(1)}%</text>`);
-  [0,.01,.02,.03].forEach(v=>h+=`<line x1="${L}" x2="${W-Rr}" y1="${Y(v)}" y2="${Y(v)}" stroke="#EFE7EA"/><text x="${L-6}" y="${Y(v)+4}" font-size="11" fill="#8C8186" text-anchor="end">+${(v*100).toFixed(0)}%p</text>`);
-  h+=`<line x1="${X(BUS.rA)}" x2="${X(BUS.rA)}" y1="${T}" y2="${H-B}" stroke="#B04E6B" stroke-dasharray="4 3"/><line x1="${L}" x2="${W-Rr}" y1="${Y(BUS.pp)}" y2="${Y(BUS.pp)}" stroke="#B04E6B" stroke-dasharray="4 3"/>`;
-  h+=`<text x="${L+8}" y="${T+16}" font-size="12" font-weight="800" fill="#7A1E3A">우선 권유 · 지금 낮고 개선 큼</text><text x="${W-Rr-8}" y="${T+16}" font-size="12" font-weight="700" fill="#8C8186" text-anchor="end">이미 받는 편 · 더 늘어남</text>
-    <text x="${L+8}" y="${H-B-8}" font-size="12" font-weight="700" fill="#8C8186">지금도 낮고 개선도 작음 · 원인 확인</text><text x="${W-Rr-8}" y="${H-B-8}" font-size="12" font-weight="700" fill="#8C8186" text-anchor="end">이미 잘 받는 중</text>`;
-  h+=`<text x="${(L+W-Rr)/2}" y="${H-4}" font-size="11.5" fill="#5F6470" text-anchor="middle">지금 혜택률 (기존 습관 · 받은 혜택 ÷ 결제액) →</text>`;
+  h+=`<rect x="${L}" y="${T}" width="${X(BUS.rA)-L}" height="${Y(BUS.pp)-T}" fill="#FDEFEF"/>`;
+  [0,.005,.01].forEach(v=>h+=`<line x1="${X(v)}" x2="${X(v)}" y1="${T}" y2="${H-B}" stroke="#EAE6E0"/><text x="${X(v)}" y="${H-B+16}" font-size="11" fill="#85807A" text-anchor="middle">${(v*100).toFixed(1)}%</text>`);
+  [0,.01,.02,.03].forEach(v=>h+=`<line x1="${L}" x2="${W-Rr}" y1="${Y(v)}" y2="${Y(v)}" stroke="#EAE6E0"/><text x="${L-6}" y="${Y(v)+4}" font-size="11" fill="#85807A" text-anchor="end">+${(v*100).toFixed(0)}%p</text>`);
+  h+=`<line x1="${X(BUS.rA)}" x2="${X(BUS.rA)}" y1="${T}" y2="${H-B}" stroke="#E5686B" stroke-dasharray="4 3"/><line x1="${L}" x2="${W-Rr}" y1="${Y(BUS.pp)}" y2="${Y(BUS.pp)}" stroke="#E5686B" stroke-dasharray="4 3"/>`;
+  h+=`<text x="${L+8}" y="${T+16}" font-size="12" font-weight="800" fill="#D7191F">우선 권유 · 지금 낮고 개선 큼</text><text x="${W-Rr-8}" y="${T+16}" font-size="12" font-weight="700" fill="#85807A" text-anchor="end">이미 받는 편 · 더 늘어남</text>
+    <text x="${L+8}" y="${H-B-8}" font-size="12" font-weight="700" fill="#85807A">지금도 낮고 개선도 작음 · 원인 확인</text><text x="${W-Rr-8}" y="${H-B-8}" font-size="12" font-weight="700" fill="#85807A" text-anchor="end">이미 잘 받는 중</text>`;
+  h+=`<text x="${(L+W-Rr)/2}" y="${H-4}" font-size="11.5" fill="#655C4F" text-anchor="middle">지금 혜택률 (기존 습관 · 받은 혜택 ÷ 결제액) →</text>`;
   const lr=v=>5+Math.sqrt(v/smax)*21;
   const SIDE={'남구':'left','부산진구':'below','해운대구':'right','강서구':'below','동래구':'above','중구':'left','기장군':'left','금정구':'above'};
   const ORD=Object.values(GUSTAT).sort((a,b)=>b.sumTot-a.sumTot);
@@ -584,16 +486,16 @@ function scatter(){
     h+=`<circle data-g="${s.g}" style="cursor:pointer" cx="${X(s.rA)}" cy="${Y(s.pp)}" r="${r}" fill="${q[2]}" fill-opacity="${s.n<10?.28:.72}" stroke="#fff" stroke-width="1.5"><title>${s.g} · ${s.n}명 · 월 +${won(s.sumTot)}</title></circle>`;});
   ORD.forEach(s=>{const r=lr(s.sumTot),cx=X(s.rA),cy=Y(s.pp),side=SIDE[s.g]||'right';
     const [tx,ty,an]=side==='left'?[cx-r-4,cy+4,'end']:side==='below'?[cx,cy+r+13,'middle']:side==='above'?[cx,cy-r-5,'middle']:[cx+r+4,cy+4,'start'];
-    h+=`<text data-g="${s.g}" x="${tx}" y="${ty}" font-size="11.5" font-weight="800" fill="#241A1E" stroke="#fff" stroke-width="3" paint-order="stroke" stroke-linejoin="round" text-anchor="${an}" style="cursor:pointer">${s.g}</text>`;});
+    h+=`<text data-g="${s.g}" x="${tx}" y="${ty}" font-size="11.5" font-weight="800" fill="#2B2622" stroke="#fff" stroke-width="3" paint-order="stroke" stroke-linejoin="round" text-anchor="${an}" style="cursor:pointer">${s.g}</text>`;});
   return h+'</svg>';
 }
-function selectGu(g){gusel=gusel===g?null:g;renderMap();renderTop5();renderInfo();}
+function selectGu(g){gusel=gusel===g?null:g;renderMap();renderInfo();}
 function scenarioBars(s,unit){
-  const rows=[['지금 그대로 (S00)',s.a,'var(--b2)'],['잔액만 넉넉 (S10)',s.b,'var(--sand)'],['원패스만 (S01)',s.c,'var(--b5)'],['원패스+잔액 (S11)',s.d,'var(--b8)']];
+  const rows=[['지금 그대로',s.a,'var(--b2)'],['원패스만',s.c,'var(--b5)'],['원패스+충전',s.d,'var(--b8)']];
   const mx=Math.max(...rows.map(r=>r[1]),1);
   return rows.map(r=>`<div class="vb"><span>${r[0]}</span><div class="tr"><div style="width:${r[1]/mx*100}%;background:${r[2]}"></div></div><span class="v">${won(r[1])}</span></div>`).join('')+`<div class="mute" style="margin-top:4px">${unit}</div>`;
 }
-const GCOL={G1:'#3F0B1E',G2:'#7A1E3A',G3:'#B04E6B',G4:'#D9A0B2',G5:'#EBCDD7',G6:'#C49A5A',G7:'#BDB4B8'};
+const GCOL={G1:'#5E0203',G2:'#D7191F',G3:'#E5686B',G4:'#F2AEB0',G5:'#F9D9DA',G6:'#896E4A',G7:'#B7A997'};
 const GSHORT={G1:'G1 가입 후 미사용',G2:'G2 월 10만 미만',G3:'G3 월 10~30만',G4:'G4 월 30~50만',G5:'G5 월 50만 이상',G6:'G6 동백전 없음',G7:'G7 정보 없음'};
 function groupBars(L){const n=L.length||1;
   return Object.keys(GSHORT).map(g=>{const c=L.filter(u=>u.g===g).length;
@@ -602,158 +504,62 @@ function actCounts(L){return [['R1 동백전 가입 검토',L.filter(u=>u.ws==='
   ['R2 자동충전 검토',L.filter(u=>u.ws==='활성'&&u.d-u.c>0).length,'잔액이 모자라 혜택이 끊긴 고객'],
   ['원패스 효과 설명',L.filter(u=>u.c-u.a>0).length,'카드 자동 선택으로 혜택이 느는 고객'],
   ['데이터 보완 먼저',L.filter(u=>u.ws==='정보 없음').length,'지갑 정보 없음']];}
+function renderKpi(){
+  const N=U.length, a=V.sc.S00.tot/N, d=V.sc.S11.tot/N, t=TOP5[0];
+  const k=[['보정 고객',fmt(N)+'<small>명</small>',`동백전 보유 ${V.member}명 · ${Math.round(V.member/N*100)}%`],
+    ['지금 1인 월 혜택',fmt(a)+'<small>원</small>',`결제 1만 원당 ${fmt(BUS.rA*1e4)}원`],
+    ['원패스+충전 시',fmt(d)+'<small>원</small>',`+${won(d-a)} · 결제 1만 원당 ${fmt(BUS.rD*1e4)}원`],
+    ['먼저 챙길 구·군',t,`${TOP5.slice(1,3).join(' · ')} 순`]];
+  $('kpis').innerHTML=k.map(([l,v,s],i)=>`<div class="card kpi ${i===3?'hi':''}"><div class="l">${l}</div><div class="big">${v}</div><div class="s">${s}</div></div>`).join('');
+}
+function groupStack(){
+  const n=U.length, keys=Object.keys(GSHORT);
+  return `<div class="pn"><h4>고객 분류 <span class="mute" style="font-weight:500">· 눌러서 고객 보기</span></h4>
+    <div class="gstack">${keys.map(g=>{const c=U.filter(u=>u.g===g).length;return c?`<div data-grp="${g}" style="flex:${c};background:${GCOL[g]};color:${['G4','G5','G7'].includes(g)?'var(--ink)':'#fff'}" title="${GSHORT[g]} ${c}명">${c/n>.06?c:''}</div>`:'';}).join('')}</div>
+    <div class="gleg">${keys.map(g=>`<span data-grp="${g}"><i style="background:${GCOL[g]}"></i>${GSHORT[g].replace(/^G\d /,'')} ${U.filter(u=>u.g===g).length}</span>`).join('')}</div></div>`;
+}
 function renderInfo(){
   if(!gusel){
-    $('info').innerHTML=`<div class="info-empty"><b>부산 전체 ${U.length}명</b>을 보고 있습니다. 왼쪽 지도에서 <b>구·군을 누르면</b> 그 지역 고객 구성, 권할 조치, 혜택이 많이 느는 고객이 이 자리에 나옵니다.</div>
-     <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-top:14px">
-      <div class="pn"><h4>지금 혜택률 대비 개선폭 · 어느 구에서 원패스 효과가 큰가</h4>${scatter()}
-        <div class="leg" style="margin-top:4px;align-items:center"><span style="display:inline-flex;align-items:center;gap:6px"><svg width="48" height="30" viewBox="0 0 48 30"><circle cx="9" cy="20" r="6" fill="none" stroke="#8C8186"/><circle cx="32" cy="15" r="13" fill="none" stroke="#8C8186"/></svg>원 크기 = 구 전체 월 혜택 증가</span><span><i style="background:var(--b7)"></i>우선 권유</span><span><i style="background:var(--b5)"></i>원패스 설명</span><span><i style="background:var(--sand)"></i>원인 확인</span><span><i style="background:var(--slate)"></i>유지</span></div>
-        <div class="help-box"><b>읽는 법</b>가로는 지금 받는 혜택률(혜택 ÷ 결제액), 세로는 원패스+충전 시 그 비율이 몇 %p 오르는지입니다. 점선은 부산 평균(지금 ${pct(BUS.rA)}, 개선 +${(BUS.pp*100).toFixed(2)}%p)입니다. <b>원이 클수록 그 구에서 늘어나는 혜택 합계가 큽니다.</b> 왼쪽 위의 큰 원이 먼저 챙길 구이고, 흐린 원은 고객 10명 미만입니다.</div></div>
+    $('info').innerHTML=`<div class="ihead"><div class="ct" style="font-size:19px">구·군별 원패스 효과</div><div class="mute">지도에서 구·군을 누르면 상세가 열립니다</div></div>
+     <div style="display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:14px;margin-top:12px">
+      <div class="pn"><h4>지금 혜택률 대비 개선폭 <span class="mute" style="font-weight:500">· 원 크기 = 구 전체 월 혜택 증가</span></h4>${scatter()}
+        <div class="leg" style="margin-top:2px"><span><i style="background:var(--b7)"></i>우선 권유</span><span><i style="background:var(--b5)"></i>원패스 설명</span><span><i style="background:var(--sand)"></i>원인 확인</span><span><i style="background:var(--slate)"></i>유지</span><span style="margin-left:auto">흐린 원 = 10명 미만</span></div></div>
       <div class="pn" id="rankpn"></div>
      </div>
-     <div class="p3c">
-      <div class="pn"><h4>고객 그룹 구성 · 조각을 누르면 P2 그룹 보기</h4><div class="chartbox">${donut()}</div>
-        <div class="help-box"><b>읽는 법</b>동백전을 쓰는 활성 고객(G1~G5)은 ${U.filter(u=>u.ws==='활성').length}명이고, 나머지는 <b>동백전 가입 안내</b>(G6)나 정보 확인(G7) 대상입니다. 진한 조각일수록 동백전 사용이 적어 충전 권유 효과가 큽니다.</div></div>
-      <div class="pn"><h4>연령대별 1인 월 혜택 증가 · 원패스만 → 충전까지</h4><div class="chartbox">${dumbbell()}</div>
-        <div class="help-box"><b>읽는 법</b>왼쪽 점은 원패스로 카드만 골라 줬을 때, 오른쪽 점은 충전까지 됐을 때입니다. 선이 길수록 <b>자동충전 권유</b> 효과가 큰 연령대입니다.</div></div>
-      <div class="pn"><h4>부산 전체 1인 월 혜택이 쌓이는 과정</h4><div class="chartbox">${waterfall()}</div>
-        <div class="help-box"><b>읽는 법</b>지금 받는 혜택에 카드 자동 선택 몫과 충전 몫이 차례로 더해져 원패스+잔액 넉넉 조건이 됩니다. 충전 몫은 잔액이 모두 채워졌다고 본 상한입니다.</div></div>
-     </div>`;
+     <div style="margin-top:14px">${groupStack()}</div>`;
     renderRank();
     $('info').querySelectorAll('[data-g]').forEach(r=>r.onclick=()=>selectGu(r.dataset.g));
     $('info').querySelectorAll('[data-grp]').forEach(r=>r.onclick=()=>{resetF();gsel=r.dataset.grp;usel=null;p2src='syn';p2();show('p2');});
     return;
   }
   const s=GUSTAT[gusel],L=s.L,[c,l]=sbOf(s.n), allMem=U.filter(u=>u.mem).length/240;
-  const top=[...L].sort((x,y)=>(y.d-y.a)-(x.d-x.a)).slice(0,8);
-  const acts=actCounts(L), amx=Math.max(...acts.map(a=>a[1]),1);
-  $('info').innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ct" style="font-size:22px">${s.g}</div><span class="sb ${c}">${l} · ${s.n}명</span>
-     ${TOP5.includes(s.g)?`<span class="tag t-asm">TOP ${TOP5.indexOf(s.g)+1}</span>`:''}
-     <button class="btn ghost" style="margin-left:auto" id="backall">← 부산 전체</button><button class="btn" id="goP2gu">이 구 고객 P2에서 보기 →</button></div>
-    ${s.n<10?`<div class="help-box" style="border-color:var(--warn);background:#FBF1EA"><b style="color:var(--warn)">소표본 주의</b> 고객이 ${s.n}명뿐이라 한두 명 때문에 평균이 크게 흔들립니다. 순위나 비교보다 고객 한 명씩 보는 용도로 쓰세요.</div>`:''}
-    <div class="k4">
-      <div><div class="l">보정 고객</div><div class="v">${s.n}<small style="font-size:14px">명</small></div><div class="s">부산 전체 240명 중 ${(s.n/240*100).toFixed(1)}%</div></div>
-      <div><div class="l">동백전 보유율</div><div class="v">${Math.round(s.mem*100)}%</div><div class="s">부산 평균 ${Math.round(allMem*100)}%</div></div>
-      <div><div class="l">지금 혜택률 (혜택 ÷ 결제액)</div><div class="v">${pct(s.rA)}</div><div class="s">결제 1만 원당 ${fmt(s.rA*1e4)}원 · 부산 ${pct(BUS.rA)} · 1인 ${won(s.a)}/월</div></div>
-      <div class="hi"><div class="l">원패스+충전 시 혜택률</div><div class="v">${pct(s.rD)} <small style="font-size:15px">+${(s.pp*100).toFixed(2)}%p</small></div><div class="s">개선폭 16개 구·군 중 ${Object.values(GUSTAT).sort((x,y)=>y.pp-x.pp).findIndex(x=>x.g===s.g)+1}위 · 부산 +${(BUS.pp*100).toFixed(2)}%p · 1인 +${won(s.tot)}/월</div></div>
+  const top=[...L].sort((x,y)=>(y.d-y.a)-(x.d-x.a)).slice(0,5);
+  const rk=Object.values(GUSTAT).sort((x,y)=>y.pp-x.pp).findIndex(x=>x.g===s.g)+1;
+  const cc={};L.forEach(u=>{const p=ML.users[u.id];cc[p.pc]=(cc[p.pc]||0)+1;});const mtop=Object.entries(cc).sort((a,b)=>b[1]-a[1]).slice(0,2);
+  $('info').innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ct" style="font-size:24px">${s.g}</div><span class="sb ${c}">${l} · ${s.n}명</span>
+     ${TOP5.includes(s.g)?`<span class="tag t-asm">합계 TOP ${TOP5.indexOf(s.g)+1}</span>`:''}
+     <button class="btn ghost" style="margin-left:auto" id="backall">← 부산 전체</button><button class="btn" id="goP2gu">이 구 고객 보기 →</button></div>
+    <div class="k3">
+      <div><div class="l">보정 고객</div><div class="v">${s.n}<small>명</small></div><div class="s">동백전 보유 ${Math.round(s.mem*100)}% · 부산 ${Math.round(allMem*100)}%</div></div>
+      <div><div class="l">결제 1만 원당 혜택</div><div class="v">${fmt(s.rA*1e4)}<small>원</small> → ${fmt(s.rD*1e4)}<small>원</small></div><div class="s">개선폭 +${(s.pp*100).toFixed(2)}%p · 16개 중 ${rk}위</div></div>
+      <div class="hi"><div class="l">1인 월 혜택 증가</div><div class="v">+${fmt(s.tot)}<small>원</small></div><div class="s">원패스만 +${won(s.op)}</div></div>
     </div>
-    <div class="help-box"><b>${quad(s)[0]} → ${quad(s)[1]}</b> 이 구 고객은 결제 1만 원당 지금 ${fmt(s.rA*1e4)}원을 혜택으로 받고, 원패스로 카드를 골라 주면 ${fmt(s.rC*1e4)}원, 충전까지 되면 ${fmt(s.rD*1e4)}원(상한)을 받습니다.</div>
-    <div class="p3c">
-      <div class="pn"><h4>이 구의 4가지 조건 (1인 월 혜택)</h4>${scenarioBars(s,s.n+'명 평균 · S10·S11은 잔액 가정 상한')}
-        <div class="help-box"><b>읽는 법</b>위에서 아래로 갈수록 원패스와 충전이 더해집니다. 맨 위와 맨 아래의 차이가 이 구에서 권유로 늘릴 수 있는 최대치입니다.</div></div>
-      <div class="pn"><h4>고객 그룹 구성</h4>${groupBars(L)}</div>
-      <div class="pn"><h4>직원이 검토할 조치 · 해당 고객 수</h4>
-        ${acts.map(a=>`<div class="vb" style="grid-template-columns:130px 1fr 44px"><span title="${a[2]}">${a[0]}</span><div class="tr"><div style="width:${a[1]/amx*100}%;background:var(--b7)"></div></div><span class="v">${a[1]}명</span></div>`).join('')}
-        <div class="mute" style="margin-top:4px">한 고객이 여러 조치에 동시에 해당할 수 있습니다 · 규칙 기반</div>
-        ${(()=>{const cc={};L.forEach(u=>{const p=ML.users[u.id];cc[p.pc]=(cc[p.pc]||0)+1;});const top=Object.entries(cc).sort((a,b)=>b[1]-a[1]).slice(0,2);
-          return `<div class="mlbox" style="margin-top:10px"><b>ML 예측</b><div>1인 예상 증가 <b>+${won(avg(L,u=>ML.users[u.id].pg))}</b> · 연결 추천 카드 ${top.map(([k,v])=>`${k} ${v}명`).join(', ')}</div></div>`;})()}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+      <div class="pn"><h4>1인 월 혜택 비교</h4>${scenarioBars(s,'')}</div>
+      <div class="pn"><h4>고객 분류</h4>${groupBars(L)}
+        <div class="mlbox" style="margin-top:8px"><b>ML</b> 1인 예상 증가 +${won(avg(L,u=>ML.users[u.id].pg))} · 추천 카드 ${mtop.map(([k,v])=>`${k} ${v}명`).join(', ')}</div></div>
     </div>
-    <div class="pn" style="margin-top:14px"><h4>이 구에서 혜택이 많이 늘어나는 고객 TOP ${top.length} · 행을 누르면 P2 고객 상세</h4>
-      <table class="t"><tr><th>고객</th><th>그룹</th><th>연령</th><th>동백전</th><th class="r">지금 혜택</th><th class="r">원패스만</th><th class="r">원패스+충전</th><th>검토 조치</th></tr>
-      ${top.map(u=>`<tr class="ck" data-u="${u.id}"><td><b>${u.id}</b></td><td>${u.g}</td><td>${u.age}</td><td>${u.ws}</td><td class="r">${won(u.a)}</td><td class="r">${sgn(u.c-u.a)}</td><td class="r up">${sgn(u.d-u.a)}</td><td><span class="chip b">${rec(u)[0]}</span></td></tr>`).join('')}</table></div>`;
+    <div class="pn" style="margin-top:14px"><h4>혜택이 많이 늘어나는 고객 TOP ${top.length} <span class="mute" style="font-weight:500">· 눌러서 고객 상세</span></h4>
+      <table class="t"><tr><th>고객</th><th>분류</th><th>연령</th><th class="r">지금</th><th class="r">원패스+충전</th></tr>
+      ${top.map(u=>`<tr class="ck" data-u="${u.id}"><td><b>${u.id}</b></td><td><span class="gchip" style="background:${GCOL[u.g]};color:${['G4','G5','G7'].includes(u.g)?'var(--ink)':'#fff'}">${u.g}</span> ${GSHORT[u.g].replace(/^G\d /,'')}</td><td>${u.age}</td><td class="r">${won(u.a)}</td><td class="r up">+${fmt(u.d-u.a)}원</td></tr>`).join('')}</table></div>`;
   $('backall').onclick=()=>selectGu(gusel);
   $('goP2gu').onclick=()=>{resetF();F.gu=new Set([gusel]);gsel=null;usel=null;p2src='syn';p2();show('p2');};
   $('info').querySelectorAll('tr[data-u]').forEach(r=>r.onclick=()=>{resetF();F.gu=new Set([gusel]);gsel=null;usel=r.dataset.u;p2src='syn';p2();show('p2');});
 }
 $('metric').onchange=e=>{metric=e.target.value;renderMap();};
-$('bigonly').onclick=()=>{bigOnly=!bigOnly;$('bigonly').classList.toggle('on',bigOnly);renderMap();};
 
 // ================= P1 =================
 function ALLOC(sc){const A=OV.allocation[sc],g={};Object.keys(A).forEach(k=>g[k]=[A[k].count,A[k].amount_won]);return g;}
-const P1GROUP=[['help','직원 권유로 풀 수 있음',[0,1],'var(--b7)'],['policy','정책·가맹점 영역',[2,3,4],'var(--slate)'],['rest','동백전 적용·기타',[],'#BDB4B8']];
-let xsel=1;
-function p1hero(){
-  const help=EX[0].n+EX[1].n, pol=EX[2].n+EX[3].n+EX[4].n, d=V.sc.S01.tot-V.sc.S00.tot;
-  const cards=[
-    [0,'동백전 미보유',EX[0].n,'가입 안내로 풀 수 있음','var(--b8)','고객이 동백전이 없어 후보에서 빠짐'],
-    [1,'잔액 부족',EX[1].n,'자동충전으로 풀 수 있음','var(--b6)','결제 순간 잔액이 모자람'],
-    [2,'비가맹점 · 온라인',EX[2].n+EX[3].n,'정책 영역 · 직원 해결 불가','var(--slate)','가맹점 확대는 부산시·운영사 몫'],
-    [null,'카드 자동 선택 효과',null,'240명 합계 · 현재 잔액 기준','var(--b7)',`1인 +${won(d/240)}/월`]];
-  $('p1hero').innerHTML=cards.map(([i,n,c,sub,col,sub2])=>`<div class="t5 ${i===xsel?'on':''}" ${i!==null?`data-i="${i}"`:'data-go="p3"'} tabindex="0">
-     <div class="h"><span class="rk" style="background:${col}">${i===null?'원패스':i<2?'풀 수 있음':'정책 영역'}</span>
-     <div><div class="gv" style="color:${col}">${c===null?'+'+fmt(d/10000)+'만':fmt(c)}</div><div class="gl">${c===null?'원 · 월':'건 · '+(c/V.tx*100).toFixed(1)+'%'}</div></div></div>
-     <div class="nm">${n}</div><div class="ds">${sub}</div><div class="ds">${sub2}</div></div>`).join('')
-   +`<div class="t5" style="cursor:default;background:#FAF5F7"><div class="h"><span class="rk" style="background:var(--b7)">요약</span>
-     <div><div class="gv">${Math.round(help/V.tx*100)}%</div><div class="gl">직원이 풀 수 있음</div></div></div>
-     <div class="nm">결제 ${fmt(V.tx)}건 중</div><div class="ds"><b style="color:var(--b7)">${fmt(help)}건</b> 직원이 풀 수 있음</div><div class="ds"><b style="color:var(--slate)">${fmt(pol)}건(${Math.round(pol/V.tx*100)}%)</b> 정책 영역</div></div>`;
-  $('p1hero').querySelectorAll('[data-i]').forEach(c=>c.onclick=()=>{xsel=+c.dataset.i;p1hero();p1x();});
-  $('p1hero').querySelectorAll('[data-go]').forEach(c=>c.onclick=()=>show('p3'));
-}
-function p1x(){
-  const N=V.tx, rest={i:-1,n:REST,c:'#D9D2D5',name:'동백전 적용·기타'};
-  const groups=P1GROUP.map(([k,label,idx,col])=>({k,label,col,items:k==='rest'?[rest]:idx.map(i=>({i,n:EX[i].n,c:EX[i].c,name:EX[i].name}))}));
-  groups.forEach(g=>g.n=g.items.reduce((a,b)=>a+b.n,0));
-  const mx=Math.max(...EX.map(e=>e.n),REST);
-  const body=groups.map(g=>`<div style="margin-bottom:14px">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;font-weight:800;color:${g.col==='#BDB4B8'?'#8C8186':g.col};border-bottom:2px solid ${g.col};padding:0 4px 4px;margin-bottom:6px"><span>${g.label}</span><span>${fmt(g.n)}건 · ${Math.round(g.n/N*100)}%</span></div>
-      ${g.items.map(it=>`<div class="xrow ${it.i===xsel?'on':''}" data-i="${it.i}" style="${it.i<0?'cursor:default':''}">
-        <div class="n">${it.name}</div>
-        <div class="track"><div class="fill" style="width:${Math.max(it.n/mx*100,.6)}%;background:${it.c}"></div></div>
-        <div class="v">${fmt(it.n)}건<small>${(it.n/N*100).toFixed(1)}%</small></div></div>`).join('')}</div>`).join('');
-  const e=EX[xsel];
-  $('waffle').innerHTML=`<div class="ct">결제 ${fmt(N)}건은 어디서 동백전 혜택을 놓치나 <span class="mute" style="font-weight:500">· 원패스 자동 선택 + 현재 잔액</span></div>
-    <div style="margin:14px 0 auto">${body}</div>
-    <div style="display:flex;align-items:center;gap:12px;background:#FAF5F7;border-radius:12px;padding:10px 14px;min-height:84px;box-sizing:border-box;border-left:3px solid var(--b5)">
-      <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:15px">${e.name} <span class="pill ${e.fix}" style="margin-left:4px">${e.fixT}</span></div><div class="mute" style="margin-top:3px;font-size:13px">${e.mean}</div></div>
-      ${e.go?`<button class="btn" id="goP2">관련 고객 보기 →</button>`:''}${e.k==='INSUFFICIENT_BALANCE'?`<button class="btn ghost" id="goP3">자동충전 비교</button>`:''}</div>`;
-  $('waffle').querySelectorAll('[data-i]').forEach(r=>{const i=+r.dataset.i;if(i>=0)r.onclick=()=>{xsel=i;p1hero();p1x();};});
-  if(e.go) $('goP2').onclick=()=>{resetF();F.ws=new Set(e.go.ws);gsel=null;usel=null;p2src='syn';p2();show('p2');};
-  if($('goP3')) $('goP3').onclick=()=>show('p3');
-}
-function alloc(){
-  const parts=[['db','동백전','#5C1229',3.5],['cr','BNK 신용','#B04E6B',2],['ck','BNK 체크','#D9A0B2',2],['none','미배정','#BDB4B8',1.5]];
-  const scs=[['S00','지금 습관'],['S01','원패스'],['S11','원패스+잔액']];
-  const tot=V.amount, val=scs.map(([sc])=>{const g=ALLOC(sc);return Object.fromEntries(parts.map(([k])=>[k,g[k][1]/tot]));});
-  const W=440,H=360,L=36,R=96,T=24,B=50,mx=0.7,X=i=>L+i*(W-L-R)/2,Y=v=>T+(1-v/mx)*(H-T-B);
-  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="시나리오별 결제수단 비중 변화">`;
-  [0,.2,.4,.6].forEach(v=>s+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#EFE7EA"/><text x="${L-6}" y="${Y(v)+4}" font-size="10.5" fill="#8C8186" text-anchor="end">${v*100}%</text>`);
-  scs.forEach(([sc,l],i)=>{s+=`<line x1="${X(i)}" x2="${X(i)}" y1="${T}" y2="${H-B}" stroke="#D9D2D5" stroke-dasharray="${sc==='S11'?'4 3':''}"/>
-    <text x="${X(i)}" y="${H-B+18}" font-size="12.5" font-weight="700" fill="#241A1E" text-anchor="middle">${l}</text>${sc==='S11'?`<text x="${X(i)}" y="${H-B+34}" font-size="10.5" fill="#8A6326" text-anchor="middle">가정 · 잔액 넉넉</text>`:''}`;});
-  parts.forEach(([k,n,col,w])=>{const pts=val.map((v,i)=>[X(i),Y(v[k])]);
-    s+=`<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linejoin="round"/>`;
-    pts.forEach(([x,y],i)=>{s+=`<circle cx="${x}" cy="${y}" r="${k==='db'?6:4.5}" fill="${col}" stroke="#fff" stroke-width="1.5"/>`;
-      if(i<2&&k!=='none') s+=`<text x="${x}" y="${y-10}" font-size="11.5" font-weight="${k==='db'?900:700}" fill="${col==='#D9A0B2'?'#B04E6B':col}" text-anchor="middle" stroke="#fff" stroke-width="3" paint-order="stroke">${Math.round(val[i][k]*100)}%</text>`;});
-  });
-  // 오른쪽 끝 라벨 (겹치지 않게 세로 간격 확보)
-  const ends=parts.map(([k,n,col])=>({n,col:col==='#D9A0B2'?'#B04E6B':col,v:val[2][k],y:Y(val[2][k])})).sort((a,b)=>a.y-b.y);
-  for(let i=1;i<ends.length;i++) if(ends[i].y-ends[i-1].y<17) ends[i].y=ends[i-1].y+17;
-  ends.forEach(e=>{s+=`<text x="${W-R+10}" y="${e.y+4}" font-size="12" font-weight="800" fill="${e.col}">${Math.round(e.v*100)}% ${e.n}</text>`;});
-  s+='</svg>';
-  $('alloc').innerHTML=`<div class="ct">같은 결제가 어느 카드로 옮겨 가나</div><div class="cs">결제 금액 비중 · 보정 거래 ${fmt(V.tx)}건</div>
-    <div style="margin:auto 0">${s}</div>
-    <div class="help-box"><b>읽는 법</b>선이 오르면 그 수단으로 결제가 옮겨 온 것입니다. 동백전 선이 ${Math.round(val[0].db*100)}% → ${Math.round(val[1].db*100)}% → ${Math.round(val[2].db*100)}%로 오르는 만큼이 원패스와 충전 효과입니다.</div>`;
-}
-function p1policy(){
-  const pol=DB.policies.find(p=>p.start<='2026-06-30'&&(!p.end||p.end>'2026-06-01'))||DB.policies[0];
-  const bandName={'LE_10B':'10억 이하','GT_10B_LE_30B':'10~30억','GT_30B':'30억 초과','UNKNOWN':'미상'};
-  const cnt=Object.fromEntries(DB.bands.map(([b,c])=>[bandName[b]||b,c]));
-  const rows=[['10억 이하',pol?pol.rates[0]:null],['10~30억',pol?pol.rates[1]:null],['30억 초과',pol?pol.rates[2]:null],['미상',null]];
-  const mxc=Math.max(...rows.map(r=>cnt[r[0]]||0));
-  $('p1policy').innerHTML=`<div class="ct">가맹점 매출 규모별 캐시백 ${pol&&pol.src!=='VERIFIED'?'<span class="tag t-asm">가정 · 정책 확인 대기</span>':''}</div>
-    <div class="cs">${pol?pol.id+' · 월 한도 '+fmt(pol.cap/1e4)+'만 원':''}</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px;align-items:end">
-    ${rows.map(([n,r])=>{const c=cnt[n]||0;return `<div style="text-align:center"><div style="font-size:24px;font-weight:900;color:${r?'var(--b7)':'var(--mute)'}">${r==null?'—':Math.round(r*100)+'%'}</div>
-      <div style="height:70px;display:flex;align-items:flex-end;justify-content:center;margin-top:4px"><div style="width:42px;height:${Math.max(c/mxc*70,3)}px;background:${r?'var(--b3)':'#D9D2D5'};border-radius:4px 4px 0 0"></div></div>
-      <div style="font-size:12.5px;font-weight:700;margin-top:4px">${n}</div><div class="mute">${fmt(c)}곳</div></div>`;}).join('')}</div>`;
-}
-function p1ind(){
-  const rows=DB.ind.filter(r=>r[1]+r[2]+r[3]>0).slice(0,12), mx=Math.max(...rows.map(r=>r[1]+r[2]+r[3]));
-  $('p1ind').innerHTML=`<div class="ct">업종별 동백전 가맹 비율</div><div class="cs">가맹점 ${fmt(DB.ind.reduce((a,r)=>a+r[1]+r[2]+r[3],0))}곳 · 막대 길이 = 가맹점 수</div>
-    <div style="margin-top:8px">${rows.map(([n,a,b,c])=>{const t=a+b+c;return `<div class="hbar" style="grid-template-columns:86px 1fr 52px"><span>${n}</span><div class="tr" style="width:${t/mx*100}%"><div style="width:${a/t*100}%;background:var(--b7)"></div><div style="width:${b/t*100}%;background:var(--b2)"></div><div style="width:${c/t*100}%;background:var(--sand)"></div></div><span style="text-align:right;font-weight:700;color:var(--b7)">${Math.round(a/t*100)}%</span></div>`;}).join('')}</div>
-    <div class="leg" style="margin-top:auto;padding-top:6px"><span><i style="background:var(--b7)"></i>가맹</span><span><i style="background:var(--b2)"></i>비가맹</span><span><i style="background:var(--sand)"></i>미상</span><span style="margin-left:auto">오른쪽 % = 가맹 비율</span></div>`;
-}
-
-const P2CARDS=[['G1,G2','자동충전 권유','가입 후 미사용 · 월 10만 미만','var(--b8)','ch'],['G3','원패스 + 자동충전','월 10~30만 사용','var(--b7)','both'],
-  ['G4,G5','원패스 효과 설명','월 30만 이상 사용','var(--b5)','op'],['G6','동백전 가입 안내','동백전 없음','var(--sand)','op'],['G7','정보 확인 먼저','지갑 정보 없음','var(--slate)','none']];
-const inG=u=>!gsel||gsel.split(',').includes(u.g);
-function p2hero(){
-  $('p2hero').innerHTML=P2CARDS.map(([gs,n,ds,col,kind])=>{const L=U.filter(u=>gs.split(',').includes(u.g));
-    const v=kind==='ch'?avg(L,u=>u.d-u.c):kind==='both'?avg(L,u=>u.d-u.a):kind==='op'?avg(L,u=>u.c-u.a):null;
-    return `<div class="t5 ${gsel===gs?'on':''}" data-gs="${gs}" tabindex="0"><div class="h"><span class="rk" style="background:${col}">${gs.replace(',','·')}</span>
-      <div><div class="gv" style="color:${col}">${L.length}</div><div class="gl">명</div></div></div>
-      <div class="nm">${n}</div><div class="ds">${ds}</div><div class="ds">${v==null?'금액 계산 안 함':'1인 +'+won(v)+'/월'}${kind==='ch'||kind==='both'?' <span class="tag t-asm">가정</span>':''}</div></div>`;}).join('');
-  $('p2hero').querySelectorAll('[data-gs]').forEach(c=>c.onclick=()=>{gsel=gsel===c.dataset.gs?null:c.dataset.gs;usel=null;p2();});
-}
 // ================= P2 =================
 const COH=[['G1','활성 · 가입 후 미사용','R2 자동충전 검토','잔액 부족'],['G2','활성 · 월 10만 미만','R2 자동충전 검토','잔액 부족'],
   ['G3','활성 · 월 10~30만','원패스 + R2 검토','카드 선택 · 잔액'],['G4','활성 · 월 30~50만','원패스 선택 효과 설명','카드 선택'],
@@ -807,7 +613,7 @@ function ucard(L){
        <div><span class="chip">${u.age}</span><span class="chip">${u.gu}</span><span class="chip">${u.sp}</span><span class="chip">${u.st}</span></div>
        <div class="blk" style="margin-top:8px"><h5>동백전</h5><p style="font-size:13.5px">${u.mem?'보유':'미보유'} · 지갑 ${u.ws} · ${u.lv}</p></div>
        <div class="blk" style="margin-top:8px"><h5>연결 카드 ${u.cc}장</h5>${u.cards.map(([n,p])=>`<span class="chip ${p?'b':''}">${n.replace('BNK ','').replace('합성','보정')}${p?' · 주카드':''}</span>`).join('')}</div></div>
-     <div style="flex:1.05;min-width:0"><h5 class="mute" style="font-weight:700;margin-bottom:4px">6월 혜택 · 4가지 조건</h5>${scenarioBars(u,'결제 '+u.tx+'건 · S10·S11은 가정·상한')}</div></div>
+     <div style="flex:1.05;min-width:0"><h5 class="mute" style="font-weight:700;margin-bottom:4px">6월 혜택 비교</h5>${scenarioBars(u,'결제 '+u.tx+'건 · 충전 효과는 잔액이 충분하다는 가정')}</div></div>
    <div style="background:var(--b1);border-radius:12px;padding:10px 14px;margin-top:10px;display:flex;gap:12px;align-items:center">
      <div style="flex:1"><span style="font-size:15px;font-weight:900;color:var(--b7)">${ra}</span><div style="font-size:12.8px;margin-top:2px">${rb}</div></div></div>
    <h5 class="mute" style="font-weight:700;margin-top:12px">거래 내역 · 혜택 변화가 큰 순 ${tx?`(${changed}/${rows.length}건이 다른 수단으로 바뀜)`:''}</h5>
@@ -853,13 +659,13 @@ function p2real(){
   const benCell=t=>t.kind==='미기재'?'<span class="mute">미기재</span>':t.kind==='포인트'?`${fmt(t.ben)}P <span class="mute">포인트</span>`:t.kind==='현금'?`${won(t.ben)} <span class="mute">청구할인</span>`:`<b style="color:var(--b7)">0원</b> <span class="mute">미충전</span>`;
   $('ucard').innerHTML=`<div style="display:flex;align-items:baseline;gap:12px"><div class="big" style="font-size:30px">${rsel}</div><div class="mute">${c.type} · 2026-10 실제 결제 · 이름 대신 코드</div></div>
    <div style="display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr;gap:6px;align-items:stretch;margin-top:12px">
-     ${flow.map(([l,v,s],i)=>`<div style="background:${i===1?'var(--b1)':'#FAF5F7'};border-radius:12px;padding:10px 12px"><div class="mute" style="font-weight:700">${l}</div><div style="font-size:14px;font-weight:800;margin-top:3px;line-height:1.4">${v}</div></div>${i<2?'<div style="display:flex;align-items:center;justify-content:center;color:var(--b3);font-size:20px;font-weight:900">→</div>':''}`).join('')}</div>
+     ${flow.map(([l,v,s],i)=>`<div style="background:${i===1?'var(--b1)':'#F8F6F2'};border-radius:12px;padding:10px 12px"><div class="mute" style="font-weight:700">${l}</div><div style="font-size:14px;font-weight:800;margin-top:3px;line-height:1.4">${v}</div></div>${i<2?'<div style="display:flex;align-items:center;justify-content:center;color:var(--b3);font-size:20px;font-weight:900">→</div>':''}`).join('')}</div>
    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px">${c.facts.map(([l,v])=>`<div style="border:1px solid var(--line);border-radius:10px;padding:8px 10px"><div class="mute">${l}</div><div style="font-weight:800;font-size:13.5px;margin-top:2px">${v}</div></div>`).join('')}</div>
    ${rsel==='T1'?`<h5 class="mute" style="font-weight:700;margin-top:12px">미충전으로 캐시백을 못 받은 3건 · AS-IS vs TO-BE</h5>
    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px">${focus.map(t=>`<div style="border:1.5px solid var(--b3);border-radius:10px;padding:8px 12px"><div style="font-weight:800">${t.m.length>14?t.m.slice(0,14)+'…':t.m}</div><div class="mute">${t.dt.replace('-','/')} · ${won(t.amt)}${t.survey.includes('%')?' · 선행조사 '+t.survey.replace('동백전 가맹점, ',''):''}</div>
      <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:13px"><span>실제 <b>0원</b></span><span>충전했다면 <b style="color:var(--b7)">${won(Math.floor(t.amt*rate))}</b></span></div></div>`).join('')}</div>
-   <div class="mute" style="margin-top:4px">충전했다면 = 10% 가맹점·한도 내라고 본 조건부 값 ${stTag('가정','#8A6326')} · 합계 ${won(est)}</div>`:
-   `<div style="background:var(--sand1);border-radius:10px;padding:8px 12px;margin-top:12px;font-size:12.8px;color:#8A6326">동백전 가맹점 2건이 어느 거래인지 아직 연결되지 않아, 거래별 추가 혜택은 계산하지 않았습니다. 나머지 14건도 비가맹으로 확정된 것이 아닙니다.</div>`}
+   <div class="mute" style="margin-top:4px">충전했다면 = 10% 가맹점·한도 내라고 본 조건부 값 ${stTag('가정','#6B5438')} · 합계 ${won(est)}</div>`:
+   `<div style="background:var(--sand1);border-radius:10px;padding:8px 12px;margin-top:12px;font-size:12.8px;color:#6B5438">동백전 가맹점 2건이 어느 거래인지 아직 연결되지 않아, 거래별 추가 혜택은 계산하지 않았습니다. 나머지 14건도 비가맹으로 확정된 것이 아닙니다.</div>`}
    <h5 class="mute" style="font-weight:700;margin-top:12px">거래 ${tx.length}건 · 받은 혜택은 기록된 값만 (미기재 ≠ 0원)</h5>
    <div class="scroll" style="flex:1;margin-top:4px"><table class="t txl"><tr><th>일자</th><th>가게 · 업종</th><th class="r">금액</th><th>결제 수단</th><th>가맹 표기</th><th class="r">받은 혜택</th></tr>
    ${rows.map(t=>`<tr ${t.tool==='동백전'?'style="background:var(--b1)"':''}><td>${t.dt.replace('-','/')}</td><td>${t.m.length>14?t.m.slice(0,14)+'…':t.m} <span class="mute">${t.ind}</span></td><td class="r">${won(t.amt)}</td>
@@ -867,21 +673,14 @@ function p2real(){
   // 오른쪽
   const off=tx.filter(t=>!/온라인|통신|기타|교통/.test(t.ind)&&!/NICE|네이버페이|AGODA|우아한|땡겨요|ANTHROPIC|자동납부|한국철도/.test(t.m));
   const offAmt=off.reduce((a,t)=>a+t.amt,0), all=tx.reduce((a,t)=>a+t.amt,0);
-  $('urec').innerHTML=`<div class="ct">원패스 제안 <span class="tag" style="background:#F1EFF0;color:var(--slate)">사례 진단</span><span class="tag t-ml">ML 참고</span></div>
+  $('urec').innerHTML=`<div class="ct">원패스 제안 <span class="tag" style="background:#EFECE7;color:var(--slate)">사례 진단</span><span class="tag t-ml">ML 참고</span></div>
     <div class="cs">확인된 문제에 맞는 기능을 고릅니다</div>
     <div style="margin-top:12px;background:linear-gradient(160deg,var(--b1),#fff);border:1.5px solid var(--b3);border-radius:14px;padding:12px 16px">
       <div class="mute" style="font-weight:700;color:var(--b6)">권할 기능</div><div style="font-size:20px;font-weight:900;color:var(--b7);margin-top:2px">${c.fn}</div>
       <div style="font-size:13px;margin-top:6px;line-height:1.55">${rsel==='T1'?'동백전 가맹점 결제 직전 잔액이 모자라면 알리고, 고객이 동의한 한도 안에서 부족분만 충전해 캐시백을 받게 합니다.':'결제마다 동백전과 보유 카드의 실제 혜택(연회비·실적 조건 포함)을 원 단위로 비교해, 부산 소상공인 가맹점처럼 동백전이 유리한 곳에만 동백전을 배정합니다.'}</div></div>
     ${rsel==='T4'?`<h5 class="mute" style="font-weight:700;margin-top:12px">인터뷰 · 동백전을 안 쓰는 이유</h5>
-      ${c.voice.map(([a,b])=>`<div style="border-left:3px solid var(--b5);padding:2px 10px;margin:4px 0"><div style="font-weight:800;font-size:13.5px">${a}</div><div class="mute" style="font-size:12.5px">"${b}"</div></div>`).join('')}
-      <h5 class="mute" style="font-weight:700;margin-top:10px">결제가 어디서 일어나나</h5>
-      <div class="sbar" style="height:26px;min-height:26px;flex-shrink:0;margin-top:4px"><div style="width:${offAmt/all*100}%;background:var(--b7)"></div><div style="width:${100-offAmt/all*100}%;background:#BDB4B8">온라인·구독·여행·교통 ${Math.round(100-offAmt/all*100)}%</div></div>
-      <div class="mute"><b style="color:var(--b7)">오프라인 매장 ${Math.round(offAmt/all*100)}%</b> · 동백전을 쓸 수 있는 결제가 적어 체감 혜택이 작게 느껴짐</div>`:
-     `<h5 class="mute" style="font-weight:700;margin-top:12px">T1의 동백전 사용 모습</h5>
-      ${[['동백전으로 결제',3,'var(--b7)'],['동백전 체크카드 기록',17,'var(--b3)'],['원본 가맹 표기 "예"',tx.filter(t=>t.dbm==='예').length,'var(--b5)']].map(([n,v,col])=>`<div class="vb" style="grid-template-columns:150px 1fr 40px"><span>${n}</span><div class="tr"><div style="width:${v/25*100}%;background:${col}"></div></div><span class="v">${v}건</span></div>`).join('')}
-      <div class="mute" style="margin-top:4px">동백전을 이미 쓰는 고객 · 문제는 선택이 아니라 잔액</div>`}
-    <h5 class="mute" style="font-weight:700;margin-top:12px">계산 전에 확인할 것</h5>
-    <ul class="as">${c.pending.map(p=>`<li>${stTag('UNKNOWN','#B4541A')} ${p}</li>`).join('')}</ul>
+      ${c.voice.map(([a,b])=>`<div style="border-left:3px solid var(--b5);padding:2px 10px;margin:4px 0"><div style="font-weight:800;font-size:13.5px">${a}</div><div class="mute" style="font-size:12.5px">"${b}"</div></div>`).join('')}`:
+     ''}
     ${(()=>{const m=ML.real[rsel];return `<div class="mlbox" style="margin-top:auto"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>ML 예측 · 보정 고객 240명으로 학습</b><span class="mute">거래 ${m.n}건 입력</span></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">
         <div><div class="mute">연결 추천 카드</div>${m.card.map(([n,p],i)=>`<div style="display:flex;justify-content:space-between;font-size:13px;${i?'color:var(--mute)':'font-weight:800'}"><span>${n}</span><span>${Math.round(p*100)}%</span></div>`).join('')}</div>
@@ -901,18 +700,12 @@ function urec(u,rows,loading){
   const top=Object.entries(ind).sort((a,b)=>b[1].amt-a[1].amt).slice(0,3);
   const md=o=>Object.entries(o).sort((a,b)=>b[1]-a[1])[0][0];
   const d=RECDEC[u.id]||'';
-  $('urec').innerHTML=`<div class="ct">개인화 카드 추천 <span class="tag" style="background:#F1EFF0;color:var(--slate)">지금은 규칙 기반</span><span class="tag t-ml">ML 적용</span></div>
+  $('urec').innerHTML=`<div class="ct">개인화 카드 추천 <span class="tag" style="background:#EFECE7;color:var(--slate)">지금은 규칙 기반</span><span class="tag t-ml">ML 적용</span></div>
     <div class="cs">이 고객의 6월 결제를 원패스가 다시 골랐을 때 기준</div>
     <div style="display:flex;align-items:center;gap:14px;margin-top:12px;background:linear-gradient(160deg,var(--b1),#fff);border:1.5px solid var(--b3);border-radius:14px;padding:12px 16px">
       <div style="flex:1"><div class="mute" style="font-weight:700;color:var(--b6)">주로 쓰면 좋은 카드</div><div style="font-size:20px;font-weight:900;color:var(--b7);margin-top:2px">${best?best[0]:'—'}</div>
         <div class="mute">원패스 기준 ${best?best[1].op:0}건 · 혜택 ${best?won(best[1].ben):'—'}</div></div>
       <div style="text-align:right"><div class="mute">원패스로 늘어남</div><div style="font-size:22px;font-weight:900;color:var(--b7)">+${won(u.c-u.a)}</div><div class="mute">월 · 현재 잔액 기준</div></div></div>
-    <h5 class="mute" style="font-weight:700;margin-top:12px">카드별 결제 건수 · 지금 vs 원패스 추천</h5>
-    ${list.slice(0,5).map(([c,v])=>`<div style="display:grid;grid-template-columns:118px 1fr 64px;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span>${c}</span>
-      <div style="display:flex;flex-direction:column;gap:2px"><div class="tr" style="height:8px;background:#F4EEF0;border-radius:3px;overflow:hidden"><div style="height:100%;width:${v.now/mx*100}%;background:#BDB4B8"></div></div>
-      <div class="tr" style="height:8px;background:#F4EEF0;border-radius:3px;overflow:hidden"><div style="height:100%;width:${v.op/mx*100}%;background:var(--b7)"></div></div></div>
-      <span style="text-align:right"><span class="mute">${v.now}</span> → <b>${v.op}</b></span></div>`).join('')}
-    <div class="leg"><span><i style="background:#BDB4B8"></i>지금 습관</span><span><i style="background:var(--b7)"></i>원패스 추천</span></div>
     <h5 class="mute" style="font-weight:700;margin-top:12px">업종별 추천 카드</h5>
     <table class="t" style="font-size:12.5px"><tr><th>업종</th><th>지금</th><th>추천</th><th class="r">혜택 변화</th></tr>
     ${top.map(([k,v])=>`<tr><td>${k}</td><td class="mute">${md(v.c0)}</td><td><b>${md(v.c1)}</b></td><td class="r ${v.gain>0?'up':''}">${v.gain>0?'+':''}${fmt(v.gain)}원</td></tr>`).join('')}</table>
@@ -925,56 +718,8 @@ function urec(u,rows,loading){
   $('urec').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{RECDEC[u.id]=RECDEC[u.id]===b.dataset.d?'':b.dataset.d;urec(u,rows,false);});
 }
 
-// ================= P3 =================
-let p3pick=null;
-function p3hero(){
-  const s=V.sc, b=s.S00.tot, r=V.s02[4]||[38.4,43,180000,0,0,0];
-  const cards=[['S00','지금 그대로','기존 카드 습관 · 현재 잔액',s.S00.tot,null,'var(--slate)',false],
-    ['S01','원패스만','카드 자동 선택 · 현재 잔액',s.S01.tot,s.S01.tot-b,'var(--b5)',false],
-    ['S10','잔액만 넉넉','기존 습관 · 잔액 상한',s.S10.tot,s.S10.tot-b,'var(--sand)',true],
-    ['S11','원패스 + 잔액 넉넉','둘 다 · 최대치',s.S11.tot,s.S11.tot-b,'var(--b8)',true],
-    ['S02','자동충전 현실 추정',`동의 ${r[0]}% × 1인 ${fmt(r[2]/1e4)}만 원`,r[3],r[3]-b,'var(--b7)',true]];
-  $('p3hero').innerHTML=cards.map(([k,n,ds,tot,d,col,asm])=>`<div class="t5 ${p3pick===k?'on':''}" data-k="${k}" tabindex="0"><div class="h"><span class="rk" style="background:${col}">${k}</span>
-      <div><div class="gv" style="color:${col}">${d==null?fmt(tot/10000)+'만':'+'+fmt(d/10000)+'만'}</div><div class="gl">${d==null?'원 · 240명 합계':'원 · 지금 대비'}</div></div></div>
-      <div class="nm">${n}</div><div class="ds">${ds}</div><div class="ds">1인 ${won(tot/240)}/월 ${asm?'<span class="tag t-asm">가정</span>':''}</div></div>`).join('');
-  $('p3hero').querySelectorAll('[data-k]').forEach(c=>c.onclick=()=>{p3pick=p3pick===c.dataset.k?null:c.dataset.k;if(p3pick==='S02')ssel=4;p3hero();p3();s02();});
-}
-function p3(){
-  const s=V.sc, c=(k,cls)=>`<div class="cell ${cls} ${p3pick===k?'pick':''}"><div class="id">${k}</div><div class="v">${fmt(s[k].tot)}원</div><div class="n">1인 ${won(s[k].tot/240)}/월</div></div>`;
-  const ar=(a,b,x)=>`<div class="ar"><b>${x}</b>+${fmt(s[b].tot-s[a].tot)}원</div>`;
-  $('mx').innerHTML=`<div></div><div class="hd">지금 카드 습관</div><div></div><div class="hd">원패스 자동 선택</div>
-    <div class="rh">지금 잔액</div>${c('S00','now')}${ar('S00','S01','→')}${c('S01','')}
-    <div></div>${ar('S00','S10','↓')}<div></div>${ar('S01','S11','↓')}
-    <div class="rh">잔액 넉넉<br><span class="mute">(상한)</span></div>${c('S10','asm')}${ar('S10','S11','→')}${c('S11','best')}`;
-  const t=V.shap.bal+V.shap.choice, tot=s.S11.tot-s.S00.tot;
-  const tile=(lab,v,col,desc)=>`<div style="flex:1;border-radius:14px;padding:14px 16px;background:${col}1A;border-left:5px solid ${col}"><div class="mute" style="font-weight:700">${lab}</div>
-    <div style="font-size:30px;font-weight:900;color:${col};margin-top:2px">${Math.round(v/t*100)}%</div><div style="font-weight:800">+${fmt(v)}원</div><div class="mute" style="margin-top:4px">${desc}</div></div>`;
-  $('p3split').innerHTML=`<div class="ct">② 늘어난 +${fmt(tot/10000)}만 원은 어디서 오나 <span class="mute" style="font-weight:500">· 지금 → 원패스+잔액 넉넉</span></div>
-    <div style="display:flex;gap:12px;margin-top:14px">${tile('카드를 잘 고른 덕',V.shap.choice,'#7A1E3A','원패스가 결제마다 혜택 큰 카드 선택')}${tile('잔액이 넉넉해진 덕',V.shap.bal,'#A8792F','잔액 부족으로 끊기던 동백전 결제 회복 (상한)')}</div>
-    <div class="sbar" style="height:30px;margin-top:14px"><div style="width:${V.shap.choice/t*100}%;background:var(--b7)"></div><div style="width:${V.shap.bal/t*100}%;background:var(--sand)"></div></div>
-    <div class="help-box" style="margin-top:auto"><b>읽는 법</b>카드 선택만으론 절반이 안 됩니다. 나머지는 잔액이 받쳐 줄 때 생기므로, 원패스에 <b>자동충전을 함께 붙여야</b> 효과가 커집니다. 두 요인이 함께 만든 몫(${fmt(V.shap.inter)}원)은 두 칸에 나눠 담았습니다.</div>`;
-}
-let ssel=4;
-function s02(){
-  const mx=Math.max(...V.s02.map(r=>r[4])),mn=Math.min(...V.s02.map(r=>r[4]));
-  const col=v=>{const t=(v-mn)/(mx-mn);const a=[176,78,107],b=[63,11,30];return `rgb(${a.map((x,i)=>Math.round(x+(b[i]-x)*t)).join(',')})`;};
-  let h='<div></div><div class="hd">1인 10만 원</div><div class="hd">1인 18만 원</div><div class="hd">1인 30만 원</div>';
-  [25,38.4,50].forEach((c,ri)=>{h+=`<div class="rh">동의 ${c}%<small>${V.s02[ri*3][1]}명 / 111</small></div>`;
-    for(let j=0;j<3;j++){const i=ri*3+j,r=V.s02[i];h+=`<div class="c ${i===ssel?'on':''}" data-i="${i}" style="background:${col(r[4])}"><div class="n">원패스만 대비</div><div class="v">+${fmt(r[4])}</div><div class="n">+${(r[4]/V.sc.S01.tot*100).toFixed(1)}%</div></div>`;}});
-  $('sg').innerHTML=h;
-  $('sg').querySelectorAll('.c').forEach(e=>e.onclick=()=>{ssel=+e.dataset.i;s02();});
-  const r=V.s02[ssel];
-  $('s02d').innerHTML=`<div class="ct">동의 ${r[0]}% × 1인 ${fmt(r[2]/1e4)}만 원일 때</div>
-   <div class="dl"><div style="background:var(--b1)"><div class="l" style="color:var(--b6)">원패스만 대비 더 늘어남</div><div class="v" style="color:var(--b7)">+${fmt(r[4])}원</div><div class="s">+${(r[4]/V.sc.S01.tot*100).toFixed(1)}%</div></div>
-     <div><div class="l">자동충전 동의 고객</div><div class="v">${r[1]}<small style="font-size:14px">명 / 111</small></div><div class="s">충전 합계 ${fmt(r[5]/1e4)}만 원</div></div></div>
-   <h5 class="mute" style="font-weight:700;margin-top:16px">240명 월 혜택 합계 비교</h5>
-   ${[['원패스만',V.sc.S01.tot,'var(--b5)'],['+ 자동충전 (이 조건)',r[3],'var(--b7)'],['+ 잔액 넉넉 (상한)',V.sc.S11.tot,'var(--b8)']].map(([n,v,c])=>`<div class="vb" style="grid-template-columns:130px 1fr 90px;margin:7px 0"><span>${n}</span><div class="tr" style="height:16px"><div style="width:${v/V.sc.S11.tot*100}%;background:${c}"></div></div><span class="v">${fmt(v/10000)}만</span></div>`).join('')}
-   <div class="mute">자동충전으로 상한까지 가는 길의 ${Math.round((r[3]-V.sc.S01.tot)/(V.sc.S11.tot-V.sc.S01.tot)*100)}%를 채웁니다</div>
-   <div class="help-box" style="margin-top:auto"><b>읽는 법</b>동의율을 25→50%로 올리면 +${fmt(V.s02[7][4]-V.s02[1][4])}원, 충전 자금을 10→30만 원으로 늘리면 +${fmt(V.s02[5][4]-V.s02[3][4])}원입니다. <b>동의를 늘리는 권유</b>가 더 효과적입니다.</div>`;
-}
-
-renderTop5();renderMap();renderInfo();
-p1hero();p1x();alloc();p1policy();p1ind();p2();p3hero();p3();s02();
+calcTop5();renderKpi();renderMap();renderInfo();
+p2();
 show((location.hash||'#p0').slice(1));
 }
 boot();
